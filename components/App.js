@@ -1,29 +1,48 @@
 // main wrapper component - layout, universal styles, etc.
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { checkIfMobile, getVPDims } from '../lib/redux/actions'
+import Background from './Background'
 import Header from './core/Header'
 import Footer from './core/Footer'
+import DataManager from './DataManager'
+import ListView from './ListView'
+import GoogleMap from './GoogleMap'
+import { binder } from '../lib/_utils'
 
 // import globalStyles from '../../styles/index.scss'
 
 class App extends Component {
+  constructor (props) {
+    super(props)
+    binder(this, [])
+  }
   componentDidMount () {
 
   }
   render () {
-    const { children } = this.props
+    const { FBdata } = this.props
     return (
       <div className='app-outer'>
         <div className='app-inner'>
-          <header>
-            <Header />
-          </header>
-          <main>{ children }</main>
-          <footer>
-            <Footer />
-          </footer>
+          <Background>
+            <header>
+              <Header />
+            </header>
+            <main>
+              <div className='map-wrapper'>
+                <GoogleMap />
+              </div>
+              <div className='events-list-wrapper'>
+                <ListView list={{ gallery: FBdata.events }} />
+              </div>
+              <div className='galleries-list-wrapper'>
+                <ListView list={{ gallery: FBdata.galleries }} />
+              </div>
+            </main>
+            <footer>
+              <Footer />
+            </footer>
+          </Background>
         </div>
         <style jsx global>{`
           a {
@@ -52,21 +71,7 @@ class App extends Component {
   }
 }
 
-function mapStateToProps (state) {
-  return {
-    isMobile: state.splash.isMobile,
-    dims: state.splash.dims
-  }
-}
-
-function mapDispatchToProps (dispatch) {
-  return {
-    onCheckIfMobile: () => dispatch(checkIfMobile()),
-    onGetVPDims: () => dispatch(getVPDims())
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default DataManager(App)
 // export default App
 
 App.propTypes = {

@@ -11,7 +11,8 @@ const handle = Router.getRequestHandler(app)
 console.log(handle)
 
 app.prepare().then(() => {
-  express()
+  const server = express()
+  server
     .use(compression())
     .use(handle)
     .listen(port, err => {
@@ -27,10 +28,10 @@ app.prepare().then(() => {
   // //     return app.render(req, res, '/thing', { id: req.params.id })
   // // })
 
-  // server.get('*', (req, res) => {
-  //   // return handle(req, res)
-  //   return app.render(req, res, '/', req.query)
-  // })
+  server.get('*', (req, res) => {
+    // return handle(req, res)
+    return app.render(req, res, '/')
+  })
 
   // server.listen(port, (err) => {
   //   if (err) throw err
