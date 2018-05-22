@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { binder } from '../../lib/_utils'
+import { binder } from '../lib/_utils'
 
 class Filter extends Component {
   constructor (props) {
     super(props)
-    binder(this, [''])
+    // binder(this, [''])
   }
 
   componentDidMount () {}

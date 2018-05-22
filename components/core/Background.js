@@ -5,7 +5,7 @@ import { binder } from '../../lib/_utils'
 class Background extends Component {
   constructor (props) {
     super(props)
-    binder(this, [''])
+    // binder(this, [''])
   }
 
   componentDidMount () {}

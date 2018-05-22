@@ -1,7 +1,7 @@
 // main wrapper component - layout, universal styles, etc.
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import Background from './Background'
+import Background from './core/Background'
 import Header from './core/Header'
 import Footer from './core/Footer'
 import DataManager from './DataManager'
@@ -14,7 +14,7 @@ import { binder } from '../lib/_utils'
 class App extends Component {
   constructor (props) {
     super(props)
-    binder(this, [])
+    // binder(this, [])
   }
   componentDidMount () {
 

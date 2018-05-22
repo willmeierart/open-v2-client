@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { checkIfMobile, getVPDims, fetchFBdata } from '../lib/redux/actions'
-import { binder } from '../../lib/_utils'
+import { binder } from '../lib/_utils'
 
 const DataManager = ComposedComponent => {
   class WrappedComponent extends Component {
