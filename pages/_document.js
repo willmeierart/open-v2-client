@@ -16,12 +16,12 @@ export default class CustomDocument extends Document {
   //   e.preventDefault()
   //   e.stopPropagation()
   // }
-  componentDidMount () {
+  // componentDidMount () {
     // window.addEventListener('scroll', (e) => { this.preventScrollNav(e) })
     // window.addEventListener('touchmove', (e) => { this.preventScrollNav(e) })
     // window.addEventListener('touchstart', (e) => { this.preventScrollNav(e) })
     // window.addEventListener('touchend', (e) => { this.preventScrollNav(e) })
-  }
+  // }
   render () {
     return (
       <html lang='en-US'

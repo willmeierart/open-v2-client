@@ -1,6 +1,8 @@
 // main wrapper component - layout, universal styles, etc.
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { checkIfMobile, getVPDims, fetchFBdata } from '../lib/redux/actions'
 import Background from './core/Background'
 import Header from './core/Header'
 import Footer from './core/Footer'
@@ -20,7 +22,7 @@ class App extends Component {
 
   }
   render () {
-    const { FBdata } = this.props
+    const { FBdata, children } = this.props
     return (
       <div className='app-outer'>
         <div className='app-inner'>
@@ -29,7 +31,7 @@ class App extends Component {
               <Header />
             </header>
             <main>
-              <div className='map-wrapper'>
+              {/* <div className='map-wrapper'>
                 <GoogleMap />
               </div>
               <div className='events-list-wrapper'>
@@ -37,7 +39,8 @@ class App extends Component {
               </div>
               <div className='galleries-list-wrapper'>
                 <ListView list={{ gallery: FBdata.galleries }} />
-              </div>
+              </div> */}
+              { children }
             </main>
             <footer>
               <Footer />
@@ -46,8 +49,8 @@ class App extends Component {
         </div>
         <style jsx global>{`
           a {
-            text-decoration: none;
-            color: inherit;
+            {/* text-decoration: none; */}
+            {/* color: inherit; */}
           }
           li {
             list-style: none;
@@ -71,9 +74,25 @@ class App extends Component {
   }
 }
 
-export default DataManager(App)
-// export default App
-
 App.propTypes = {
   title: PropTypes.string.isRequired
 }
+
+// export default DataManager(App)
+function mapStateToProps (state) {
+  return {
+    isMobile: state.env.isMobile,
+    dims: state.env.dims,
+    FBdata: state.data.FBdata
+  }
+}
+
+function mapDispatchToProps (dispatch) {
+  return {
+    onCheckIfMobile: () => dispatch(checkIfMobile()),
+    onGetVPDims: () => dispatch(getVPDims()),
+    onFetchFBdata: () => dispatch(fetchFBdata())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
