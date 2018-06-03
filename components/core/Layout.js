@@ -2,16 +2,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { checkIfMobile, getVPDims, fetchFBdata } from '../lib/redux/actions'
-import Background from './core/Background'
-import Header from './core/Header'
-import Footer from './core/Footer'
-import DataManager from './DataManager'
-import ListView from './ListView'
-import GoogleMap from './GoogleMap'
-import { binder } from '../lib/_utils'
-
-// import globalStyles from '../../styles/index.scss'
+import { checkIfMobile, getVPDims, fetchFBdata } from '../../lib/redux/actions'
+import Header from './Header'
+import Footer from './Footer'
+import { binder } from '../../lib/_utils'
 
 class App extends Component {
   constructor (props) {
@@ -26,26 +20,15 @@ class App extends Component {
     return (
       <div className='app-outer'>
         <div className='app-inner'>
-          <Background>
-            <header>
-              <Header />
-            </header>
-            <main>
-              {/* <div className='map-wrapper'>
-                <GoogleMap />
-              </div>
-              <div className='events-list-wrapper'>
-                <ListView list={{ gallery: FBdata.events }} />
-              </div>
-              <div className='galleries-list-wrapper'>
-                <ListView list={{ gallery: FBdata.galleries }} />
-              </div> */}
-              { children }
-            </main>
-            <footer>
-              <Footer />
-            </footer>
-          </Background>
+          <header>
+            <Header needsFbApproval />
+          </header>
+          <main>
+            { children }
+          </main>
+          <footer>
+            <Footer />
+          </footer>
         </div>
         <style jsx global>{`
           a {

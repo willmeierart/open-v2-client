@@ -22,37 +22,28 @@ export default class HomePage extends Component {
   }
   render () {
     return (
-      <AppProvider>
+      <div>
         <Head title='Home' />
         <section>
-          {/* {allThings1.loading || allThings2.loading ? (
-            <div className='loader-wrapper'>
-              <Loader type='line-spin-fade-loader' active />
-            </div>
-          ) : ( */}
-          <div> dear FB privacy policy auditors:</div>
-          <div> in lieu of having a working API key, I can offer this to show how the app will work:</div>
-          <div>
-            <a href='https://github.com/willmeierart/OPEN-v2-proxy'>github link for the proxy server which will use the app token</a>
-            <span>(it worked before all this privacy reform happened)</span>
-          </div>
-          <div>
-            <a href='http://openartscenedenver.online'>link to the original clientside version of the idea</a>
-            <span>(which required oauth, this version will use the proxy server and circumvent any login or user data collection)</span>
-            <a href='https://github.com/willmeierart/OPEN-ArtScene'> and a link to the github for the old iteration</a>
-          </div>
-          <div>
-            <a href='/privacy'>see the privacy policy</a>
-          </div>
+          <h1>COMING SOON</h1>
           {/* )} */}
         </section>
         <style jsx>{`
+          section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            font-size: 10em;
+            text-align: center;
+          }
             {/* .loader-wrapper {
               width:100%; height:100%;
               display: flex; justify-content: center; align-items:center;
             } */}
         `}</style>
-      </AppProvider>
+      </div>
     )
   }
 }
