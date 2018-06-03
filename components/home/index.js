@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import Link from 'next/link'
 import { connect } from 'react-redux'
 import { binder } from '../../lib/_utils'
 import DataManager from './DataManager'
@@ -15,6 +16,7 @@ class Home extends Component {
   componentDidMount () {}
 
   render () {
+    const needsFbApproval = true
     return (
       <div className='outer-wrapper'>
         <div className='inner-wrapper'>
@@ -28,10 +30,37 @@ class Home extends Component {
               <ListView list={{ gallery: FBdata.galleries }} />
             </div> */}
         </div>
+        <div className='notice'>
+          { needsFbApproval && <div className='fb-notice'>
+            <Link href='/fb'>
+              <a>If you are with the Facebook Privacy Policy Auditing Team, please click here</a>
+            </Link>
+          </div> }
+        </div>
         <style jsx>{`
-          .outer-wrapper{}
-          .inner-wrapper{}
-        `}</style>
+        .notice {
+          width: 100vw;
+          height: 50px;
+          background: red;
+          position: absolute;
+          top: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+          font-size: 1.5em;
+          color: white;
+          border-bottom: 1px solid red;
+        }
+        .header-inner:hover {
+          background: white;
+          color: red;
+        }
+        a {
+          color: inherit;
+          text-decoration: none;
+        }
+      `}</style>
       </div>
     )
   }
@@ -56,4 +85,4 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default connect(mapStateToProps, mapDispatchToProps)(Home)

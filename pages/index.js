@@ -6,6 +6,7 @@
 import React, { Component } from 'react'
 import AppProvider from '../lib/redux/AppProvider'
 import Head from '../components/Head'
+import Home from '../components/home'
 // import fetch from 'isomorphic-fetch'
 
 // include boilerplate for global loader dependent on graphql req's:
@@ -24,6 +25,7 @@ export default class HomePage extends Component {
     return (
       <div>
         <Head title='Home' />
+        <Home />
         <section>
           <h1>COMING SOON</h1>
           {/* )} */}

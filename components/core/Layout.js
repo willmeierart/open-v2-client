@@ -1,4 +1,4 @@
-// main wrapper component - layout, universal styles, etc.
+// main wrLayouter component - layout, universal styles, etc.
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -7,21 +7,21 @@ import Header from './Header'
 import Footer from './Footer'
 import { binder } from '../../lib/_utils'
 
-class App extends Component {
+class Layout extends Component {
   constructor (props) {
     super(props)
     // binder(this, [])
   }
   componentDidMount () {
-
+    console.log(this.props)
   }
   render () {
-    const { FBdata, children } = this.props
+    const { FBdata, children, url } = this.props
     return (
-      <div className='app-outer'>
-        <div className='app-inner'>
+      <div className='Layout-outer'>
+        <div className='Layout-inner'>
           <header>
-            <Header needsFbApproval />
+            <Header url={this.props.router.route} needsFbLayoutroval />
           </header>
           <main>
             { children }
@@ -57,11 +57,11 @@ class App extends Component {
   }
 }
 
-App.propTypes = {
-  title: PropTypes.string.isRequired
+Layout.propTypes = {
+  title: PropTypes.string
 }
 
-// export default DataManager(App)
+// export default DataManager(Layout)
 function mapStateToProps (state) {
   return {
     isMobile: state.env.isMobile,
@@ -78,4 +78,4 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default connect(mapStateToProps, mapDispatchToProps)(Layout)

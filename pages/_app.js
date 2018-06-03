@@ -7,7 +7,7 @@ export default class MyApp extends App {
     const { Component } = this.props
     return (
       <Container>
-        <AppProvider>
+        <AppProvider {...this.props}>
           <Component {...this.props} />
         </AppProvider>
         <style jsx global>{`
