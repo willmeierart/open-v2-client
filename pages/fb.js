@@ -27,7 +27,7 @@ export default class HomePage extends Component {
               <Loader type='line-spin-fade-loader' active />
             </div>
           ) : ( */}
-          <div> dear FB privacy policy auditors:</div>
+          <h2> dear FB privacy policy auditors:</h2>
           <div> in lieu of having a working API key, I can offer this to show how the app will work:</div>
           <div>
             <a href='https://github.com/willmeierart/OPEN-v2-proxy'>github link for the proxy server which will use the app token</a>
@@ -48,6 +48,14 @@ export default class HomePage extends Component {
               width:100%; height:100%;
               display: flex; justify-content: center; align-items:center;
             } */}
+            section {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              flex-direction: column;
+              text-align: center;
+              height: 100vh;
+            }
         `}</style>
       </div>
     )
