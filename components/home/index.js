@@ -6,22 +6,31 @@ import { binder } from '../../lib/_utils'
 import DataManager from './DataManager'
 import ListView from './ListView'
 import GoogleMap from './GoogleMap'
+import EventsToggle from './EventsToggle'
+import ScrollBar from './ScrollBar'
 
 class Home extends Component {
   constructor (props) {
     super(props)
-    // binder(this, [''])
+    this.state = {
+      view: 'events' // || 'galleries'
+    }
+    binder(this, ['handleToggle'])
   }
 
   componentDidMount () {}
 
+  handleToggle () {
+    const { toggleState } = this.state
+    this.setState({ toggleState: toggleState === 1 ? 0 : 1 })
+  }
+
   render () {
-    const needsFbApproval = true
     return (
       <div className='outer-wrapper'>
         <div className='inner-wrapper'>
           {/* <div className='map-wrapper'>
-              <GoogleMap />
+              <GoogleMap view={this.state.view} />
             </div>
             <div className='events-list-wrapper'>
               <ListView list={{ gallery: FBdata.events }} />
@@ -29,36 +38,36 @@ class Home extends Component {
             <div className='galleries-list-wrapper'>
               <ListView list={{ gallery: FBdata.galleries }} />
             </div> */}
-        </div>
-        <div className='notice'>
-          { needsFbApproval && <div className='fb-notice'>
-            <Link href='/fb'>
-              <a>If you are with the Facebook Privacy Policy Auditing Team, please click here</a>
-            </Link>
-          </div> }
+          {/* { this.state.toggleState === 0
+            ? <div className='events-wrapper'>
+              <div className='section-inner'>
+                <EventsToggle eventState={toggleState} toggleEventState={this.handleToggle} />
+              </div>
+            </div>
+            : <div className='galleries-wrapper'>
+              <div className='section-inner'></div>
+            </div>
+          } */}
+          <div id='scrollbar'>
+            <ScrollBar view={this.props.viewState} />
+          </div>
+          <div id='events-view'>
+          </div>
+          <div id='galleries-view'>
+
+          </div>
         </div>
         <style jsx>{`
-        .notice {
-          width: 100vw;
-          height: 50px;
-          background: red;
-          position: absolute;
-          top: 0;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          text-align: center;
-          font-size: 1.5em;
-          color: white;
-          border-bottom: 1px solid red;
+        .outer-wrapper {
+          min-height: 100vh;
+          height: 100vh;
         }
-        .header-inner:hover {
-          background: white;
-          color: red;
+        .inner-wrapper {
+          display: grid;
+          grid-template-columns: auto 100px auto;
         }
-        a {
-          color: inherit;
-          text-decoration: none;
+        #scrollbar {
+          grid-column: 2/3;
         }
       `}</style>
       </div>
@@ -74,6 +83,7 @@ function mapStateToProps (state) {
     // isMobile: state.env.isMobile,
     // dims: state.env.dims,
     // FBdata: state.data.FBdata
+    viewState: state.ui.viewState
   }
 }
 

@@ -3,13 +3,15 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { checkIfMobile, getVPDims, fetchFBdata } from '../../lib/redux/actions'
-import Header from './Header'
-import Footer from './Footer'
+import TitleBar from './TitleBar'
 import { binder } from '../../lib/_utils'
 
 class Layout extends Component {
   constructor (props) {
     super(props)
+    this.state = {
+      // splitScreen: 
+    }
     // binder(this, [])
   }
   componentDidMount () {
@@ -21,14 +23,11 @@ class Layout extends Component {
       <div className='Layout-outer'>
         <div className='Layout-inner'>
           <header>
-            <Header url={this.props.router.route} needsFbLayoutroval />
+            <TitleBar url={this.props.router.route} needsFbLayoutroval />
           </header>
           <main>
             { children }
           </main>
-          <footer>
-            <Footer />
-          </footer>
         </div>
         <style jsx global>{`
           a {
@@ -47,9 +46,6 @@ class Layout extends Component {
             width: 100vw;
             box-sizing: border-box;
           }
-          header {}
-          footer {}
-          main {}
         `}</style>
         {/* <style dangerouslySetInnerHTML={{ __html: globalStyles }} /> */}
       </div>

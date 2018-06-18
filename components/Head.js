@@ -17,6 +17,7 @@ const CustomHead = (props = initialProps) => {
       <link rel='shortcut icon' href='/static/zero.ico' />
       <script defer src='https://use.fontawesome.com/releases/v5.0.6/js/all.js' />
       {/* <script async src='https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXXX-X' /> */}
+      <link rel='stylesheet' href='https://use.typekit.net/weo5ngi.css' />
       <style dangerouslySetInnerHTML={{__html: `
         @font-face {
           font-family: 'Art-Sans';

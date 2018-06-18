@@ -11,8 +11,10 @@ Router
   // .add('services', '/:slug', '')
   // .add('converse', '/:slug', '')
 
-  .add('home', '/')
+  .add('index', '/')
   .add('privacy', '/privacy')
+  .add('links', '/links')
+  .add('fb', '/facebook-review')
   // .add('us', '/us')
   // .add('work', '/work')
   // .add('services', '/services')
