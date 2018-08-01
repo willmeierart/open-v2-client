@@ -1,5 +1,5 @@
-export default () => (
-	<svg version="1.1" id="Layer_1" x="0px" y="0px"
+export default ({ color }) => (
+	<svg fill={color ? color : 'black'} version="1.1" id="Layer_1" x="0px" y="0px"
 		width="414.528px" height="59.48px" viewBox="0 0 414.528 59.48" enableBackground="new 0 0 414.528 59.48">
 	<g>
 		<path d="M326.625,15.685h-6.637h0l-15.935,43.144h6.637l4.716-12.768h15.802l4.716,12.768h6.637L326.625,15.685L326.625,15.685z

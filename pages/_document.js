@@ -16,8 +16,19 @@ export default class CustomDocument extends Document {
       <html lang='en-US'>
         <Head />
         <body>
-          <Main />
-          <NextScript />
+          <div className='scroll-wrapper'>
+            <Main />
+            <NextScript />
+          </div>
+          <style jsx>{`
+            .scroll-wrapper {
+              width: 100%;
+              padding-right: 50px;
+              margin-right: -50px;
+              box-sizing: content-box;
+              position: relative;
+            }
+          `}</style>
         </body>
       </html>
     )

@@ -1,21 +1,23 @@
+import PropTypes from 'prop-types'
 import Link from 'next/link'
 import MarqueeHeader from './MarqueeHeader'
 import DaLogo from '../assets/DA_LOGO'
 
 const TitleBar = ({ url, isHovered, title, handleClick }) => {
-  console.log(url)
   return (
     <div className='header-outer'>
       <div className='header-inner'>
         { isHovered
           ? <div className='menu-bar'>
             <div className='logo-wrapper'>
-              <DaLogo />
+              <Link href='/'><a>
+                <DaLogo color='#EAE6FF' />
+              </a></Link>
             </div>
             <div className='links-wrapper'>
               <div onClick={() => { handleClick('events') }} className='events-link link'>events</div>
               <div onClick={() => { handleClick('galleries') }} className='galleries-link link'>galleries</div>
-              <div onClick={() => { handleClick('links') }} className='links-link link'>links</div>
+              <div className='links-link link'><Link href='/links'><a>links</a></Link></div>
             </div>
           </div>
           : <MarqueeHeader title={title} />
@@ -24,25 +26,51 @@ const TitleBar = ({ url, isHovered, title, handleClick }) => {
       <style jsx>{`
         .header-outer {
           width: 100vw;
-          height: 60px;
+          height: 100px;
           background-color: black;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
+          z-index: 20;
         }
-        .header-inner {
-          width: 100%;
+        .menu-bar {
           height: 100%;
           display: flex;
           justify-content: space-between;
           align-items: center;
+          flex-direction: row;
+          font-family: 'Art-Sans';
+          width: 100vw;
+        }
+        .logo-wrapper {
+          padding: 2em;
+          margin-top: -.25em;
+        }
+        .links-wrapper {
+          display: flex;
         }
         .link {
           color: var(--color-lightblue);
+          padding-right: 1.5em;
+          font-size: 2.5em;
+          cursor: pointer;
         }
-        .menu-bar {
-          font-family: 'Art Sans'
+        .link:last-of-type {
+          padding-right: 1em;
+        }
+        .events-link:hover {
+          color: var(--color-green);
+        }
+        .galleries-link:hover {
+          color: var(--color-blue);
+        }
+        .links-link:hover {
+          color: var(--color-orange);
+        }
+        a {
+          color: inherit;
+          text-decoration: none;
         }
       `}</style>
     </div>

@@ -6,20 +6,29 @@ import { binder } from '../../lib/_utils'
 class MarqueeHeader extends Component {
   constructor (props) {
     super(props)
-    binder(this, ['renderWordDivs'])
     this.state = {
       wdColor: 'var(--color-green)'
     }
     this.wordStyles = {
       padding: '.125em 1em',
-      color: 'var(--color-green)',
       display: 'inline-block',
       fontSize: '3em',
       fontFamily: 'Art-Sans'
     }
+    binder(this, ['renderWordDivs', 'setWdStyleColor'])
   }
 
   componentDidMount () {
+    this.setWdStyleColor()
+  }
+
+  componentDidUpdate (prevProps) {
+    if (prevProps.title !== this.props.title) {
+      this.setWdStyleColor()
+    }
+  }
+
+  setWdStyleColor () {
     const { title } = this.props
     let color = 'var(--color - lightblue)'
     switch (title) {
@@ -36,38 +45,27 @@ class MarqueeHeader extends Component {
     this.setState({ wdColor: color })
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-    if (this.state.wdColor !== nextState.wdColor) return true
-    else if (this.props.title !== nextProps.title) return true
-    else return false
-  }
-  componentDidUpdate (prevProps, prevState) {
-    if (prevProps !== this.props) {
-      console.log(this.props, prevProps)
-    }
-  }
-
   renderWordDivs () {
     const outerWidth = this.outer.getBoundingClientRect().width
     const innerWidth = this.word.getBoundingClientRect().width
     const arr = []
-    console.log(outerWidth, innerWidth)
+    // console.log(outerWidth, innerWidth)
     if (innerWidth > 0) {
       const num = Math.ceil(outerWidth / innerWidth)
-      console.log(num)
-      for (let i = 0; i < num; i++) {
+      // console.log(num);
+      for (let i = 0; i < num * 2; i++) {
         arr.push(this.props.title)
       }
     }
     return arr.map((wd, i) => {
       return (
-        <div key={i} className='word' style={this.wordStyles}>
+        <div key={i} className='word' style={ this.wordStyles }>
           <FontWyler phrase={wd} />
           <style jsx>{`
             .word {
               animation: marquee${i + 2} 3s linear infinite;
               color: ${this.state.wdColor};
-              animation-delay: ${(i + 1) * 5};
+              animation-delay: ${(i + 1) * 3};
             }
             @keyframes marquee${i + 2} {
               from {

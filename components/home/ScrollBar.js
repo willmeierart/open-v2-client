@@ -20,6 +20,9 @@ class ScrollBar extends Component {
     if (this.state.origin !== prevState.origin || this.props.view !== prevProps.view) {
 
     }
+    if (this.props.yPos !== prevProps.yPos) {
+
+    }
   }
 
   setOrigin () {
@@ -32,13 +35,19 @@ class ScrollBar extends Component {
   }
 
   scrollTheBar () {
-    const { percentScrolled } = this.props
-    const baseHeight = window.innerHeight * 0.8
-    const barPos = `${baseHeight * percentScrolled}vh`
+    const { yPos } = this.props
+    const baseHeight = window.innerHeight * 0.8 - 100
+    const barPos = `${baseHeight * yPos}vh`
+    console.log(barPos, baseHeight, yPos)
     this.setState({ barPos })
   }
 
   render () {
+    const { yPos } = this.props
+    console.log(yPos);
+    const baseHeight = window.innerHeight * 0.8 - 100
+    const barPos = `${baseHeight * yPos}px`
+    // console.log(barPos, yPos)
     return (
       <div className='track'>
         <div className='bar' />
@@ -54,7 +63,7 @@ class ScrollBar extends Component {
             width: 30px;
             background: red;
             position: absolute;
-            top: ${this.state.barPos};
+            top: ${barPos};
           }
         `}</style>
       </div>
@@ -62,6 +71,9 @@ class ScrollBar extends Component {
   }
 }
 
-ScrollBar.propTypes = {}
+ScrollBar.propTypes = {
+  viewState: PropTypes.string,
+  yPos: PropTypes.number.isRequired
+}
 
 export default ScrollBar

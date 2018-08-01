@@ -2,9 +2,11 @@ import PropTypes from 'prop-types'
 import ListModule from './ListModule'
 
 const ListView = ({ list }) => {
-  const renderList = () => list.map(li => (
-    <li key={li.id}>
-      <ListModule data={li.data} />
+  // console.log(list)
+  const renderList = () => list.map((li, i) => (
+    <li key={li.id + i}>
+      { i }
+      <ListModule data={li} />
     </li>
   ))
   return (
@@ -14,6 +16,9 @@ const ListView = ({ list }) => {
       <style jsx>{`
         .outer-container {}
         .inner-container {}
+        ul {
+          padding: 0;
+        }
       `}</style>
     </div>
   )
