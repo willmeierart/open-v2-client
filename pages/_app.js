@@ -32,7 +32,6 @@ export default class MyApp extends App {
           font-family: 'Campaign';
           margin: 0;
           width: 100vw;
-          overflow: hidden;
           box-sizing: border-box;
         }
         .ev-font {

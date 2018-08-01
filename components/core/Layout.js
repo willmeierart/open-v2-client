@@ -110,12 +110,15 @@ class Layout extends Component {
             { children }
           </main>
         </div>
-        <style jsx>{`
+        <style jsx global>{`
           header {
             position: fixed;
             top: 0;
             width: 100%;
             z-index: 1000000000;
+          }
+          body {
+            overflow: ${hasSeenIntro ? 'hidden' : 'scroll'};
           }
         `}</style>
         {/* <style dangerouslySetInnerHTML={{ __html: globalStyles }} /> */}
