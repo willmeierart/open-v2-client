@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 import { checkIfMobile, getVPDims, fetchFBdata, setViewState } from '../../lib/redux/actions'
 import TitleBar from './TitleBar'
 import MobileTitleBar from './MobileTitleBar'
-import MarqueeHeader from './MarqueeHeader'
 import SplashIntro from '../home/SplashIntro'
 import { binder } from '../../lib/_utils'
 
@@ -80,7 +79,10 @@ class Layout extends Component {
 
   handleMenuItemClick (itemTxt) {
     const { router, onSetViewState } = this.props
-    console.log(router, itemTxt)
+    if (itemTxt === 'links') {
+      router.push('/links')
+      return
+    } 
     router.push('/')
     router.events.on('routeChangeComplete', () => { onSetViewState(itemTxt) })
   }
@@ -97,14 +99,14 @@ class Layout extends Component {
             </div>
           }
           <header onMouseEnter={() => { this.hoverTitleBar(true) }} onMouseLeave={() => { this.hoverTitleBar(false) }}>
-           { !isMobile
-            ? <TitleBar isHovered={titleBarHovered}
-              title={headerTitle}
-              setViewState={onSetViewState}
-              url={route} needsFbLayout
-              handleClick={this.handleMenuItemClick} />
-            : <MobileTitleBar />
-           }
+            { !isMobile
+              ? <TitleBar isHovered={titleBarHovered}
+                title={headerTitle}
+                setViewState={onSetViewState}
+                url={route} needsFbLayout
+                handleClick={this.handleMenuItemClick} />
+              : <MobileTitleBar handleClick={this.handleMenuItemClick} />
+            }
           </header>
           <main>
             { children }

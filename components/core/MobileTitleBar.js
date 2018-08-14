@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { binder } from '../../lib/_utils'
 import Link from 'next/link'
 import DaLogo from '../assets/DA_LOGO'
 import MobileMenu from './MobileMenu'
@@ -9,11 +10,30 @@ class MobileTitleBar extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      menuOpen: false
+      menuOpen: false,
+      animateIn: false
+    }
+    binder(this, ['openMenu', 'handleClick'])
+  }
+
+  openMenu () {
+    if (this.state.menuOpen) {
+      this.setState({ animateIn: false })
+      setTimeout(() => {
+        this.setState({ menuOpen: false })
+      }, 1000)
+    } else {
+      this.setState({ menuOpen: true, animateIn: true })
     }
   }
+
+  handleClick (name) {
+    this.props.handleClick(name)
+    this.openMenu()
+  }
+
   render () {
-    const { menuOpen } = this.state
+    const { menuOpen, animateIn } = this.state
     return (
       <div className='header-outer'>
         <div className='header-inner'>
@@ -24,11 +44,11 @@ class MobileTitleBar extends Component {
               </a></Link>
             </div>
             <div className='nav-icon-wrapper'>
-              <MobileNavIcon />
+              <MobileNavIcon menuIsOpen={menuOpen} handleClick={this.openMenu} />
             </div>
             { menuOpen &&
               <div className='menu-wrapper'>
-                <MobileMenu />
+                <MobileMenu isOpen={animateIn} handleClick={this.handleClick} />
               </div>
             }
           </div>
@@ -61,10 +81,22 @@ class MobileTitleBar extends Component {
             color: inherit;
             text-decoration: none;
           }
+          .menu-wrapper {
+            z-index: 1000000000000;
+            position: absolute;
+            top: 100px;
+            left: 0;
+            width: 100vw;
+            height: calc(100vh - 100px);
+          }
         `}</style>
       </div>
     )
   }
+}
+
+MobileTitleBar.propTypes = {
+  handleClick: PropTypes.func.isRequired
 }
 
 export default MobileTitleBar

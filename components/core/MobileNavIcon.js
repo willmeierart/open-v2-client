@@ -1,13 +1,21 @@
 import PropTypes from 'prop-types'
+import Hamburger from '../assets/Hamburger'
+import LeftArrow from '../assets/LeftArrow'
 
 const MobileNavIcon = ({ menuIsOpen, handleClick }) => {
   return (
     <div className='outer-container'>
-      <div className='inner-container'></div>
-      {/* <style jsx>{`
-        .outer-container {}
-        .inner-container {}
-      `}</style> */}
+      <div onClick={handleClick} className='inner-container'>
+        { menuIsOpen ? <LeftArrow /> : <Hamburger /> }
+      </div>
+      <style jsx>{`
+        .outer-container {
+          margin-right: 1em;
+        }
+        .inner-container {
+          cursor: pointer;
+        }
+      `}</style>
     </div>
   )
 }

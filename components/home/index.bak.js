@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { connect } from 'react-redux'
 // import { TransitionMotion, spring } from 'react-motion'
 import { binder } from '../../lib/_utils'
-import { gallery, todayEvent, futureEvent, actualFBoutput } from '../../lib/mockData'
+import { gallery, todayEvent, futureEvent } from '../../lib/mockData'
 import DataManager from './DataManager'
 import ListView from './ListView'
 import GoogleMap from './GoogleMap'
@@ -58,18 +58,24 @@ class Home extends Component {
   }
 
   handleScrollBarPos (frac) {
-    if (this.state.scrollBarWidth !== `${window.innerWidth / 2 - 15}px`) {
-      this.setState({ scrollBarWidth: `${window.innerWidth / 2 - 15}px` })
-    }
-    this.setState({ scrollBarPosY: frac })
+    // if (this.state.canScroll) {
+      if (this.state.scrollBarWidth !== `${window.innerWidth / 2 - 15}px`) {
+        this.setState({ scrollBarWidth: `${window.innerWidth / 2 - 15}px` })
+      }
+      // console.log(frac, typeof frac)
+      this.setState({ scrollBarPosY: frac })
+    // }
   }
 
   handleListScroll (e, num) {
+    // e.stopPropagation()
     if (this.state.canScroll) {
       if (e) {
         if (e.target === this.leftList || e.target === this.rightList) {
+          // console.log(e.target)
           const scrollCap = e.target.scrollHeight - e.target.getBoundingClientRect().height
           const safeTop = e.target.scrollTop === 0 ? 1 : e.target.scrollTop
+          // console.log(e.target.scrollTop, e.target.scrollHeight, scrollCap, safeTop)
           const up = num === 2 && e.target.scrollTop === 0
           const down = num === 1 && e.target.scrollTop === scrollCap
           const frac = parseFloat((safeTop / scrollCap).toFixed(3))
@@ -98,19 +104,31 @@ class Home extends Component {
 
       this.leftList.scrollTop = 0
       this.rightList.scrollTop = 0
+      // if (num === 2) {
       if (scrollBarPosY <= 0.01) {
         clearInterval(interval)
       } else {
         this.setState({ scrollBarPosY: scrollBarPosY - 0.25 })
       }
+      // } else if (num === 1) {
+      //   if (scrollBarPosY >= 0.99) {
+      //     clearInterval(interval)
+      //   } else {
+      //     this.setState({ scrollBarPosY: scrollBarPosY + 0.001 })
+      //   }
+      // }
+      // if (i === 33) clearInterval(interval)
     }, 16)
   }
 
   handleScrollView (e, num) {
     const view = num === 2 ? 'galleries' : 'events'
-
+    // console.log('handle scroll view', this.state.canScroll, e.target, num)
     this.props.onSetViewState(view)
-
+    // if (!this.state.canScroll) {
+    //   if (e) this.preventScrollAndReset(e)
+    //   return
+    // }
     this.animateScrollBarReset(num)
 
     this.setState({
@@ -128,15 +146,18 @@ class Home extends Component {
   preventScrollAndReset (e) {
     console.log('shouldnt be scrolling')
     e.preventDefault()
+    // this.leftList.scrollTop = 0
+    // this.rightList.scrollTop = 0
   }
 
   handleEventsToggleClick (eventsState) {
+    // console.log(eventsState)
     this.setState({ eventsState })
   }
 
   render () {
     const {
-      state: { scrollBarWidth, animateAmt, scrollBarPosY, canScroll, eventsState },
+      state: { scrollView, scrollBarWidth, animate, animateAmt, scrollBarPosY, canScroll, eventsState },
       props: { viewState },
       bodyHeight, fakeGalleries, fakeEvents, handleEventsToggleClick
     } = this

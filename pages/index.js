@@ -14,7 +14,7 @@ export default class HomePage extends Component {
       <div>
         <Head title='Home' />
         <section>
-          <Home />
+          <Home isMobile={window !== undefined && (window.orientation !== undefined || window.innerWidth < 900)} />
         </section>
       </div>
     )

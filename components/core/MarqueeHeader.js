@@ -10,27 +10,36 @@ class MarqueeHeader extends Component {
       wdColor: 'var(--color-green)'
     }
     this.wordStyles = {
-      padding: '.125em 1em',
+      padding: this.props.isMobileMenu && !this.props.isFAQ ? '0.125em .25em' : '.125em 1em',
       display: 'inline-block',
-      fontSize: '3em',
-      fontFamily: 'Art-Sans'
+      fontFamily: 'Art-Sans',
+      fontSize: this.props.isMobileMenu && !this.props.isFAQ ? '20vh' : '3em'
     }
+    this.speed = this.props.isMobileMenu && !this.props.isFAQ ? '8' : '3'
     binder(this, ['renderWordDivs', 'setWdStyleColor'])
   }
 
   componentDidMount () {
-    this.setWdStyleColor()
+    if (this.props.isMobileMenu) {
+      this.setState({ wdColor: this.props.activeItem ? 'var(--color-lightblue)' : 'black' })
+    } else {
+      this.setWdStyleColor()
+    }
   }
 
   componentDidUpdate (prevProps) {
     if (prevProps.title !== this.props.title) {
-      this.setWdStyleColor()
+      if (this.props.isMobileMenu) {
+        this.setState({ wdColor: this.props.activeItem ? 'var(--color-lightblue)' : 'black' })
+      } else {
+        this.setWdStyleColor()
+      }
     }
   }
 
   setWdStyleColor () {
     const { title } = this.props
-    let color = 'var(--color - lightblue)'
+    let color = 'var(--color-lightblue)'
     switch (title) {
       case 'events':
         color = 'var(--color-green)'
@@ -58,25 +67,23 @@ class MarqueeHeader extends Component {
       }
     }
     return arr.map((wd, i) => {
-      return (
-        <div key={i} className='word' style={ this.wordStyles }>
-          <FontWyler phrase={wd} />
-          <style jsx>{`
-            .word {
-              animation: marquee${i + 2} 3s linear infinite;
-              color: ${this.state.wdColor};
-              animation-delay: ${(i + 1) * 3};
+      return <div key={i} className="word" style={this.wordStyles}>
+        <FontWyler isMobileMenu={this.props.isMobileMenu} phrase={wd} />
+        <style jsx>{`
+          .word {
+            animation: marquee${i + 2} ${this.speed}s linear infinite;
+            color: ${this.state.wdColor};
+            animation-delay: ${(i + 1) * this.speed};
+          }
+          @keyframes marquee${i + 2} {
+            from {
+              transform: translateX(0%);
+            } to {
+              transform: translateX(-100%);
             }
-            @keyframes marquee${i + 2} {
-              from {
-                transform: translateX(0%);
-              } to {
-                transform: translateX(-100%);
-              }
-            }
-          `}</style>
-        </div>
-      )
+          }
+        `}</style>
+      </div>
     })
   }
 
@@ -84,7 +91,9 @@ class MarqueeHeader extends Component {
     return (
       <div ref={outer => { this.outer = outer }} className='outer-container'>
         <div className='inner-container'>
-          <div ref={word => { this.word = word }} className='word' style={ this.wordStyles }>{ this.props.title }</div>
+          <div ref={word => { this.word = word }}
+            className='word'
+            style={this.wordStyles}>{ this.props.title }</div>
           { this.outer && this.word && this.renderWordDivs() }
         </div>
         <style jsx>{`
@@ -97,7 +106,7 @@ class MarqueeHeader extends Component {
           display: flex;
         }
         .word {
-          animation: marquee 3s linear infinite;
+          animation: marquee ${this.speed}s linear infinite;
           color: ${this.state.wdColor};
         }
         @keyframes marquee {
@@ -114,6 +123,10 @@ class MarqueeHeader extends Component {
   }
 }
 
-MarqueeHeader.propTypes = {}
+MarqueeHeader.propTypes = {
+  title: PropTypes.string.isRequired,
+  isMobileMenu: PropTypes.bool,
+  isFAQ: PropTypes.bool
+}
 
 export default MarqueeHeader

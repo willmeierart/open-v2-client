@@ -47,6 +47,7 @@ class ScrollBar extends Component {
     console.log(yPos);
     const baseHeight = window.innerHeight * 0.8 - 100
     const barPos = `${baseHeight * yPos}px`
+    const width = this.props.isMobile ? '20px' : '30px'
     // console.log(barPos, yPos)
     return (
       <div className='track'>
@@ -54,13 +55,13 @@ class ScrollBar extends Component {
         <style jsx>{`
           .track{
             height: 100vh;
-            width: 30px;
+            width: ${width};
             background: yellow;
             position: relative;
           }
           .bar{
             height: 20vh;
-            width: 30px;
+            width: ${width};
             background: red;
             position: absolute;
             top: ${barPos};
@@ -73,7 +74,8 @@ class ScrollBar extends Component {
 
 ScrollBar.propTypes = {
   viewState: PropTypes.string,
-  yPos: PropTypes.number.isRequired
+  yPos: PropTypes.number.isRequired,
+  isMobile: PropTypes.bool
 }
 
 export default ScrollBar
