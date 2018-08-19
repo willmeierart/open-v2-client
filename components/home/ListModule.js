@@ -54,6 +54,7 @@ export default class ListModule extends Component {
             overflow: scroll;
             width: 100%;
             height: 100%;
+            overflow-wrap: break-word;
           }
           .scrollbar-minus {
             transform: rotate(90deg);
@@ -126,7 +127,7 @@ export default class ListModule extends Component {
         <div className='inner-container'>
           <div onClick={this.handleExpand} className='expand-btn'>{isOpen ? <Minus /> : <Plus /> }</div>
           <div className='title'>{ data.name }</div>
-          <div className='address'>{ data.location ? data.location : data.owner + ' - ' + data.place }</div>
+          <div className='address'>{ data.location ? data.location.street : data.owner + ' - ' + data.place.location.street }</div>
           { isOpen && this.contentSwitcher(data) }
         </div>
         <style jsx>{`

@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 // import { TransitionMotion, spring } from 'react-motion'
 import { binder } from '../../lib/_utils'
 import { gallery, todayEvent, futureEvent, actualFBoutput } from '../../lib/mockData'
-import DataManager from './DataManager'
 import ListView from './ListView'
 import GoogleMap from './GoogleMap'
 import EventsToggle from './EventsToggle'
@@ -34,7 +33,7 @@ class Home extends Component {
     }
     this.bodyHeight = 'calc(100vh - 100px)'
 
-    this.showMap = false
+    this.showMap = true
   }
 
   componentDidMount () {
@@ -51,6 +50,14 @@ class Home extends Component {
       })
     }
   }
+
+  // shouldComponentUpdate (nextProps, nextState) {
+  //   if (nextState.scrollBarPosY !== this.state.scrollBarPosY) {
+  //     return false
+  //   } else {
+  //     return true
+  //   }
+  // }
 
   handleToggle () {
     const { toggleState } = this.state
@@ -137,10 +144,35 @@ class Home extends Component {
   render () {
     const {
       state: { scrollBarWidth, animateAmt, scrollBarPosY, canScroll, eventsState },
-      props: { viewState },
+      props: { viewState, FBdata },
       bodyHeight, fakeGalleries, fakeEvents, handleEventsToggleClick
     } = this
-    console.log(canScroll)
+    console.log(this.props.FBdata)
+
+    const testEventsList = FBdata ? FBdata.events[eventsState].concat(fakeEvents[eventsState]) : fakeEvents[eventsState]
+    const testGalleriesList = FBdata ? FBdata.galleries.concat(fakeGalleries) : fakeGalleries
+
+    const teLocations = testEventsList.map(ev => ({
+      id: ev.id,
+      name: ev.name,
+      coords: {
+        lat: ev.place.location.latitude,
+        lng: ev.place.location.longitude
+      }
+    }))
+    const tgLocations = testGalleriesList.map(ev => ({
+      id: ev.id,
+      name: ev.name,
+      coords: {
+        lat: ev.location.latitude,
+        lng: ev.location.longitude
+      }
+    }))
+
+    const mapMarkers = filter => this.props.allMapMarkers.filter(m => m.type === filter)
+    console.log(this.props.allMapMarkers)
+
+    console.log(testEventsList, testGalleriesList)
 
     return (
       <div className='outer-wrapper'>
@@ -151,18 +183,20 @@ class Home extends Component {
           <div id='events-view' className='view-sec'>
             <div onScroll={e => { this.handleListScroll(e, 1) }} ref={leftList => { this.leftList = leftList }} className='left'>
               <EventsToggle eventState={eventsState} toggleEventState={handleEventsToggleClick} />
-              <ListView state={eventsState} list={fakeEvents[eventsState]} />
+              {/* <ListView state={eventsState} list={fakeEvents[eventsState]} /> */}
+              <ListView state={eventsState} list={testEventsList} />
             </div>
             <div className='right'>
-              { this.showMap && <GoogleMap type='events' /> }
+              { this.showMap && <GoogleMap markers={mapMarkers('event')} type='events' /> }
             </div>
           </div>
           <div id='galleries-view' className='view-sec'>
             <div className='left'>
-              { this.showMap && <GoogleMap type='galleries' /> }
+              { this.showMap && <GoogleMap markers={mapMarkers('gallery')} type='galleries' /> }
             </div>
             <div onScroll={e => { this.handleListScroll(e, 2) }} ref={rightList => { this.rightList = rightList }} className='right'>
-              <ListView list={fakeGalleries} />
+              {/* <ListView list={fakeGalleries} /> */}
+              <ListView list={testGalleriesList} />
             </div>
           </div>
         </div>
@@ -227,7 +261,8 @@ Home.propTypes = {}
 
 function mapStateToProps (state) {
   return {
-    viewState: state.ui.viewState
+    viewState: state.ui.viewState,
+    allMapMarkers: state.data.allMapMarkers
   }
 }
 

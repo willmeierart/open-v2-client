@@ -88,7 +88,7 @@ class Layout extends Component {
   }
 
   render () {
-    const { FBdata, children, onSetViewState, router: { route }, isMobile } = this.props
+    const { children, onSetViewState, router: { route }, isMobile } = this.props
     const { headerTitle, titleBarHovered, hasSeenIntro } = this.state
     return (
       <div className='Layout-outer'>
@@ -134,6 +134,7 @@ Layout.propTypes = {
 }
 
 // export default DataManager(Layout)
+
 function mapStateToProps (state) {
   return {
     isMobile: state.env.isMobile,

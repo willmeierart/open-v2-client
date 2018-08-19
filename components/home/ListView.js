@@ -5,7 +5,6 @@ const ListView = ({ list }) => {
   // console.log(list)
   const renderList = () => list.map((li, i) => (
     <li key={li.id + i}>
-      { i }
       <ListModule data={li} />
     </li>
   ))
@@ -14,9 +13,8 @@ const ListView = ({ list }) => {
       <div className='inner-container'></div>
       <ul>{ renderList() }</ul>
       <style jsx>{`
-        .outer-container {}
-        .inner-container {}
         ul {
+          margin-top: 3em;
           padding: 0;
         }
       `}</style>
