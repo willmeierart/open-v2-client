@@ -16,7 +16,7 @@ class GoogleMap extends Component {
 
   componentDidMount () {
     const mapNode = ReactDOM.findDOMNode(this[`${this.props.type}MapDOM`])
-    const init = (() => {
+    const init = () => {
       console.log(typeof this[`${this.props.type}MapDOM`])
       if (window.google && this[`${this.props.type}MapDOM`]) {
         console.log(this.props.type)
@@ -37,31 +37,37 @@ class GoogleMap extends Component {
       } else {
         setTimeout(init, 800)
       }
-    })()
+    }
+    init()
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate (prevProps, prevState) {
     if (this.props.view !== prevProps.view) {
       this.setState({ style: this.props.mapStyles[this.props.view] })
       // animate func?
     }
-    if (this.props.markers !== prevProps.markers) {
-      // if (this.state.inited) {
-      // this.toggleActiveMarkers()
-        this.toggleActiveMarkers()
-      // } else {
-        // setTimeout(this.toggleActiveMarkers(), 800)
-      // }
-    }
+    console.log(this.state.inited, prevState.inited);
+    // if (this.state.inited !== prevState.inited) {
+    //   console.log('INITED CHANGED', this.props.markers.length)
+    //   if (this.props.markers.length > 0) {
+
+    //     this.toggleActiveMarkers()
+    //   }
+    // }
+    // if (this.props.markers !== prevProps.markers) {
+    //   if (this.state.inited) {
+    //     this.toggleActiveMarkers()
+    //   }
+    // }
   }
 
   toggleActiveMarkers () {
-    console.log('MARKERS', this.props.markers)
+    console.log('MARKERS', this.props.markers, window.google.maps)
     return this.props.markers.forEach(marker => {
       marker.marker.map = this[`${this.props.type}Map`]
-      new window.google.maps.Marker(marker.marker)
+      const MARKER = new window.google.maps.Marker(marker.marker)
       // trueMarker.map = this[`${this.props.type}MapDOM`]
-      console.log('ASSIGNING MAP TO:', marker)
+      console.log('ASSIGNING MAP TO:', marker, MARKER)
     })
   }
 
