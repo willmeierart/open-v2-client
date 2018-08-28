@@ -2,7 +2,6 @@ import PropTypes from 'prop-types'
 import ListModule from './ListModule'
 
 const ListView = ({ list }) => {
-  // console.log(list)
   const renderList = () => list.map((li, i) => (
     <li key={li.id + i}>
       <ListModule data={li} />

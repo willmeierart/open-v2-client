@@ -52,6 +52,7 @@ const Links = ({ links }) => {
           background-color: var(--color-orange);
           height: calc(100vh - 100px);
           cursor: none;
+          overflow: scroll;
         }
         .inner-container {
           padding: 0;

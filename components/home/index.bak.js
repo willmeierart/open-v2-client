@@ -17,7 +17,7 @@ class Home extends Component {
     this.state = {
       canScroll: true,
       view: 'events', // || 'galleries'
-      scrollBarPosY: 0.001,
+      scrollBarPosY: 0.00000000001,
       scrollBarWidth: 0,
       scrollView: 1, // || 2
       animate: false,
@@ -104,7 +104,7 @@ class Home extends Component {
       this.leftList.scrollTop = 0
       this.rightList.scrollTop = 0
       // if (num === 2) {
-      if (scrollBarPosY <= 0.01) {
+      if (scrollBarPosY <= 0.00000000001) {
         clearInterval(interval)
       } else {
         this.setState({ scrollBarPosY: scrollBarPosY - 0.25 })

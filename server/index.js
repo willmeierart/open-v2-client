@@ -8,8 +8,6 @@ const app = next({ dev })
 const port = process.env.PORT || 3000
 const handle = Router.getRequestHandler(app)
 
-console.log(handle)
-
 app.prepare().then(() => {
   const server = express()
   server

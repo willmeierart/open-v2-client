@@ -38,13 +38,11 @@ class ScrollBar extends Component {
     const { yPos } = this.props
     const baseHeight = window.innerHeight * 0.8 - 100
     const barPos = `${baseHeight * yPos}vh`
-    console.log(barPos, baseHeight, yPos)
     this.setState({ barPos })
   }
 
   render () {
     const { yPos } = this.props
-    console.log(yPos);
     const baseHeight = window.innerHeight * 0.8 - 100
     const barPos = `${baseHeight * yPos}px`
     const width = this.props.isMobile ? '20px' : '30px'

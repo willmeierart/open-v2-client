@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import FontWyler from '../magic/FontWyler'
+import FauxWyler from '../magic/FauxWyler'
 import { binder } from '../../lib/_utils'
 
 class MarqueeHeader extends Component {
@@ -58,17 +59,18 @@ class MarqueeHeader extends Component {
     const outerWidth = this.outer.getBoundingClientRect().width
     const innerWidth = this.word.getBoundingClientRect().width
     const arr = []
-    // console.log(outerWidth, innerWidth)
     if (innerWidth > 0) {
       const num = Math.ceil(outerWidth / innerWidth)
-      // console.log(num);
       for (let i = 0; i < num * 2; i++) {
         arr.push(this.props.title)
       }
     }
     return arr.map((wd, i) => {
-      return <div key={i} className="word" style={this.wordStyles}>
-        <FontWyler isMobileMenu={this.props.isMobileMenu} phrase={wd} />
+      return <div key={i} className='word' style={this.wordStyles}>
+        { i === 0 || i === arr.length - 1
+          ? <FauxWyler isMobileMenu={this.props.isMobileMenu} phrase={wd} />
+          : <FontWyler isMobileMenu={this.props.isMobileMenu} phrase={wd} />
+        }
         <style jsx>{`
           .word {
             animation: marquee${i + 2} ${this.speed}s linear infinite;

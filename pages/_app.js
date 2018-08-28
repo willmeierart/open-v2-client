@@ -1,6 +1,7 @@
 import React from 'react'
 import App, { Container } from 'next/app'
 import AppProvider from '../lib/redux/AppProvider'
+import { PageTransition } from 'next-page-transitions'
 // import { binder } from '../lib/_utils'
 
 export default class MyApp extends App {
@@ -18,7 +19,9 @@ export default class MyApp extends App {
     const { Component } = this.props
     return <Container>
       <AppProvider {...this.props}>
-        <Component {...this.props} />
+        <PageTransition timeout={300} classNames='page-transition'>
+          <Component {...this.props} />
+        </PageTransition>
       </AppProvider>
       <style jsx global>{`
         html {
@@ -33,6 +36,7 @@ export default class MyApp extends App {
           margin: 0;
           width: 100vw;
           box-sizing: border-box;
+          background-color: black;
         }
         .ev-font {
           font-family: 'Art-Sans';
@@ -51,6 +55,20 @@ export default class MyApp extends App {
         }
         li {
           list-style: none;
+        }
+        .page-transition-enter {
+          opacity: 0;
+        }
+        .page-transition-enter-active {
+          opacity: 1;
+          transition: opacity 100ms;
+        }
+        .page-transition-exit {
+          opacity: 1;
+        }
+        .page-transition-exit-active {
+          opacity: 0;
+          transition: opacity 100ms;
         }
       `}</style>
     </Container>

@@ -1,14 +1,27 @@
 import Head from '../components/Head'
 import Links from '../components/links'
-import { link } from '../lib/mockData'
+import { links } from '../lib/data'
 
 export default function LinksPage () {
-  const links = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ].map(l => link)
+  const shuffledArr = (() => {
+    let LINKS = [...links]
+    let currentIndex = links.length
+    let temporaryValue
+    let randomIndex
+    while (currentIndex !== 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex)
+      currentIndex -= 1
+      temporaryValue = links[currentIndex]
+      links[currentIndex] = links[randomIndex]
+      links[randomIndex] = temporaryValue
+    }
+    return LINKS
+  })()
   return (
     <div>
       <Head title='Home' />
       <section>
-        <Links links={links} />
+        <Links links={shuffledArr} />
       </section>
     </div>
   )

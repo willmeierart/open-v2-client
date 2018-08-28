@@ -40,7 +40,6 @@ class MobileMenu extends Component {
   }
 
   render () {
-    console.log(this.state.animateAmt, this.props.isOpen)
     return (
       <div className='outer-container'>
         <div className='inner-container'>
