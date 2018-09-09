@@ -17,7 +17,7 @@ export default class HomePage extends Component {
   constructor(props) {
     super(props)
   }
-  render() {
+  render () {
     return (
       <div>
         <Head title='Home' />

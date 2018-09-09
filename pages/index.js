@@ -15,7 +15,7 @@ export default class HomePage extends Component {
       <div>
         <Head title='Home' />
         <section>
-          <Home introSeen={this.state.introSeen} isMobile={window !== undefined && (window.orientation !== undefined || window.innerWidth < 1000)} />
+          <Home introSeen={this.state.introSeen} isMobile={typeof window !== 'undefined' && (window.orientation !== undefined || window.innerWidth < 1000)} />
         </section>
       </div>
     )
