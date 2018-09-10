@@ -33,6 +33,7 @@
     "graphql": "^0.11.7",
     "graphql-anywhere": "^4.1.11",
     "graphql-tag": "^2.9.2",
+    "immutable": "^3.8.2",
     "isomorphic-fetch": "^2.2.1",
     "isomorphic-unfetch": "^2.0.0",
     "loaders.css": "^0.1.2",

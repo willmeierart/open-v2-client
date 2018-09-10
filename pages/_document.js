@@ -13,12 +13,12 @@ export default class CustomDocument extends Document {
       <html lang='en-US'>
         <Head />
         <body>
-          <div className='scroll-wrapper'>
+          <div class='main-sec'>
             <Main />
             <NextScript />
           </div>
           <style jsx>{`
-            .scroll-wrapper {
+            .main-sec {
               width: 100%;
               padding-right: 50px;
               margin-right: -50px;

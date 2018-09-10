@@ -14,10 +14,10 @@ export default class HomePage extends Component {
   // const { thing } = json
   // return thing
   // }
-  constructor(props) {
+  constructor (props) {
     super(props)
   }
-  render() {
+  render () {
     return (
       <div>
         <Head title='Home' />

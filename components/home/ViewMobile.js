@@ -13,7 +13,7 @@ export default class Mobile extends Component {
     super(props)
     this.state = {
       canScroll: true,
-      view: 'events', // || 'galleries'
+      view: 'galleries', // || 'events'
       animateAmt: 0,
       viewPos: 'calc(100vh - 4em - 230px)',
       // eventsState: 'today', // || 'upcoming',
@@ -82,7 +82,7 @@ export default class Mobile extends Component {
     return (
       <div className='outer-wrapper'>
         <div id='google-map'>
-          { showMap && <GoogleMap markers={mapMarkers(markerType)} type={viewState} /> }
+          { showMap && <GoogleMap markers={mapMarkers(markerType)} type={viewState} setActiveMarker={this.props.onSetActiveMarker} /> }
         </div>
         <div className='inner-wrapper'>
           <div id='view'>

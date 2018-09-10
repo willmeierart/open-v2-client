@@ -13,7 +13,7 @@ export default class Desktop extends Component {
     super(props)
     this.state = {
       canScroll: true,
-      view: 'events', // || 'galleries'
+      view: 'galleries', // || 'events'
       scrollBarPosY: 0.001,
       scrollBarWidth: 0,
       scrollView: 1, // || 2
@@ -21,7 +21,7 @@ export default class Desktop extends Component {
       animateAmt: 0
     }
 
-    binder(this, ['handleListScroll', 'preventScrollAndReset', 'handleScrollBarPos'])
+    binder(this, ['handleListScroll', 'preventScrollAndReset'])
   }
 
   componentDidMount () {
@@ -38,16 +38,6 @@ export default class Desktop extends Component {
     }
   }
 
-  // shouldComponentUpdate (nextProps, nextState) {
-  //   if (nextState.scrollBarPosY !== this.state.scrollBarPosY) {
-  //     return false
-  //   } else {
-  //     return true
-  //   }
-  // }
-
-  
-
   handleListScroll (e, num) {
     if (this.state.canScroll) {
       if (e) {
@@ -58,36 +48,18 @@ export default class Desktop extends Component {
           const down = num === 1 && e.target.scrollTop === scrollCap
           const frac = parseFloat(safeTop / scrollCap)
           this.handleScrollBarPos(frac)
-          if (up) {
-            this.handleScrollView(e, 1)
-          } else if (down) {
-            this.handleScrollView(e, 2)
-          }
+          // if (up) {
+          //   this.handleScrollView(e, 1)
+          // } else if (down) {
+          //   this.handleScrollView(e, 2)
+          // }
         }
       } else if (num) {
-        this.handleScrollView(null, num)
+        // this.handleScrollView(null, num)
       }
     } else {
       if (e) this.preventScrollAndReset(e)
     }
-  }
-
-  animateScrollBarReset (num) {
-    let i = 0
-    const interval = setInterval(() => {
-      i++
-      const { scrollBarPosY } = this.state
-
-      // console.log(scrollBarPosY, num)
-
-      this.leftList.scrollTop = 0
-      this.rightList.scrollTop = 0
-      if (scrollBarPosY <= 0.01) {
-        clearInterval(interval)
-      } else {
-        this.setState({ scrollBarPosY: scrollBarPosY - 0.25 })
-      }
-    }, 16)
   }
   
   handleScrollBarPos (frac) {
@@ -99,25 +71,6 @@ export default class Desktop extends Component {
     }
   }
 
-  handleScrollView (e, num) {
-    const view = num === 2 ? 'galleries' : 'events'
-
-    this.props.onSetViewState(view)
-
-    this.animateScrollBarReset(num)
-
-    this.setState({
-      canScroll: false,
-      scrollView: num,
-      animateAmt: num === 2 ? (window.innerHeight - 100) * -1 : 0,
-      view: num === 2 ? 'galleries' : 'events'
-    }, () => {
-      setTimeout(() => {
-        this.setState({ canScroll: true })
-      }, 500)
-    })
-  }
-
   preventScrollAndReset (e) {
     console.log('shouldnt be scrolling')
     e.preventDefault()
@@ -125,8 +78,8 @@ export default class Desktop extends Component {
 
   render () {
     const {
-      state: { animateAmt, scrollBarWidth, scrollBarPosY  },
-      props: { viewState, FBdata, introSeen, mapMarkers, events, galleries, eventsState, showMap, handleToggle, bodyHeight}, handleScrollBarPos
+      state: { animateAmt, scrollBarWidth, scrollBarPosY },
+      props: { viewState, introSeen, mapMarkers, galleries, showMap, bodyHeight, onSetActiveMarker, activeMarker, onSetActualMapMarkers, actualMapMarkers }
     } = this
 
     return (
@@ -135,19 +88,9 @@ export default class Desktop extends Component {
           <ScrollBar yPos={scrollBarPosY} view={viewState} />
         </div>
         <div className='inner-wrapper'>
-          <div id='events-view' className='view-sec'>
-            <div onScroll={e => { this.handleListScroll(e, 1) }} ref={leftList => { this.leftList = leftList }} className='left'>
-              <EventsToggle eventState={eventsState} toggleEventState={handleToggle} />
-              {/* <ListView state={eventsState} list={fakeEvents[eventsState]} /> */}
-              <ListView state={eventsState} list={events} />
-            </div>
-            <div className='right'>
-              { showMap && <GoogleMap markers={mapMarkers('event')} type='events' /> }
-            </div>
-          </div>
           <div id='galleries-view' className='view-sec'>
             <div className='left'>
-              { showMap && <GoogleMap markers={mapMarkers('gallery')} type='galleries' /> }
+              <GoogleMap markers={mapMarkers('gallery')} type='galleries' setActiveMarker={onSetActiveMarker} activeMarker={activeMarker} setActualMapMarkers={onSetActualMapMarkers} actualMapMarkers={actualMapMarkers} />
             </div>
             <div onScroll={e => { this.handleListScroll(e, 2) }} ref={rightList => { this.rightList = rightList }} className='right'>
               {/* <ListView list={fakeGalleries} /> */}
@@ -213,4 +156,3 @@ export default class Desktop extends Component {
 }
 
 Desktop.propTypes = {}
-

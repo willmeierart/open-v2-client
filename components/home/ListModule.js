@@ -208,13 +208,14 @@ export default class ListModule extends Component {
     const actualPos = this.scrollBar ? `${this.scrollBar.getBoundingClientRect().x} ${this.scrollBar.getBoundingClientRect().y}` : '0 0'
     return (
       <div ref={el => { this.container = el }} className='outer-container'>
-        <div className='inner-container'>
+        { data ? <div className='inner-container'>
           <div ref={el => { this.expBtn = el }} onClick={this.handleExpand} className='expand-btn'>{isOpen ? <Minus /> : <Plus /> }</div>
           { this.state.isOpen && <div className='faux-minus'><Minus /></div> }
           <div className='title'>{ data.name }</div>
-          <div className='address'>{ data.location ? data.location.street : data.owner + ' - ' + data.place.location.street }</div>
-          { isOpen && this.contentSwitcher(data) }
-        </div>
+          <div className='address'>{ data.location ? data.location.street : '' }</div>
+          {/* { isOpen && this.contentSwitcher(data) } */}
+          { isOpen && this.renderGalleryContent(data) }
+        </div> : null }
         <style jsx>{`
           .outer-container {
             background: var(--color-lightblue);

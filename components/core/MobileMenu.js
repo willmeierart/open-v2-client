@@ -21,7 +21,7 @@ class MobileMenu extends Component {
   }
 
   renderMarquees () {
-    return ['events', 'galleries', 'links'].map((l, i) => (
+    return ['galleries', 'links'].map((l, i) => (
       <div key={l} onClick={() => { this.props.handleClick(l) }} className='marquee-wrapper'>
         <MarqueeHeader isMobileMenu title={l} />
         <style jsx>{`

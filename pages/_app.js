@@ -2,19 +2,8 @@ import React from 'react'
 import App, { Container } from 'next/app'
 import AppProvider from '../lib/redux/AppProvider'
 import { PageTransition } from 'next-page-transitions'
-// import { binder } from '../lib/_utils'
 
 export default class MyApp extends App {
-  // constructor (props) {
-  //   super(props)
-
-  // }
-  // // handleScroll () {
-
-  // // }
-  // componentDidMount () {
-
-  // }
   render () {
     const { Component } = this.props
     return <Container>

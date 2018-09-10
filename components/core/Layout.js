@@ -15,7 +15,7 @@ class Layout extends Component {
       headerTitle: 'events',
       titleBarHovered: false,
       route: '/',
-      hasSeenIntro: false
+      hasSeenIntro: true //disable intro
     }
     binder(this, ['handleIntro', 'hoverTitleBar', 'handleMenuItemClick'])
   }
@@ -55,15 +55,15 @@ class Layout extends Component {
 
   handleIntro () {
     if (this.splashWrapper) {
-      const SWBounds = this.splashWrapper.getBoundingClientRect()
-      const conds = SWBounds.bottom <= 0
-      if (conds) {
-        this.setState({ introSeen: true }, () => {
+      // const SWBounds = this.splashWrapper.getBoundingClientRect()
+      // const conds = SWBounds.bottom <= 0
+      // if (conds) {
+      //   this.setState({ introSeen: true }, () => {
           window.localStorage.setItem('hasSeenIntro', 'true')
           window.removeEventListener('scroll', this.handleIntro)
           this.props.onSetIntroSeen(true)
-        })
-      }
+    //     })
+    //   }
     }
   }
 
