@@ -21,11 +21,12 @@ export default class Desktop extends Component {
       animateAmt: 0
     }
 
-    binder(this, ['handleListScroll', 'preventScrollAndReset'])
+    binder(this, ['handleListScroll', 'preventScrollAndReset', 'handleScrollBarPos'])
   }
 
   componentDidMount () {
     console.log('desktop')
+    window.addEventListener('resize', this.handleScrollBarPos)
   }
 
   componentDidUpdate (prevProps) {
@@ -79,7 +80,7 @@ export default class Desktop extends Component {
   render () {
     const {
       state: { animateAmt, scrollBarWidth, scrollBarPosY },
-      props: { viewState, introSeen, mapMarkers, galleries, showMap, bodyHeight, onSetActiveMarker, activeMarker, onSetActualMapMarkers, actualMapMarkers }
+      props: { viewState, introSeen, mapMarkers, galleries, showMap, bodyHeight, onSetActiveMarker, activeMarker, onSetActualMapMarkers, actualMapMarkers, children }
     } = this
 
     return (
@@ -90,7 +91,8 @@ export default class Desktop extends Component {
         <div className='inner-wrapper'>
           <div id='galleries-view' className='view-sec'>
             <div className='left'>
-              <GoogleMap markers={mapMarkers('gallery')} type='galleries' setActiveMarker={onSetActiveMarker} activeMarker={activeMarker} setActualMapMarkers={onSetActualMapMarkers} actualMapMarkers={actualMapMarkers} />
+              {/* <GoogleMap markers={mapMarkers('gallery')} type='galleries' setActiveMarker={onSetActiveMarker} activeMarker={activeMarker} setActualMapMarkers={onSetActualMapMarkers} actualMapMarkers={actualMapMarkers} /> */}
+              { children }
             </div>
             <div onScroll={e => { this.handleListScroll(e, 2) }} ref={rightList => { this.rightList = rightList }} className='right'>
               {/* <ListView list={fakeGalleries} /> */}

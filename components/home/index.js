@@ -5,6 +5,7 @@ import { fetchFBdata, setAllMapMarkers, setViewState, setEventsState, setActiveM
 import { gallery, todayEvent, futureEvent } from '../../lib/mockData'
 import ViewMobile from './ViewMobile'
 import ViewDesktop from './ViewDesktop'
+import GoogleMap from './GoogleMap'
 import MarqueeHeader from '../core/MarqueeHeader'
 import { makeMarker, binder } from '../../lib/_utils'
 
@@ -30,7 +31,6 @@ class Home extends Component {
   async componentDidMount () {
     await this.props.onFetchFBdata()
     this.returnMockDataList()
-    window.addEventListener('resize', this.handleScrollBarPos)
   }
 
   componentDidUpdate (prevProps) {
@@ -111,7 +111,7 @@ class Home extends Component {
   }
 
   render () {
-    const { FBdata, introSeen, viewState, eventsState, allMapMarkers, onSetViewState, onSetEventsState } = this.props
+    const { FBdata, introSeen, viewState, eventsState, allMapMarkers, onSetViewState, onSetEventsState, showMap, bodyHeight, onSetActiveMarker, activeMarker, onSetActualMapMarkers, actualMapMarkers, children } = this.props
     const { testEventsList, testGalleriesList, scrollBarWidth, scrollBarPosY } = this.state
 
     const mapMarkers = filter => this.props.allMapMarkers.filter(m => m.type === filter)
@@ -124,8 +124,11 @@ class Home extends Component {
       this.props.isMobile
       ? <ViewMobile {...this.props} events={testEventsList} galleries={galleries} mapMarkers={mapMarkers} showMap={this.showMap} handleToggle={this.handleToggle} bodyHeight={this.bodyHeight}>
         <MarqueeHeader title={viewState} />
+        <GoogleMap markers={mapMarkers('gallery')} type='galleries' setActiveMarker={onSetActiveMarker} activeMarker={activeMarker} setActualMapMarkers={onSetActualMapMarkers} actualMapMarkers={actualMapMarkers} />
       </ViewMobile>
-      : <ViewDesktop {...this.props} events={testEventsList} galleries={galleries} mapMarkers={mapMarkers} showMap={this.showMap} handleToggle={this.handleToggle} bodyHeight={this.bodyHeight} />
+      : <ViewDesktop {...this.props} events={testEventsList} galleries={galleries} mapMarkers={mapMarkers} showMap={this.showMap} handleToggle={this.handleToggle} bodyHeight={this.bodyHeight}>
+        <GoogleMap markers={mapMarkers('gallery')} type='galleries' setActiveMarker={onSetActiveMarker} activeMarker={activeMarker} setActualMapMarkers={onSetActualMapMarkers} actualMapMarkers={actualMapMarkers} />
+      </ViewDesktop>
     }</div>
   }
 }
@@ -149,7 +152,7 @@ function mapStateToProps (state) {
     activeMarker: state.data.activeMarker,
     eventsState: state.ui.eventsState,
     viewState: state.ui.viewState,
-    introSeen: state.env.introSeen,
+    introSeen: state.env.introSeen
   }
 }
 

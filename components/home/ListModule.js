@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import moment from 'moment'
 import Plus from '../assets/plus'
 import Minus from '../assets/minus'
+import FBEventsPlugin from './FBEventsPlugin'
 import { binder } from '../../lib/_utils'
 
 export default class ListModule extends Component {
@@ -147,6 +148,7 @@ export default class ListModule extends Component {
   }
 
   renderGalleryContent (data) {
+    const moduleWidth = this.descripBox ? this.descripBox.getBoundingClientRect().width : 200
     return (
       <div className='expanded-content'>
         <div ref={el => { this.descripBox = el }} className='descrip-outer'>
@@ -157,14 +159,16 @@ export default class ListModule extends Component {
         <div className='img-wrapper'>
           <img src={data.cover} />
         </div>
+        <FBEventsPlugin ID={data.id} width={moduleWidth} />
         <style jsx>{`
           .expanded-content {
             display: flex;
+            flex-direction: column;
             justify-content: space-between;
             margin-top: 1em;
           }
           .descrip-outer {
-            margin-bottom: 1em;
+            margin-bottom: 3em;
             margin-right: .5em;
             height: 6em;
             line-height: 1.5em;

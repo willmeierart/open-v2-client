@@ -37,7 +37,6 @@ export default class Mobile extends Component {
     }
   }
 
-
   handleListScroll (e) {
     // console.log('firing')
     if (this.state.canScroll) {
@@ -74,7 +73,7 @@ export default class Mobile extends Component {
   render () {
     const {
       state: { viewPos, scrollBarPosY },
-      props: { viewState, mapMarkers, eventsState, events, galleries, showMap, handleToggle, bodyHeight },
+      props: { viewState, mapMarkers, eventsState, events, galleries, showMap, handleToggle, bodyHeight, children },
     } = this
 
     const markerType = viewState === 'events' ? 'event' : 'galleries'
@@ -82,7 +81,8 @@ export default class Mobile extends Component {
     return (
       <div className='outer-wrapper'>
         <div id='google-map'>
-          { showMap && <GoogleMap markers={mapMarkers(markerType)} type={viewState} setActiveMarker={this.props.onSetActiveMarker} /> }
+          { showMap && children[1] }
+          {/* { showMap && <GoogleMap markers={mapMarkers(markerType)} type={viewState} setActiveMarker={this.props.onSetActiveMarker} /> } */}
         </div>
         <div className='inner-wrapper'>
           <div id='view'>
@@ -90,11 +90,11 @@ export default class Mobile extends Component {
               <ScrollBar isMobile yPos={scrollBarPosY} view={viewState} />
             </div>
             <div onClick={this.handleTitleBarClick} className='title-wrapper' ref={titleBar => { this.titleBar = titleBar }}>
-              { this.props.children }
+              { children[0] }
             </div>
             <div className='list-section' onScroll={e => { this.handleListScroll(e) }} ref={list => { this.list = list }}>
               <EventsToggle eventState={eventsState} toggleEventState={handleToggle} />
-              <ListView state={eventsState} list={events} />
+              <ListView state={eventsState} list={galleries} />
             </div>
             
           </div>
