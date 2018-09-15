@@ -9,24 +9,25 @@ class GoogleMap extends Component {
     super(props)
     this.state = {
       style: this.props.mapStyles[this.props.view],
-      inited: false
+      inited: false,
+      actualMapMarkers: []
     }
     binder(this, ['toggleActiveMarkers'])
+    this.ACTUAL_MAP_MARKERS = []
   }
 
   componentDidMount () {
-    const mapNode = ReactDOM.findDOMNode(this[`${this.props.type}MapDOM`])
+    const mapNode = ReactDOM.findDOMNode(this.mapDOM)
     const init = () => {
-      if (window.google && this[`${this.props.type}MapDOM`]) {
+      if (window.google && this.mapDOM) {
         const { google } = window
         // init options go here
-        this[`${this.props.type}Map`] = new google.maps.Map(mapNode, {
+        this.map = new google.maps.Map(mapNode, {
           styles: this.props.mapStyles,
           zoom: 14,
           center: { lat: 39.755123, lng: -104.986663 },
           disableDefaultUI: true
         })
-        // const THIS_MAP = this[`${this.props.type}Map`]
 
         this.toggleActiveMarkers()
         this.setState({ inited: true })
@@ -42,29 +43,34 @@ class GoogleMap extends Component {
       this.setState({ style: this.props.mapStyles[this.props.view] })
       // animate func?
     }
-    // if (this.state.inited !== prevState.inited) {
-    //   console.log('INITED CHANGED', this.props.markers.length)
-    //   if (this.props.markers.length > 0) {
-
-    //     this.toggleActiveMarkers()
-    //   }
-    // }
-    // if (this.props.markers !== prevProps.markers) {
-    //   if (this.state.inited) {
-    //     this.toggleActiveMarkers()
-    //   }
-    // }
+    if (this.props.activeMarker !== prevProps.activeMarker) {
+      this.toggleActiveMarkers()
+    }
   }
 
   toggleActiveMarkers () {
-    // console.log('MARKERS', this.props.markers, window.google.maps)
-    return this.props.markers.forEach(marker => {
-      marker.marker.map = this[`${this.props.type}Map`]
-      const MARKER = new window.google.maps.Marker(marker.marker)
-      // trueMarker.map = this[`${this.props.type}MapDOM`]
-      
-      // console.log('ASSIGNING MAP TO:', marker, MARKER)
-    })
+    const markerIDs = this.ACTUAL_MAP_MARKERS.map(m => m.id)
+
+    if (!this.state.inited) {
+      this.props.markers.forEach(marker => {
+        marker.marker.map = this.map
+        const MARKER = new window.google.maps.Marker(marker.marker)
+        MARKER.addListener('click', () => {
+          this.props.setActiveMarker(marker.id)
+        })
+        this.ACTUAL_MAP_MARKERS.push(MARKER)
+      })
+
+      this.setState({ actualMapMarkers: this.ACTUAL_MAP_MARKERS })
+
+    } else {
+      this.state.actualMapMarkers.forEach((marker, i) => {
+        const url = this.props.markers[i].id === this.props.activeMarker
+          ? `/static/assets/ox${Math.floor(Math.random() * 4) + 1}.svg` 
+          : `/static/assets/o${Math.floor(Math.random() * 4) + 1}.svg` 
+        marker.setIcon(url)
+      })
+    }
   }
 
   shouldComponentUpdate (newProps, newState) {
@@ -80,7 +86,7 @@ class GoogleMap extends Component {
   render () {
     return (
       <div className='outer-wrapper'>
-        <div id={`${this.props.type}-map`} className='map' ref={map => { this[`${this.props.type}MapDOM`] = map }} />
+        <div id='map' className='map' ref={map => { this.mapDOM = map }} />
         <style jsx>{`
           .outer-wrapper {
             width: 100%;

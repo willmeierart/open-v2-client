@@ -14,7 +14,8 @@
     "docker:stop": "docker stop <containername>",
     "docker:start": "docker start <containername> && npm run docker:logs",
     "docker:logs": "docker logs -f <containername>",
-    "deploy": "npm run docker:build && npm run docker:clean && npm run docker:run"
+    "deploy": "npm run docker:build && npm run docker:clean && npm run docker:run",
+    "export": "next build && next export"
   },
   "author": "Will Meier",
   "license": "ISC",
@@ -33,6 +34,7 @@
     "graphql": "^0.11.7",
     "graphql-anywhere": "^4.1.11",
     "graphql-tag": "^2.9.2",
+    "immutable": "^3.8.2",
     "isomorphic-fetch": "^2.2.1",
     "isomorphic-unfetch": "^2.0.0",
     "loaders.css": "^0.1.2",

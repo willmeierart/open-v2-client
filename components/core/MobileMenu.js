@@ -21,12 +21,12 @@ class MobileMenu extends Component {
   }
 
   renderMarquees () {
-    return ['events', 'galleries', 'links'].map((l, i) => (
+    return ['galleries', 'links'].map((l, i) => (
       <div key={l} onClick={() => { this.props.handleClick(l) }} className='marquee-wrapper'>
         <MarqueeHeader isMobileMenu title={l} />
         <style jsx>{`
           .marquee-wrapper {
-            background-color: ${i === 0 ? 'var(--color-green)' : i === 1 ? 'var(--color-blue) ' : 'var(--color-orange)'};
+            background-color: ${i === 0 ? 'var(--color-blue) ' : 'var(--color-orange)'};
             height: 100%;
             display: flex;
             flex-direction: column;

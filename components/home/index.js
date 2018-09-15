@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { fetchFBdata, setAllMapMarkers, setViewState, setEventsState } from '../../lib/redux/actions'
+import { fetchFBdata, setAllMapMarkers, setViewState, setEventsState, setActiveMarker, setActualMapMarkers } from '../../lib/redux/actions'
 import { gallery, todayEvent, futureEvent } from '../../lib/mockData'
 import ViewMobile from './ViewMobile'
 import ViewDesktop from './ViewDesktop'
+import GoogleMap from './GoogleMap'
 import MarqueeHeader from '../core/MarqueeHeader'
 import { makeMarker, binder } from '../../lib/_utils'
 
@@ -30,12 +31,15 @@ class Home extends Component {
   async componentDidMount () {
     await this.props.onFetchFBdata()
     this.returnMockDataList()
-    window.addEventListener('resize', this.handleScrollBarPos)
   }
 
   componentDidUpdate (prevProps) {
-    if (this.props.FBdata !== prevProps.FBdata && this.props.allMapMarkers.length < 1) {
-      this.setAllMapMarkers()
+    if (this.props.FBdata && (
+      (this.props.FBdata !== prevProps.FBdata && this.props.allMapMarkers.length < 1) ||
+      this.props.activeMarker !== prevProps.activeMarker
+    )) {
+      this.setAllMapMarkers(this.props.activeMarker)
+      // setTimeout(() => { this.setAllMapMarkers(this.props.activeMarker) })
     }
   }
 
@@ -44,7 +48,8 @@ class Home extends Component {
     const fakeGalleries = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].map(x => gallery)
     const fakeEvents = { today: [0, 0, 0, 0, 0, 0, 0, 0].map(x => todayEvent), upcoming: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].map(x => futureEvent)
     }
-    const testEventsList = FBdata ? FBdata.events[eventsState].concat(fakeEvents[eventsState]) : fakeEvents[eventsState]
+    // const testEventsList = FBdata ? FBdata.events[eventsState].concat(fakeEvents[eventsState]) : fakeEvents[eventsState]
+    const testEventsList = fakeEvents[eventsState]
     const testGalleriesList = FBdata ? FBdata.galleries.concat(fakeGalleries) : fakeGalleries
     this.setState({ testEventsList, testGalleriesList })
   }
@@ -68,23 +73,35 @@ class Home extends Component {
     }))
   }
 
-  setAllMapMarkers () {
-    const { FBdata: { galleries, events: { upcoming, today } } } = this.props
+  setAllMapMarkers (activeMarkerID) {
+    const { FBdata: { galleries, events: { upcoming, today } }, activeMarker } = this.props
     const checker = []
     const markerList = galleries.concat(today).concat(upcoming).reduce((a, b) => {
       const { id, name, type } = b
-      const coords = {
-        lat: b.place ? b.place.location.latitude : b.location.latitude,
-        lng: b.place ? b.place.location.latitude : b.location.longitude
+      if (!b.location) {
+        return a
+      } else {
+        const coords = {
+          lat: b.location.latitude,
+          lng: b.location.longitude
+        }
+        const active = activeMarkerID === b.id
+
+        // console.log(activeMarkerID, activeMarker, b.id)
+
+        const formatObj = {id, name, type, coords, active}
+        const marker = makeMarker(formatObj)
+        if (checker.indexOf(b.id) === -1) {
+          checker.push(b.id)
+          a.push(marker)
+        }
+        // marker.addEventListener('click', () => {
+        //   console.log('marker')
+        // })
+
+        // console.log(marker, checker, b)
+        return a
       }
-      const formatObj = {id, name, type, coords}
-      const marker = makeMarker(formatObj)
-      if (checker.indexOf(b.id) === -1) {
-        checker.push(b.id)
-        a.push(marker)
-      }
-      // console.log(marker, checker)
-      return a
     }, [])
     this.props.onSetAllMapMarkers(markerList)
   }
@@ -94,17 +111,24 @@ class Home extends Component {
   }
 
   render () {
-    const { FBdata, introSeen, viewState, eventsState, allMapMarkers, onSetViewState, onSetEventsState } = this.props
+    const { FBdata, introSeen, viewState, eventsState, allMapMarkers, onSetViewState, onSetEventsState, showMap, bodyHeight, onSetActiveMarker, activeMarker, onSetActualMapMarkers, actualMapMarkers, children } = this.props
     const { testEventsList, testGalleriesList, scrollBarWidth, scrollBarPosY } = this.state
 
     const mapMarkers = filter => this.props.allMapMarkers.filter(m => m.type === filter)
 
+    // console.log(FBdata)
+    
+    const galleries = FBdata ? FBdata.galleries : testGalleriesList
+
     return <div>{
       this.props.isMobile
-      ? <ViewMobile FBdata={FBdata} events={testEventsList} galleries={testGalleriesList} introSeen={introSeen} viewState={viewState} eventsState={eventsState} allMapMarkers={allMapMarkers} onSetViewState={onSetViewState} onSetEventsState={onSetEventsState} mapMarkers={mapMarkers} showMap={this.showMap} handleToggle={this.handleToggle} bodyHeight={this.bodyHeight}>
+      ? <ViewMobile {...this.props} events={testEventsList} galleries={galleries} mapMarkers={mapMarkers} showMap={this.showMap} handleToggle={this.handleToggle} bodyHeight={this.bodyHeight}>
         <MarqueeHeader title={viewState} />
+        <GoogleMap markers={mapMarkers('gallery')} type='galleries' setActiveMarker={onSetActiveMarker} activeMarker={activeMarker} setActualMapMarkers={onSetActualMapMarkers} actualMapMarkers={actualMapMarkers} />
       </ViewMobile>
-      : <ViewDesktop FBdata={FBdata} events={testEventsList} galleries={testGalleriesList} introSeen={introSeen} viewState={viewState} eventsState={eventsState} allMapMarkers={allMapMarkers} onSetViewState={onSetViewState} onSetEventsState={onSetEventsState} mapMarkers={mapMarkers} showMap={this.showMap}  handleToggle={this.handleToggle} bodyHeight={this.bodyHeight}/>
+      : <ViewDesktop {...this.props} events={testEventsList} galleries={galleries} mapMarkers={mapMarkers} showMap={this.showMap} handleToggle={this.handleToggle} bodyHeight={this.bodyHeight}>
+        <GoogleMap markers={mapMarkers('gallery')} type='galleries' setActiveMarker={onSetActiveMarker} activeMarker={activeMarker} setActualMapMarkers={onSetActualMapMarkers} actualMapMarkers={actualMapMarkers} />
+      </ViewDesktop>
     }</div>
   }
 }
@@ -113,13 +137,19 @@ Home.propTypes = {
   FBdata: PropTypes.object,
   onFetchFBdata: PropTypes.func.isRequired,
   onSetAllMapMarkers: PropTypes.func.isRequired,
-  allMapMarkers: PropTypes.array.isRequired
+  onSetActiveMarker: PropTypes.func.isRequired,
+  onSetActualMapMarkers: PropTypes.func.isRequired,
+  allMapMarkers: PropTypes.array.isRequired,
+  actualMapMarkers: PropTypes.array.isRequired,
+  activeMarker: PropTypes.string.isRequired
 }
 
 function mapStateToProps (state) {
   return {
     FBdata: state.data.FBdata,
     allMapMarkers: state.data.allMapMarkers,
+    actualMapMarkers: state.data.allMapMarkers,
+    activeMarker: state.data.activeMarker,
     eventsState: state.ui.eventsState,
     viewState: state.ui.viewState,
     introSeen: state.env.introSeen
@@ -130,8 +160,10 @@ function mapDispatchToProps (dispatch) {
   return {
     onFetchFBdata: () => dispatch(fetchFBdata()),
     onSetAllMapMarkers: markers => dispatch(setAllMapMarkers(markers)),
+    onSetActualMapMarkers: markers => dispatch(setActualMapMarkers(markers)),
     onSetViewState: viewState => dispatch(setViewState(viewState)),
-    onSetEventsState: eventsState => dispatch(setEventsState(eventsState))
+    onSetEventsState: eventsState => dispatch(setEventsState(eventsState)),
+    onSetActiveMarker: activeMarkerID => dispatch(setActiveMarker(activeMarkerID))
   }
 }
 
