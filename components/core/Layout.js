@@ -34,8 +34,9 @@ class Layout extends Component {
           }
         })
         if (this.splashWrapper) window.addEventListener('scroll', this.handleIntro)
-        this.setState({ hasSeenIntro })
-        this.props.onSetIntroSeen(hasSeenIntro)
+        // this.setState({ hasSeenIntro })
+        // this.props.onSetIntroSeen(hasSeenIntro)
+        this.props.onSetIntroSeen(true)
       } else {
         setTimeout(init, 200)
       }

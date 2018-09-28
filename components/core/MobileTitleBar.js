@@ -74,8 +74,8 @@ class MobileTitleBar extends Component {
             width: 100vw;
           }
           .logo-wrapper {
-            padding: 2em;
-            margin-top: -.25em;
+            padding: 2vw;
+            margin-top: -.25vw;
           }
           a {
             color: inherit;
