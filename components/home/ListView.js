@@ -15,7 +15,7 @@ class ListView extends Component {
     const { activeID } = this.props
     const el = ReactDOM.findDOMNode(this[activeID])
     console.log(el, el.offsetTop)
-    scroller.scrollTo(activeID, {
+    scroller.scrollTo(`${activeID}`, {
       duration: 1000,
       // delay: 600,
       smooth: true,
@@ -27,7 +27,7 @@ class ListView extends Component {
     const { list, setActiveMarker, activeID } = this.props
     return list.map((li, i) => (
       <li ref={r => { this[li.id] = r }} key={li.id + i}>
-        <Element name={li.id}>
+        <Element name={`${li.id}`}>
           <ListModule data={li} setActiveMarker={setActiveMarker} activeID={activeID} shouldOpen={activeID === li.id} />
         </Element>
       </li>

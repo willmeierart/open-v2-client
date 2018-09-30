@@ -60,8 +60,9 @@ class Carousel extends Component {
           .outer-wrapper {
             width: 100%;
             height: ${height}px;
-            {/* min-height: 200px; */}
             position: relative;
+            border-size: border-box;
+            border: 2px solid var(--color-green);
           }
           .img {
             position: absolute;
