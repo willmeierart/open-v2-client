@@ -94,7 +94,7 @@ export default class Mobile extends Component {
             </div>
             <div id='list-view' className='list-section' onScroll={e => { this.handleListScroll(e) }} ref={list => { this.list = list }}>
               {/* <EventsToggle eventState={eventsState} toggleEventState={handleToggle} /> */}
-              <ListView state={eventsState} list={galleries} setActiveMarker={setActiveMarker} activeID={activeMarker} />
+              <ListView state={eventsState} list={galleries} setActiveMarker={setActiveMarker} activeID={activeMarker} openList={this.handleTitleBarClick} />
             </div>
             
           </div>

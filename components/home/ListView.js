@@ -7,7 +7,8 @@ import ListModule from './ListModule'
 class ListView extends Component {
   componentDidUpdate (prevProps) {
     if (this.props.activeID !== prevProps.activeID) {
-      setTimeout(this.scrollToEl, 100)
+      if (this.props.openList) this.props.openList()
+      setTimeout(this.scrollToEl, this.props.openList ? 490 : 100)
     }
   }
   scrollToEl = () => {
@@ -19,7 +20,7 @@ class ListView extends Component {
       // delay: 600,
       smooth: true,
       containerId: 'list-view',
-      offset: -130
+      offset: this.props.openList ? -230 : -130
     })
   }
   renderList = () => {
@@ -38,7 +39,7 @@ class ListView extends Component {
         <ul>{ this.renderList() }</ul>
         <style jsx>{`
           ul {
-            margin-top: 3em;
+            margin-top: 2em;
             padding: 0;
           }
         `}</style>
