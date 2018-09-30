@@ -80,7 +80,7 @@ export default class Desktop extends Component {
   render () {
     const {
       state: { animateAmt, scrollBarWidth, scrollBarPosY },
-      props: { viewState, introSeen, mapMarkers, galleries, showMap, bodyHeight, onSetActiveMarker, activeMarker, onSetActualMapMarkers, actualMapMarkers, children }
+      props: { viewState, introSeen, galleries, bodyHeight, activeMarker, children, setActiveMarker }
     } = this
 
     return (
@@ -94,9 +94,9 @@ export default class Desktop extends Component {
               {/* <GoogleMap markers={mapMarkers('gallery')} type='galleries' setActiveMarker={onSetActiveMarker} activeMarker={activeMarker} setActualMapMarkers={onSetActualMapMarkers} actualMapMarkers={actualMapMarkers} /> */}
               { children }
             </div>
-            <div onScroll={e => { this.handleListScroll(e, 2) }} ref={rightList => { this.rightList = rightList }} className='right'>
+            <div id='list-view' onScroll={e => { this.handleListScroll(e, 2) }} ref={rightList => { this.rightList = rightList }} className='right'>
               {/* <ListView list={fakeGalleries} /> */}
-              <ListView list={galleries} />
+              <ListView list={galleries} setActiveMarker={setActiveMarker} activeID={activeMarker} />
             </div>
           </div>
         </div>

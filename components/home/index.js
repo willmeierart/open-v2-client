@@ -111,8 +111,8 @@ class Home extends Component {
   }
 
   render () {
-    const { FBdata, introSeen, viewState, eventsState, allMapMarkers, onSetViewState, onSetEventsState, showMap, bodyHeight, onSetActiveMarker, activeMarker, onSetActualMapMarkers, actualMapMarkers, children } = this.props
-    const { testEventsList, testGalleriesList, scrollBarWidth, scrollBarPosY } = this.state
+    const { FBdata, viewState, onSetActiveMarker, activeMarker, onSetActualMapMarkers, actualMapMarkers } = this.props
+    const { testEventsList, testGalleriesList } = this.state
 
     const mapMarkers = filter => this.props.allMapMarkers.filter(m => m.type === filter)
 
@@ -122,12 +122,20 @@ class Home extends Component {
 
     return <div>{
       this.props.isMobile
-      ? <ViewMobile {...this.props} events={testEventsList} galleries={galleries} mapMarkers={mapMarkers} showMap={this.showMap} handleToggle={this.handleToggle} bodyHeight={this.bodyHeight}>
+      ? <ViewMobile {...this.props} events={testEventsList} galleries={galleries} 
+          mapMarkers={mapMarkers} showMap={this.showMap} handleToggle={this.handleToggle} 
+          bodyHeight={this.bodyHeight} setActiveMarker={onSetActiveMarker} activeMarker={activeMarker}>
         <MarqueeHeader title={viewState} />
-        <GoogleMap markers={mapMarkers('gallery')} type='galleries' setActiveMarker={onSetActiveMarker} activeMarker={activeMarker} setActualMapMarkers={onSetActualMapMarkers} actualMapMarkers={actualMapMarkers} />
+        <GoogleMap markers={mapMarkers('gallery')} type='galleries'
+          setActiveMarker={onSetActiveMarker} activeMarker={activeMarker}
+          setActualMapMarkers={onSetActualMapMarkers} actualMapMarkers={actualMapMarkers} />
       </ViewMobile>
-      : <ViewDesktop {...this.props} events={testEventsList} galleries={galleries} mapMarkers={mapMarkers} showMap={this.showMap} handleToggle={this.handleToggle} bodyHeight={this.bodyHeight}>
-        <GoogleMap markers={mapMarkers('gallery')} type='galleries' setActiveMarker={onSetActiveMarker} activeMarker={activeMarker} setActualMapMarkers={onSetActualMapMarkers} actualMapMarkers={actualMapMarkers} />
+      : <ViewDesktop {...this.props} events={testEventsList} galleries={galleries}
+          mapMarkers={mapMarkers} showMap={this.showMap} handleToggle={this.handleToggle}
+          bodyHeight={this.bodyHeight} setActiveMarker={onSetActiveMarker} activeMarker={activeMarker}>
+        <GoogleMap markers={mapMarkers('gallery')} type='galleries'
+          setActiveMarker={onSetActiveMarker} activeMarker={activeMarker}
+          setActualMapMarkers={onSetActualMapMarkers} actualMapMarkers={actualMapMarkers} />
       </ViewDesktop>
     }</div>
   }

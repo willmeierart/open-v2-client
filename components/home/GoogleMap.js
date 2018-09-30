@@ -7,16 +7,24 @@ import MapStyleManager from './MapStyleManager'
 class GoogleMap extends Component {
   constructor (props) {
     super(props)
+
+    const { activeMarker, markers } = this.props
+
+    const initCenter = activeMarker ? markers.filter(m => m.id === activeMarker).pop().marker.position : { lat: 39.755123, lng: -104.986663 }
+
     this.state = {
       style: this.props.mapStyles[this.props.view],
       inited: false,
-      actualMapMarkers: []
+      actualMapMarkers: [],
+      center: initCenter.lat ? initCenter : this.defaultCenter
     }
     binder(this, ['toggleActiveMarkers'])
     this.ACTUAL_MAP_MARKERS = []
+    this.defaultCenter = { lat: 39.755123, lng: -104.986663 }
   }
 
   componentDidMount () {
+    console.log(this.props)
     const mapNode = ReactDOM.findDOMNode(this.mapDOM)
     const init = () => {
       if (window.google && this.mapDOM) {
@@ -25,7 +33,7 @@ class GoogleMap extends Component {
         this.map = new google.maps.Map(mapNode, {
           styles: this.props.mapStyles,
           zoom: 14,
-          center: { lat: 39.755123, lng: -104.986663 },
+          center: this.state.center,
           disableDefaultUI: true
         })
 
@@ -44,8 +52,25 @@ class GoogleMap extends Component {
       // animate func?
     }
     if (this.props.activeMarker !== prevProps.activeMarker) {
+      const { activeMarker, markers } = this.props
+      const newCenter = markers.filter(m => m.id === activeMarker).pop().marker.position
+
       this.toggleActiveMarkers()
+      this.setState({ center: newCenter.lat ? newCenter : this.defaultCenter }, () => {
+        this.map.panTo(this.state.center)
+      })
     }
+  }
+
+  shouldComponentUpdate (newProps, newState) {
+    if (
+      newState.style !== this.state.style ||
+      newProps.markers !== this.props.markers ||
+      newState.center !== this.state.center
+    ) {
+      return true
+    }
+    return false
   }
 
   toggleActiveMarkers () {
@@ -73,14 +98,36 @@ class GoogleMap extends Component {
     }
   }
 
-  shouldComponentUpdate (newProps, newState) {
-    if (
-      newState.style !== this.state.style ||
-      newProps.markers !== this.props.markers
-    ) {
-      return true
+  setCenterViaMarkers (markers) {
+    if (markers.length > 1) { // only calculate bounds frame if more than one marker
+      let maxLat = null
+      let minLat = null
+      let maxLng = null
+      let minLng = null
+
+      this.setState({ bounds: null }, () => {
+        const markerCenter = markers.reduce((obj, marker) => {
+          if (maxLat === null || marker.position.lat > maxLat) maxLat = marker.position.lat()
+          if (minLat === null || marker.position.lat < minLat) minLat = marker.position.lat()
+          if (maxLng === null || marker.position.lng > maxLng) maxLng = marker.position.lng()
+          if (minLng === null || marker.position.lng < minLng) minLng = marker.position.lng()
+          obj.coords.lat = parseFloat(((maxLat + minLat) / 2).toFixed(5))
+          obj.coords.lng = parseFloat(((maxLng + minLng) / 2).toFixed(5))
+          const invokedPos = { lat: marker.position.lat(), lng: marker.position.lng() }
+          this.setBounds(invokedPos) // expand map bounds to the largest needed to show all markers
+          return obj
+        }, { coords: { lat: 0, lng: 0 } })
+        if (markerCenter.coords.lat === 0 && markerCenter.coords.lng === 0 ) {
+          console.warn('markercenter.Coords are 0,0 - defaulting to props.center');
+          this.setCenter(this.props.center)
+        } else {
+          this.setCenter(markerCenter.coords)
+        }
+      })
+    } else if (markers.length === 1) {
+      const { lat, lng } = markers[0].position
+      this.setCenter({ lat: lat(), lng: lng() })
     }
-    return false
   }
 
   render () {

@@ -3,11 +3,11 @@ import PropTypes from 'prop-types'
 import moment from 'moment'
 import Plus from '../assets/plus'
 import Minus from '../assets/minus'
+import Carousel from './Carousel'
 import FBEventsPlugin from './FBEventsPlugin'
 import { binder } from '../../lib/_utils'
 
 export default class ListModule extends Component {
-  // console.log(data)
   constructor (props) {
     super(props)
     this.state = {
@@ -16,49 +16,71 @@ export default class ListModule extends Component {
       xAmt: 0,
       yAmt: 0,
       scrollBarPos: 0,
-      shouldAnimate: true
+      shouldAnimate: true,
+      noScrollBar: false,
+      imgHeight: 0
     }
-    binder(this, ['handleExpand', 'renderEventContent', 'renderGalleryContent', 'contentSwitcher', 'handleScroll', 'parseDate'])
+    binder(this, ['handleExpand', 'manualExpand', /*'renderEventContent',*/ 'renderGalleryContent', 'contentSwitcher', 'handleScroll', 'parseDate'])
   }
 
   componentDidMount () {
+    if (this.props.shouldOpen) {
+      this.handleExpand(true)
+    }
   }
-  
+
+  componentDidUpdate (prevProps) {
+    if (prevProps.shouldOpen !== this.props.shouldOpen) {
+      this.handleExpand(this.props.shouldOpen)
+    }
+  }
+
   shouldComponentUpdate (nextProps, nextState) {
-    if (this.state !== nextState) {
+    if (this.state !== nextState || this.props.shouldOpen !== nextProps.shouldOpen) {
       return true
     } else {
       return false
     }
   }
 
-  handleExpand () {
-    this.setState({ isOpen: !this.state.isOpen })
-    
+  manualExpand () {
+    if (this.props.data.location) {
+      this.props.setActiveMarker(this.props.data.id)
+    }
+    this.handleExpand()
+  }
+
+  handleExpand (force) {
+    this.setState({ isOpen: force || !this.state.isOpen })
     setTimeout(() => {
-      if (this.state.isOpen && this.state.isOpen && this.state.shouldAnimate) {
-        console.log('CONTAINER: ', this.container.getBoundingClientRect())
-        console.log('DESCRIPBOX: ', this.descripBox.getBoundingClientRect())
-        console.log('SCROLLBAR: ', this.scrollBar.getBoundingClientRect())
-        console.log('EXPBTN: ', this.expBtn.getBoundingClientRect())
+      if (this.state.isOpen) {
+        this.setState({ imgHeight: this.descripBox.getBoundingClientRect().width })
+        if (this.descripBox.scrollHeight < this.descripBoxInner.scrollHeight) {
+          if (this.state.shouldAnimate) {
+            console.log('DESCRIPBOX: ', this.descripBox.scrollHeight)
+            console.log('DESCRIPBOXINNER: ', this.descripBoxInner.scrollHeight)
 
-        const oX = this.expBtn.getBoundingClientRect().x
-        const oY = this.expBtn.getBoundingClientRect().y
-        const dX = this.scrollBar.getBoundingClientRect().x
-        const dY = this.scrollBar.getBoundingClientRect().y
+            const oX = this.expBtn.getBoundingClientRect().x
+            const oY = this.expBtn.getBoundingClientRect().y
+            const dX = this.scrollBar.getBoundingClientRect().x
+            const dY = this.scrollBar.getBoundingClientRect().y
 
-        const xAmt = dX - oX + 6
-        const yAmt = dY - oY
+            const xAmt = dX - oX + 6
+            const yAmt = dY - oY
 
-        this.setState({
-          xAmt,
-          yAmt
-        }, () => {
-          setTimeout(() => {
-            this.setState({ scrollBarActual: true, shouldAnimate: false })
-          }, 900)
-        })
-      } else if (!this.state.isOpen) {
+            this.setState({
+              xAmt,
+              yAmt
+            }, () => {
+              setTimeout(() => {
+                this.setState({ scrollBarActual: true, shouldAnimate: false })
+              }, 900)
+            })
+          }
+        } else {
+          this.setState({ noScrollBar: true })
+        }
+      } else {
         this.setState({ scrollBarActual: false, shouldAnimate: true })
       }
     })
@@ -91,74 +113,75 @@ export default class ListModule extends Component {
     }
   }
 
-  renderEventContent (data) {
-    const date = `${this.parseDate(data.start_time).time} - ${this.parseDate(data.end_time).time}, ${this.parseDate(data.start_time).date}`
-    return (
-      <div className='expanded-content'>
-        <div className='date'>
-          <span>{ date }</span>
-        </div>
-        <div ref={el => { this.descripBox = el }} className='descrip-outer'>
-          <div ref={el => { this.scrollBar = el }} className='scrollbar-minus'><Minus /></div>
-          <div ref={el => { this.descripBoxInner = el }} onScroll={this.handleScroll} className='descrip-inner'>{ data.description }</div>
-        </div>
-        <div className='img-wrapper'>
-          <img src={data.cover} />
-        </div>
-        <style jsx>{`
-          .expanded-content {
+  // renderEventContent (data) {
+  //   const date = `${this.parseDate(data.start_time).time} - ${this.parseDate(data.end_time).time}, ${this.parseDate(data.start_time).date}`
+  //   return (
+  //     <div className='expanded-content'>
+  //       <div className='date'>
+  //         <span>{ date }</span>
+  //       </div>
+  //       <div ref={el => { this.descripBox = el }} className='descrip-outer'>
+  //         <div ref={el => { this.scrollBar = el }} className='scrollbar-minus'><Minus /></div>
+  //         <div ref={el => { this.descripBoxInner = el }} onScroll={this.handleScroll} className='descrip-inner'>{ data.description }</div>
+  //       </div>
+  //       <div className='img-wrapper'>
+  //         <img src={data.cover} />
+  //       </div>
+  //       <style jsx>{`
+  //         .expanded-content {
             
-          }
-          .date {
-            margin-bottom: 1em;
-          }
-          .descrip-outer {
-            margin-bottom: 1em;
-            margin-right: .5em;
-            height: 6em;
-            line-height: 1.5em;
-            position: relative;
-          }
-          .descrip-inner {
-            overflow: ${this.state.scrollBarActual ? 'scroll' : 'hidden'};
-            width: 100%;
-            height: 100%;
-            overflow-wrap: break-word;
-            padding-right: 1em;
-            box-sizing: border-box;
-          }
-          .scrollbar-minus {
-            transform: rotate(90deg);
-            position: absolute;
-            top: ${this.state.scrollBarPos}px;
-            right: -1em;
-            visibility: ${!this.state.scrollBarActual && 'hidden'};
-          }
-          .img-wrapper {
-            width: 100%; 
-            object-fit: cover;
-          }
-          img {
-            width: 100%;
-            height: 100%;
-          }
-        `}</style>
-      </div>
-    )
-  }
+  //         }
+  //         .date {
+  //           margin-bottom: 1em;
+  //         }
+  //         .descrip-outer {
+  //           margin-bottom: 1em;
+  //           margin-right: .5em;
+  //           height: 6em;
+  //           line-height: 1.5em;
+  //           position: relative;
+  //         }
+  //         .descrip-inner {
+  //           overflow: ${this.state.scrollBarActual ? 'scroll' : 'hidden'};
+  //           width: 100%;
+  //           height: 100%;
+  //           overflow-wrap: break-word;
+  //           padding-right: 1em;
+  //           box-sizing: border-box;
+  //         }
+  //         .scrollbar-minus {
+  //           transform: rotate(90deg);
+  //           position: absolute;
+  //           top: ${this.state.scrollBarPos}px;
+  //           right: -1em;
+  //           visibility: ${!this.state.scrollBarActual && 'hidden'};
+  //         }
+  //         .img-wrapper {
+  //           width: 100%; 
+  //           object-fit: cover;
+  //         }
+  //         img {
+  //           width: 100%;
+  //           height: 100%;
+  //         }
+  //       `}</style>
+  //     </div>
+  //   )
+  // }
 
   renderGalleryContent (data) {
     const moduleWidth = this.descripBox ? this.descripBox.getBoundingClientRect().width : 200
     return (
       <div className='expanded-content'>
         <div ref={el => { this.descripBox = el }} className='descrip-outer'>
-          <div ref={el => { this.scrollBar = el }} className='scrollbar-minus'><Minus /></div>
+          <div ref={el => { this.scrollBar = el }} className='scrollbar-minus'>{ !this.state.noScrollBar && <Minus /> }</div>
           <div ref={el => { this.descripBoxInner = el }} onScroll={this.handleScroll} className='descrip-inner'>{ data.about ? data.about : data.description }</div>
-          <div className='link'> some email </div>
+          { data.email && <div className='website'><a href={`mailto:${data.email}`}>{ data.email }</a></div>}
         </div>
-        <div className='img-wrapper'>
-          <img src={data.cover} />
-        </div>
+        {/* <div className='img-wrapper'>
+          <img src={data.images[0]} />
+        </div> */}
+        {data.images.length > 0 && <Carousel images={data.images} height={this.state.imgHeight} /> }
         <FBEventsPlugin ID={data.id} width={moduleWidth} />
         <style jsx>{`
           .expanded-content {
@@ -197,6 +220,9 @@ export default class ListModule extends Component {
             width: 100%;
             height: 100%;
           }
+          a:hover {
+            text-transform: uppercase;
+          }
         `}</style>
       </div>
     )
@@ -211,10 +237,10 @@ export default class ListModule extends Component {
     const { isOpen, xAmt, yAmt } = this.state
     const actualPos = this.scrollBar ? `${this.scrollBar.getBoundingClientRect().x} ${this.scrollBar.getBoundingClientRect().y}` : '0 0'
     return (
-      <div ref={el => { this.container = el }} className='outer-container'>
+      <div ref={el => { this.container = el }} className='outer-container' id={data.id}>
         { data ? <div className='inner-container'>
-          <div ref={el => { this.expBtn = el }} onClick={this.handleExpand} className='expand-btn'>{isOpen ? <Minus /> : <Plus /> }</div>
-          { this.state.isOpen && <div className='faux-minus'><Minus /></div> }
+          <div ref={el => { this.expBtn = el }} onClick={this.manualExpand} className='expand-btn'>{isOpen ? <Minus /> : <Plus /> }</div>
+          { this.state.isOpen && !this.state.noScrollBar && <div className='faux-minus'><Minus /></div> }
           <div className='title'>{ data.name }</div>
           <div className='address'>{ data.location ? data.location.street : '' }</div>
           {/* { isOpen && this.contentSwitcher(data) } */}

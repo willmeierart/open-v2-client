@@ -73,7 +73,7 @@ export default class Mobile extends Component {
   render () {
     const {
       state: { viewPos, scrollBarPosY },
-      props: { viewState, mapMarkers, eventsState, events, galleries, showMap, handleToggle, bodyHeight, children },
+      props: { viewState, eventsState, galleries, showMap, handleToggle, bodyHeight, children, setActiveMarker, activeMarker }
     } = this
 
     const markerType = viewState === 'events' ? 'event' : 'galleries'
@@ -92,9 +92,9 @@ export default class Mobile extends Component {
             <div onClick={this.handleTitleBarClick} className='title-wrapper' ref={titleBar => { this.titleBar = titleBar }}>
               { children[0] }
             </div>
-            <div className='list-section' onScroll={e => { this.handleListScroll(e) }} ref={list => { this.list = list }}>
-              <EventsToggle eventState={eventsState} toggleEventState={handleToggle} />
-              <ListView state={eventsState} list={galleries} />
+            <div id='list-view' className='list-section' onScroll={e => { this.handleListScroll(e) }} ref={list => { this.list = list }}>
+              {/* <EventsToggle eventState={eventsState} toggleEventState={handleToggle} /> */}
+              <ListView state={eventsState} list={galleries} setActiveMarker={setActiveMarker} activeID={activeMarker} />
             </div>
             
           </div>

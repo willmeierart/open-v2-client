@@ -21,7 +21,7 @@ const FBEventsPlugin = ({ ID, width }) => {
 }
 
 FBEventsPlugin.propTypes = {
-  id: PropTypes.string.isRequired
+  ID: PropTypes.string.isRequired
 }
 
 export default FBEventsPlugin
