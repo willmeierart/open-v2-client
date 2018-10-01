@@ -23,7 +23,6 @@ export default class CustomDocument extends Document {
               fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));</script>
           ` }} />
-          
           <div className='main-sec'>
             <Main />
             <NextScript />

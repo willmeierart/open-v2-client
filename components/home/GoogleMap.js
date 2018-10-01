@@ -16,7 +16,9 @@ class GoogleMap extends Component {
       style: this.props.mapStyles[this.props.view],
       inited: false,
       actualMapMarkers: [],
-      center: initCenter.lat ? initCenter : this.defaultCenter
+      center: initCenter.lat ? initCenter : this.defaultCenter,
+      bounds: null,
+      selectBegun: false
     }
     binder(this, ['toggleActiveMarkers'])
     this.ACTUAL_MAP_MARKERS = []
@@ -38,7 +40,14 @@ class GoogleMap extends Component {
         })
 
         this.toggleActiveMarkers()
-        this.setState({ inited: true })
+        this.setState({ inited: true }, () => {
+          this.setCenterViaMarkers(this.ACTUAL_MAP_MARKERS)
+        })
+        // window.google.maps.event.addListener(this.map, 'idle', () => {
+        //   if (this.map.getZoom() !== 14) {
+        //     this.map.setZoom(14)
+        //   }
+        // })
       } else {
         setTimeout(init, 800)
       }
@@ -49,14 +58,13 @@ class GoogleMap extends Component {
   componentDidUpdate (prevProps, prevState) {
     if (this.props.view !== prevProps.view) {
       this.setState({ style: this.props.mapStyles[this.props.view] })
-      // animate func?
     }
     if (this.props.activeMarker !== prevProps.activeMarker) {
       const { activeMarker, markers } = this.props
       const newCenter = markers.filter(m => m.id === activeMarker).pop().marker.position
 
       this.toggleActiveMarkers()
-      this.setState({ center: newCenter.lat ? newCenter : this.defaultCenter }, () => {
+      this.setState({ center: newCenter.lat ? newCenter : this.defaultCenter, selectBegun: true }, () => {
         this.map.panTo(this.state.center)
       })
     }
@@ -74,8 +82,6 @@ class GoogleMap extends Component {
   }
 
   toggleActiveMarkers () {
-    const markerIDs = this.ACTUAL_MAP_MARKERS.map(m => m.id)
-
     if (!this.state.inited) {
       this.props.markers.forEach(marker => {
         marker.marker.map = this.map
@@ -107,26 +113,47 @@ class GoogleMap extends Component {
 
       this.setState({ bounds: null }, () => {
         const markerCenter = markers.reduce((obj, marker) => {
-          if (maxLat === null || marker.position.lat > maxLat) maxLat = marker.position.lat()
-          if (minLat === null || marker.position.lat < minLat) minLat = marker.position.lat()
-          if (maxLng === null || marker.position.lng > maxLng) maxLng = marker.position.lng()
-          if (minLng === null || marker.position.lng < minLng) minLng = marker.position.lng()
-          obj.coords.lat = parseFloat(((maxLat + minLat) / 2).toFixed(5))
-          obj.coords.lng = parseFloat(((maxLng + minLng) / 2).toFixed(5))
-          const invokedPos = { lat: marker.position.lat(), lng: marker.position.lng() }
-          this.setBounds(invokedPos) // expand map bounds to the largest needed to show all markers
+          const mainCluster = marker.title.toLowerCase().indexOf('boulder') === -1 &&
+            marker.title.toLowerCase().indexOf('dairy') === -1 &&
+            marker.title.toLowerCase().indexOf('gym') === -1 &&
+            marker.title.toLowerCase().indexOf('myhren') === -1
+          if (marker.position && mainCluster) {
+            if (maxLat === null || marker.position.lat > maxLat) maxLat = marker.position.lat()
+            if (minLat === null || marker.position.lat < minLat) minLat = marker.position.lat()
+            if (maxLng === null || marker.position.lng > maxLng) maxLng = marker.position.lng()
+            if (minLng === null || marker.position.lng < minLng) minLng = marker.position.lng()
+            obj.coords.lat = parseFloat(((maxLat + minLat) / 2).toFixed(5))
+            obj.coords.lng = parseFloat(((maxLng + minLng) / 2).toFixed(5))
+            const invokedPos = { lat: marker.position.lat(), lng: marker.position.lng() }
+            this.setBounds(invokedPos) // expand map bounds to the largest needed to show all markers
+          }
           return obj
         }, { coords: { lat: 0, lng: 0 } })
         if (markerCenter.coords.lat === 0 && markerCenter.coords.lng === 0 ) {
           console.warn('markercenter.Coords are 0,0 - defaulting to props.center');
-          this.setCenter(this.props.center)
+          this.map.setCenter(this.props.center)
         } else {
-          this.setCenter(markerCenter.coords)
+          this.map.setCenter(markerCenter.coords)
         }
       })
     } else if (markers.length === 1) {
       const { lat, lng } = markers[0].position
       this.setCenter({ lat: lat(), lng: lng() })
+    }
+  }
+
+  setBounds (marker) {
+    const mainAction = () => {
+      if (marker) {
+        this.setState({ bounds: this.state.bounds.extend(marker) }, () => {
+          this.map.fitBounds(this.state.bounds) // center map around markers
+        })
+      }
+    }
+    if (!this.state.bounds) { // init bounds
+      this.setState({ bounds: new window.google.maps.LatLngBounds() }, mainAction)
+    } else {
+      mainAction()
     }
   }
 

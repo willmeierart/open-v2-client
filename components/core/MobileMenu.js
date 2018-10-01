@@ -51,7 +51,7 @@ class MobileMenu extends Component {
             width: 100vw;
             margin-left: -10px;
             height: calc(100vh - 100px);
-            transition: transform 1s linear;
+            transition: transform 800ms linear;
             transform: translateX(${!this.props.isOpen || !this.state.inited ? window.innerWidth : 0}px);
             box-sizing: content-box;
             border-left: 10px solid black;

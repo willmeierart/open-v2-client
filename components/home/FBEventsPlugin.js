@@ -1,23 +1,41 @@
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-const FBEventsPlugin = ({ ID, width }) => {
-  return (
-    <div className='outer-container'>
-      <div className='fb-page' data-href={`https://www.facebook.com/${ID}`} data-tabs='events' data-small-header='true' data-adapt-container-width='true' data-hide-cover='true' data-show-facepile='false' data-hide-cta='true'/>
-      <style jsx>{`
-        .fb-page {
-          width: ${width}px;
-          min-height: ${width}px;
-        }
-        .outer-container {
-          width: ${width}px;
-          height: ${width}px;
-          display: flex;
-          align-items: center;
-        }
-      `}</style>
-    </div>
-  )
+class FBEventsPlugin extends Component {
+  constructor (props) {
+    super(props)
+    this.state = { loaded: false }
+  }
+  componentDidMount () {
+    FB.XFBML.parse()
+    setTimeout(() => {
+      this.setState({ loaded: true })
+    }, 1000)
+  }
+  render () {
+    const { ID, width } = this.props
+    return (
+      <div className='outer-container'>
+        <div className='fb-page' data-href={`https://www.facebook.com/${ID}`} data-tabs='events' data-small-header='true' data-adapt-container-width='true' data-hide-cover='true' data-show-facepile='false' data-hide-cta='true' />
+        <style jsx>{`
+          .outer-container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          .fb-page {
+            margin: 2em;
+            display: ${this.state.loaded ? 'block' : 'none'};
+            border: 2px solid var(--color-green);
+            box-sizing: border-box;
+            width: fit-content;
+            min-width: 300px;
+          }
+        `}</style>
+      </div>
+    )
+  }
 }
 
 FBEventsPlugin.propTypes = {

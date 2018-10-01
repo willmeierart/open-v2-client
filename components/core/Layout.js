@@ -15,14 +15,15 @@ class Layout extends Component {
       headerTitle: 'events',
       titleBarHovered: false,
       route: '/',
-      hasSeenIntro: true //disable intro
+      hasSeenIntro: true, //disable intro,
+      isClient: false
     }
     binder(this, ['handleIntro', 'hoverTitleBar', 'handleMenuItemClick'])
   }
-
   componentDidMount () {
     const init = () => {
       if (typeof window !== 'undefined') {
+        this.setState({ isClient: true })
         const { hasSeenIntro } = window.localStorage
         this.props.onCheckIfMobile()
         window.addEventListener('resize', () => {
@@ -98,7 +99,7 @@ class Layout extends Component {
 
   render () {
     const { children, onSetViewState, router: { route }, isMobile, introSeen } = this.props
-    const { headerTitle, titleBarHovered, hasSeenIntro } = this.state
+    const { headerTitle, titleBarHovered, hasSeenIntro, isClient } = this.state
     return (
       <div className='Layout-outer'>
         <div className='Layout-inner'>

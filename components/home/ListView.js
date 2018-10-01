@@ -7,10 +7,11 @@ import ListModule from './ListModule'
 class ListView extends Component {
   componentDidUpdate (prevProps) {
     if (this.props.activeID !== prevProps.activeID) {
-      if (this.props.openList) this.props.openList()
+      if (this.props.openList && !this.props.listOpen) this.props.openList()
       setTimeout(this.scrollToEl, this.props.openList ? 490 : 100)
     }
   }
+
   scrollToEl = () => {
     const { activeID } = this.props
     const el = ReactDOM.findDOMNode(this[activeID])
@@ -23,16 +24,18 @@ class ListView extends Component {
       offset: this.props.openList ? -230 : -130
     })
   }
+
   renderList = () => {
-    const { list, setActiveMarker, activeID } = this.props
+    const { list, setActiveMarker, activeID, openList, listOpen } = this.props
     return list.map((li, i) => (
       <li ref={r => { this[li.id] = r }} key={li.id + i}>
         <Element name={`${li.id}`}>
-          <ListModule data={li} setActiveMarker={setActiveMarker} activeID={activeID} shouldOpen={activeID === li.id} />
+          <ListModule data={li} setActiveMarker={setActiveMarker} activeID={activeID} shouldOpen={activeID === li.id} openList={openList} listOpen={listOpen} />
         </Element>
       </li>
     ))
   }
+  
   render () {
     return (
       <div className='outer-container'>

@@ -49,7 +49,6 @@ class Carousel extends Component {
       entering: { opacity: 0 },
       entered: { opacity: 1, transition: `opacity ${duration}ms ease-out` }
     }
-    console.log(height)
     return (
       <div className='outer-wrapper'>
         <Transition in={!this.state.transition} timeout={duration}>
@@ -70,9 +69,8 @@ class Carousel extends Component {
             height: 100%;
             top: 0;
             left: 0;
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: middle;
+            background-size: contain;
+            background-position: center;
           }
           .img.a {
             background-image: url('${images[activeImageIdxA]}');

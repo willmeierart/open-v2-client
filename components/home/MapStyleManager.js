@@ -140,8 +140,7 @@ export default function MapStyleManager (ComposedComponent) {
         ]
       }
     }
-    componentDidMount() { }
-    render() {
+    render () {
       return (
         <ComposedComponent mapStyles={this.styles.base.concat(this.styles[this.props.type])} {...this.props} />
       )

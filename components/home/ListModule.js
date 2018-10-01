@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import moment from 'moment'
 import Plus from '../assets/plus'
 import Minus from '../assets/minus'
+import LinkOut from '../assets/LinkOut'
 import Carousel from './Carousel'
 import FBEventsPlugin from './FBEventsPlugin'
 import { binder } from '../../lib/_utils'
@@ -20,7 +21,7 @@ export default class ListModule extends Component {
       noScrollBar: false,
       imgHeight: 0
     }
-    binder(this, ['handleExpand', 'manualExpand', /*'renderEventContent',*/ 'renderGalleryContent', 'contentSwitcher', 'handleScroll', 'parseDate'])
+    binder(this, ['handleExpand', 'manualExpand', 'renderGalleryContent', 'contentSwitcher', 'handleScroll', 'parseDate'])
   }
 
   componentDidMount () {
@@ -57,9 +58,6 @@ export default class ListModule extends Component {
         this.setState({ imgHeight: this.descripBox.getBoundingClientRect().width })
         if (this.descripBox.scrollHeight < this.descripBoxInner.scrollHeight) {
           if (this.state.shouldAnimate) {
-            console.log('DESCRIPBOX: ', this.descripBox.scrollHeight)
-            console.log('DESCRIPBOXINNER: ', this.descripBoxInner.scrollHeight)
-
             const oX = this.expBtn.getBoundingClientRect().x
             const oY = this.expBtn.getBoundingClientRect().y
             const dX = this.scrollBar.getBoundingClientRect().x
@@ -87,10 +85,6 @@ export default class ListModule extends Component {
   }
 
   handleScroll (e) {
-    // if (e.target === this.descripBoxInner) {
-
-    // }
-    
     if (this.state.scrollBarActual) {
       const scrollCap = e.target.scrollHeight - e.target.getBoundingClientRect().height
       const safeTop = e.target.scrollTop === 0 ? 1 : e.target.scrollTop
@@ -113,62 +107,6 @@ export default class ListModule extends Component {
     }
   }
 
-  // renderEventContent (data) {
-  //   const date = `${this.parseDate(data.start_time).time} - ${this.parseDate(data.end_time).time}, ${this.parseDate(data.start_time).date}`
-  //   return (
-  //     <div className='expanded-content'>
-  //       <div className='date'>
-  //         <span>{ date }</span>
-  //       </div>
-  //       <div ref={el => { this.descripBox = el }} className='descrip-outer'>
-  //         <div ref={el => { this.scrollBar = el }} className='scrollbar-minus'><Minus /></div>
-  //         <div ref={el => { this.descripBoxInner = el }} onScroll={this.handleScroll} className='descrip-inner'>{ data.description }</div>
-  //       </div>
-  //       <div className='img-wrapper'>
-  //         <img src={data.cover} />
-  //       </div>
-  //       <style jsx>{`
-  //         .expanded-content {
-            
-  //         }
-  //         .date {
-  //           margin-bottom: 1em;
-  //         }
-  //         .descrip-outer {
-  //           margin-bottom: 1em;
-  //           margin-right: .5em;
-  //           height: 6em;
-  //           line-height: 1.5em;
-  //           position: relative;
-  //         }
-  //         .descrip-inner {
-  //           overflow: ${this.state.scrollBarActual ? 'scroll' : 'hidden'};
-  //           width: 100%;
-  //           height: 100%;
-  //           overflow-wrap: break-word;
-  //           padding-right: 1em;
-  //           box-sizing: border-box;
-  //         }
-  //         .scrollbar-minus {
-  //           transform: rotate(90deg);
-  //           position: absolute;
-  //           top: ${this.state.scrollBarPos}px;
-  //           right: -1em;
-  //           visibility: ${!this.state.scrollBarActual && 'hidden'};
-  //         }
-  //         .img-wrapper {
-  //           width: 100%; 
-  //           object-fit: cover;
-  //         }
-  //         img {
-  //           width: 100%;
-  //           height: 100%;
-  //         }
-  //       `}</style>
-  //     </div>
-  //   )
-  // }
-
   renderGalleryContent (data) {
     const moduleWidth = this.descripBox ? this.descripBox.getBoundingClientRect().width : 200
     return (
@@ -183,6 +121,12 @@ export default class ListModule extends Component {
         </div> */}
         {data.images.length > 0 && <Carousel images={data.images} height={this.state.imgHeight} /> }
         <FBEventsPlugin ID={data.id} width={moduleWidth} />
+        { data.site &&
+          <div className='site-link'>
+            <a href={data.site}>{data.site.split('//')[1]}</a>
+            <LinkOut/>
+          </div>
+        }
         <style jsx>{`
           .expanded-content {
             display: flex;
@@ -204,6 +148,7 @@ export default class ListModule extends Component {
             overflow-wrap: break-word;
             padding-right: 1em;
             box-sizing: border-box;
+            white-space: pre-line;
           }
           .scrollbar-minus {
             transform: rotate(90deg);
@@ -223,6 +168,12 @@ export default class ListModule extends Component {
           a:hover {
             text-transform: uppercase;
           }
+          .site-link {
+            display: flex;
+          }
+          .site-link a {
+            margin-right: .5em;
+          }
         `}</style>
       </div>
     )
@@ -233,7 +184,7 @@ export default class ListModule extends Component {
   }
 
   render () {
-    const { data, handleToggle } = this.props
+    const { data, handleToggle, listOpen, openList } = this.props
     const { isOpen, xAmt, yAmt } = this.state
     const actualPos = this.scrollBar ? `${this.scrollBar.getBoundingClientRect().x} ${this.scrollBar.getBoundingClientRect().y}` : '0 0'
     return (
@@ -245,6 +196,7 @@ export default class ListModule extends Component {
           <div className='address'>{ data.location ? data.location.street : '' }</div>
           {/* { isOpen && this.contentSwitcher(data) } */}
           { isOpen && this.renderGalleryContent(data) }
+          { openList && listOpen && data.location && <div className='see-on-map' onClick={openList}>See on map</div> }
         </div> : null }
         <style jsx>{`
           .outer-container {
@@ -263,8 +215,6 @@ export default class ListModule extends Component {
             width: 1em;
             height: 1em;
             z-index: 2;
-            // transform: ${data.type === 'event' ? !isOpen ? 'rotate(-90deg)' : 'rotate(-180deg)' : 'rotate(0deg)'};
-            // transition: ${data.type === 'event' && 'transform 1s'};
           }
           .faux-minus {
             position: absolute;
@@ -279,6 +229,9 @@ export default class ListModule extends Component {
           .title {
             font-weight: 700;
             text-transform: uppercase;
+          }
+          .see-on-map {
+            cursor: pointer;
           }
           @keyframes moveMinus {
             0% {

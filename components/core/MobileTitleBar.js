@@ -21,7 +21,7 @@ class MobileTitleBar extends Component {
       this.setState({ animateIn: false })
       setTimeout(() => {
         this.setState({ menuOpen: false })
-      }, 1000)
+      }, 800)
     } else {
       this.setState({ menuOpen: true, animateIn: true })
     }
@@ -44,7 +44,7 @@ class MobileTitleBar extends Component {
               </a></Link>
             </div>
             <div className='nav-icon-wrapper'>
-              <MobileNavIcon menuIsOpen={menuOpen} handleClick={this.openMenu} />
+              <MobileNavIcon menuIsOpen={animateIn} handleClick={this.openMenu} />
             </div>
             { menuOpen &&
               <div className='menu-wrapper'>

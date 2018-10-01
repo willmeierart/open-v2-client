@@ -72,7 +72,7 @@ export default class Mobile extends Component {
 
   render () {
     const {
-      state: { viewPos, scrollBarPosY },
+      state: { viewPos, scrollBarPosY, viewOpen },
       props: { viewState, eventsState, galleries, showMap, handleToggle, bodyHeight, children, setActiveMarker, activeMarker }
     } = this
 
@@ -94,7 +94,7 @@ export default class Mobile extends Component {
             </div>
             <div id='list-view' className='list-section' onScroll={e => { this.handleListScroll(e) }} ref={list => { this.list = list }}>
               {/* <EventsToggle eventState={eventsState} toggleEventState={handleToggle} /> */}
-              <ListView state={eventsState} list={galleries} setActiveMarker={setActiveMarker} activeID={activeMarker} openList={this.handleTitleBarClick} />
+              <ListView state={eventsState} list={galleries} setActiveMarker={setActiveMarker} activeID={activeMarker} listOpen={viewOpen} openList={this.handleTitleBarClick} />
             </div>
             
           </div>
