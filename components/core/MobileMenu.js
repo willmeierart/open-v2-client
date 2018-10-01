@@ -40,6 +40,7 @@ class MobileMenu extends Component {
   }
 
   render () {
+    console.log(this.props);
     return (
       <div className='outer-container'>
         <div className='inner-container'>

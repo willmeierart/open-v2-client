@@ -1,11 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 import { binder } from '../../lib/_utils'
-import { gallery, todayEvent, futureEvent } from '../../lib/mockData'
 import ListView from './ListView'
-import GoogleMap from './GoogleMap'
-import EventsToggle from './EventsToggle'
 import ScrollBar from './ScrollBar'
 
 export default class Mobile extends Component {
@@ -13,10 +9,8 @@ export default class Mobile extends Component {
     super(props)
     this.state = {
       canScroll: true,
-      view: 'galleries', // || 'events'
       animateAmt: 0,
       viewPos: 'calc(100vh - 4em - 230px)',
-      // eventsState: 'today', // || 'upcoming',
       scrollBarPosY: 0,
       viewOpen: false
     }
@@ -38,18 +32,14 @@ export default class Mobile extends Component {
   }
 
   handleListScroll (e) {
-    // console.log('firing')
     if (this.state.canScroll) {
       if (e) {
         if (e.target === this.list) {
-          // console.log(e.target)
           const scrollCap = e.target.scrollHeight - e.target.getBoundingClientRect().height
           const safeTop = e.target.scrollTop === 0 ? 0.01 : e.target.scrollTop
-          // console.log(e.target.scrollTop, e.target.scrollHeight, scrollCap, safeTop)
           const frac = parseFloat(safeTop / scrollCap)
           this.handleScrollBarPos(frac)
         }
-        // console.log(e.target)
       }
     } else {
       if (e) this.preventScroll(e)
@@ -73,30 +63,28 @@ export default class Mobile extends Component {
   render () {
     const {
       state: { viewPos, scrollBarPosY, viewOpen },
-      props: { viewState, eventsState, galleries, showMap, handleToggle, bodyHeight, children, setActiveMarker, activeMarker }
+      props: { galleries, bodyHeight, children, setActiveMarker, activeMarker }
     } = this
 
-    const markerType = viewState === 'events' ? 'event' : 'galleries'
+    const Map = children[1]
+    const TitleBar = children[0]
 
     return (
       <div className='outer-wrapper'>
         <div id='google-map'>
-          { showMap && children[1] }
-          {/* { showMap && <GoogleMap markers={mapMarkers(markerType)} type={viewState} setActiveMarker={this.props.onSetActiveMarker} /> } */}
+          { Map }
         </div>
         <div className='inner-wrapper'>
           <div id='view'>
             <div id='scrollbar'>
-              <ScrollBar isMobile yPos={scrollBarPosY} view={viewState} />
+              <ScrollBar isMobile yPos={scrollBarPosY} />
             </div>
             <div onClick={this.handleTitleBarClick} className='title-wrapper' ref={titleBar => { this.titleBar = titleBar }}>
-              { children[0] }
+              { TitleBar }
             </div>
             <div id='list-view' className='list-section' onScroll={e => { this.handleListScroll(e) }} ref={list => { this.list = list }}>
-              {/* <EventsToggle eventState={eventsState} toggleEventState={handleToggle} /> */}
-              <ListView state={eventsState} list={galleries} setActiveMarker={setActiveMarker} activeID={activeMarker} listOpen={viewOpen} openList={this.handleTitleBarClick} />
+              <ListView list={galleries} setActiveMarker={setActiveMarker} activeID={activeMarker} listOpen={viewOpen} openList={this.handleTitleBarClick} />
             </div>
-            
           </div>
         </div>
         <style jsx>{`
@@ -113,7 +101,7 @@ export default class Mobile extends Component {
           width: 100vw;
           height: calc(100%);
           display: flex;
-          background-color: ${this.state.view === 'galleries' ? 'var(--color-green)' : 'var(--color-blue)'};
+          background-color: var(--color-green);
         }
         .inner-wrapper {
           min-height: ${bodyHeight};
@@ -131,8 +119,7 @@ export default class Mobile extends Component {
           width: 100vw;
           min-height: ${bodyHeight};
           position: relative;
-          background-color: ${this.state.view === 'events' ? 'var(--color-green)' : 'var(--color-blue)'};
-          // overflow: scroll;
+          background-color: var(--color-blue);
         }
         #scrollbar {
           position: absolute;
@@ -160,4 +147,27 @@ export default class Mobile extends Component {
   }
 }
 
-Mobile.propTypes = {}
+Mobile.propTypes = {
+  FBdata: PropTypes.objectOf(
+    PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.arrayOf(
+        PropTypes.object
+      )
+    ])
+  ),
+  activeMarker: PropTypes.string,
+  actualMapMarkers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  allMapMarkers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  bodyHeight: PropTypes.string.isRequired,
+  galleries: PropTypes.arrayOf(PropTypes.object).isRequired,
+  handleToggle: PropTypes.func.isRequired,
+  introSeen: PropTypes.bool.isRequired,
+  isMobile: PropTypes.bool.isRequired,
+  mapMarkers: PropTypes.func.isRequired,
+  onFetchFBdata: PropTypes.func.isRequired,
+  onSetActiveMarker: PropTypes.func.isRequired,
+  onSetActualMapMarkers: PropTypes.func.isRequired,
+  onSetAllMapMarkers: PropTypes.func.isRequired,
+  setActiveMarker: PropTypes.func.isRequired
+}

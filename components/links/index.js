@@ -63,6 +63,8 @@ const Links = ({ links }) => {
   )
 }
 
-Links.propTypes = {}
+Links.propTypes = {
+  links: PropTypes.arrayOf(PropTypes.object).isRequired
+}
 
 export default Links

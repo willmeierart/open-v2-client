@@ -8,8 +8,7 @@ const FauxWyler = ({ phrase }) => {
 }
 
 FauxWyler.propTypes = {
-  phrase: PropTypes.string.isRequired,
-  isMobileMenu: PropTypes.bool
+  phrase: PropTypes.string.isRequired
 }
 
 export default FauxWyler

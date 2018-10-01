@@ -13,7 +13,6 @@ class GoogleMap extends Component {
     const initCenter = activeMarker ? markers.filter(m => m.id === activeMarker).pop().marker.position : { lat: 39.755123, lng: -104.986663 }
 
     this.state = {
-      style: this.props.mapStyles[this.props.view],
       inited: false,
       actualMapMarkers: [],
       center: initCenter.lat ? initCenter : this.defaultCenter,
@@ -26,7 +25,6 @@ class GoogleMap extends Component {
   }
 
   componentDidMount () {
-    console.log(this.props)
     const mapNode = ReactDOM.findDOMNode(this.mapDOM)
     const init = () => {
       if (window.google && this.mapDOM) {
@@ -177,6 +175,13 @@ class GoogleMap extends Component {
   }
 }
 
-GoogleMap.propTypes = {}
+GoogleMap.propTypes = {
+  activeMarker: PropTypes.string.isRequired,
+  actualMapMarkers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  mapStyles: PropTypes.arrayOf(PropTypes.object).isRequired,
+  markers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setActiveMarker: PropTypes.func.isRequired,
+  setActualMapMarkers: PropTypes.func.isRequired
+}
 
 export default MapStyleManager(GoogleMap)

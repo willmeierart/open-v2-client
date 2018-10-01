@@ -26,6 +26,9 @@ const MobileNavIcon = ({ menuIsOpen, handleClick }) => {
   )
 }
 
-MobileNavIcon.propTypes = {}
+MobileNavIcon.propTypes = {
+  menuIsOpen: PropTypes.bool.isRequired,
+  handleClick: PropTypes.func.isRequired
+}
 
 export default MobileNavIcon

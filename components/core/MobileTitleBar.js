@@ -34,6 +34,7 @@ class MobileTitleBar extends Component {
 
   render () {
     const { menuOpen, animateIn } = this.state
+    console.log(this.props)
     return (
       <div className='header-outer'>
         <div className='header-inner'>

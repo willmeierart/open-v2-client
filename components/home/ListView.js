@@ -51,6 +51,12 @@ class ListView extends Component {
   }
 }
 
-ListView.propTypes = {}
+ListView.propTypes = {
+  activeID: PropTypes.string.isRequired,
+  list: PropTypes.arrayOf(PropTypes.object).isRequired,
+  listOpen: PropTypes.bool,
+  openList: PropTypes.func,
+  setActiveMarker: PropTypes.func.isRequired
+}
 
 export default ListView

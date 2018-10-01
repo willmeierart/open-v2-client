@@ -86,6 +86,9 @@ class Carousel extends Component {
   }
 }
 
-Carousel.propTypes = {}
+Carousel.propTypes = {
+  height: PropTypes.number.isRequired,
+  images: PropTypes.arrayOf(PropTypes.string).isRequired
+}
 
 export default Carousel

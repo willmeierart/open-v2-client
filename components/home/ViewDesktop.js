@@ -1,11 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 import { binder } from '../../lib/_utils'
-import { gallery, todayEvent, futureEvent } from '../../lib/mockData'
 import ListView from './ListView'
-import GoogleMap from './GoogleMap'
-import EventsToggle from './EventsToggle'
 import ScrollBar from './ScrollBar'
 
 export default class Desktop extends Component {
@@ -13,10 +9,8 @@ export default class Desktop extends Component {
     super(props)
     this.state = {
       canScroll: true,
-      view: 'galleries', // || 'events'
       scrollBarPosY: 0.001,
       scrollBarWidth: 0,
-      scrollView: 1, // || 2
       animate: false,
       animateAmt: 0
     }
@@ -32,7 +26,6 @@ export default class Desktop extends Component {
   componentDidUpdate (prevProps) {
     const num = this.props.viewState === 'events' ? 1 : 2
     if (this.props.viewState !== prevProps.viewState) {
-      // console.log('component did update scroll firing')
       this.setState({ scrollView: num }, () => {
         this.handleListScroll(null, num)
       })
@@ -45,24 +38,17 @@ export default class Desktop extends Component {
         if (e.target === this.leftList || e.target === this.rightList) {
           const scrollCap = e.target.scrollHeight - e.target.getBoundingClientRect().height
           const safeTop = e.target.scrollTop === 0 ? 0.01 : e.target.scrollTop
-          const up = num === 2 && e.target.scrollTop === 0
-          const down = num === 1 && e.target.scrollTop === scrollCap
           const frac = parseFloat(safeTop / scrollCap)
           this.handleScrollBarPos(frac)
-          // if (up) {
-          //   this.handleScrollView(e, 1)
-          // } else if (down) {
-          //   this.handleScrollView(e, 2)
-          // }
+
         }
       } else if (num) {
-        // this.handleScrollView(null, num)
       }
     } else {
       if (e) this.preventScrollAndReset(e)
     }
   }
-  
+
   handleScrollBarPos (frac) {
     if (frac) {
       if (this.state.scrollBarWidth !== `${window.innerWidth / 2 - 15}px`) {
@@ -80,22 +66,20 @@ export default class Desktop extends Component {
   render () {
     const {
       state: { animateAmt, scrollBarWidth, scrollBarPosY },
-      props: { viewState, introSeen, galleries, bodyHeight, activeMarker, children, setActiveMarker }
+      props: { introSeen, galleries, bodyHeight, activeMarker, children, setActiveMarker }
     } = this
 
     return (
       <div className='outer-wrapper'>
         <div id='scrollbar'>
-          <ScrollBar yPos={scrollBarPosY} view={viewState} />
+          <ScrollBar yPos={scrollBarPosY} />
         </div>
         <div className='inner-wrapper'>
           <div id='galleries-view' className='view-sec'>
             <div className='left'>
-              {/* <GoogleMap markers={mapMarkers('gallery')} type='galleries' setActiveMarker={onSetActiveMarker} activeMarker={activeMarker} setActualMapMarkers={onSetActualMapMarkers} actualMapMarkers={actualMapMarkers} /> */}
               { children }
             </div>
             <div id='list-view' onScroll={e => { this.handleListScroll(e, 2) }} ref={rightList => { this.rightList = rightList }} className='right'>
-              {/* <ListView list={fakeGalleries} /> */}
               <ListView list={galleries} setActiveMarker={setActiveMarker} activeID={activeMarker} />
             </div>
           </div>
@@ -157,4 +141,27 @@ export default class Desktop extends Component {
   }
 }
 
-Desktop.propTypes = {}
+Desktop.propTypes = {
+  FBdata: PropTypes.objectOf(
+    PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.arrayOf(
+        PropTypes.object
+      )
+    ])
+  ),
+  activeMarker: PropTypes.string,
+  actualMapMarkers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  allMapMarkers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  bodyHeight: PropTypes.string.isRequired,
+  galleries: PropTypes.arrayOf(PropTypes.object).isRequired,
+  handleToggle: PropTypes.func.isRequired,
+  introSeen: PropTypes.bool.isRequired,
+  isMobile: PropTypes.bool.isRequired,
+  mapMarkers: PropTypes.func.isRequired,
+  onFetchFBdata: PropTypes.func.isRequired,
+  onSetActiveMarker: PropTypes.func.isRequired,
+  onSetActualMapMarkers: PropTypes.func.isRequired,
+  onSetAllMapMarkers: PropTypes.func.isRequired,
+  setActiveMarker: PropTypes.func.isRequired
+}

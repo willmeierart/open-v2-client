@@ -24,7 +24,6 @@ class Home extends Component {
 
     binder(this, ['returnMockDataList', 'handleMapMarkers', 'setAllMapMarkers', 'handleToggle'])
 
-    this.showMap = true
     this.bodyHeight = 'calc(100vh - 100px)'
   }
 
@@ -111,33 +110,49 @@ class Home extends Component {
   }
 
   render () {
-    const { FBdata, viewState, onSetActiveMarker, activeMarker, onSetActualMapMarkers, actualMapMarkers } = this.props
-    const { testEventsList, testGalleriesList } = this.state
+    const { FBdata, onSetActiveMarker, activeMarker, onSetActualMapMarkers, actualMapMarkers } = this.props
 
     const mapMarkers = filter => this.props.allMapMarkers.filter(m => m.type === filter)
-
-    // console.log(FBdata)
     
-    const galleries = FBdata ? FBdata.galleries : testGalleriesList
+    const galleries = FBdata ? FBdata.galleries : []
 
     return <div>{
       this.props.isMobile
-      ? <ViewMobile {...this.props} events={testEventsList} galleries={galleries} 
-          mapMarkers={mapMarkers} showMap={this.showMap} handleToggle={this.handleToggle} 
+      ? <ViewMobile {...this.props} galleries={galleries} 
+          mapMarkers={mapMarkers} handleToggle={this.handleToggle} 
           bodyHeight={this.bodyHeight} setActiveMarker={onSetActiveMarker} activeMarker={activeMarker}>
-        <MarqueeHeader title={viewState} />
-        <GoogleMap markers={mapMarkers('gallery')} type='galleries'
+        <MarqueeHeader title={'galleries'} />
+        <GoogleMap markers={mapMarkers('gallery')}
           setActiveMarker={onSetActiveMarker} activeMarker={activeMarker}
           setActualMapMarkers={onSetActualMapMarkers} actualMapMarkers={actualMapMarkers} />
       </ViewMobile>
-      : <ViewDesktop {...this.props} events={testEventsList} galleries={galleries}
-          mapMarkers={mapMarkers} showMap={this.showMap} handleToggle={this.handleToggle}
+      : <ViewDesktop {...this.props} galleries={galleries}
+          mapMarkers={mapMarkers} handleToggle={this.handleToggle}
           bodyHeight={this.bodyHeight} setActiveMarker={onSetActiveMarker} activeMarker={activeMarker}>
-        <GoogleMap markers={mapMarkers('gallery')} type='galleries'
+        <GoogleMap markers={mapMarkers('gallery')}
           setActiveMarker={onSetActiveMarker} activeMarker={activeMarker}
           setActualMapMarkers={onSetActualMapMarkers} actualMapMarkers={actualMapMarkers} />
       </ViewDesktop>
     }</div>
+  }
+}
+
+function mapStateToProps (state) {
+  return {
+    FBdata: state.data.FBdata,
+    allMapMarkers: state.data.allMapMarkers,
+    actualMapMarkers: state.data.allMapMarkers,
+    activeMarker: state.data.activeMarker,
+    introSeen: state.env.introSeen
+  }
+}
+
+function mapDispatchToProps (dispatch) {
+  return {
+    onFetchFBdata: () => dispatch(fetchFBdata()),
+    onSetAllMapMarkers: markers => dispatch(setAllMapMarkers(markers)),
+    onSetActualMapMarkers: markers => dispatch(setActualMapMarkers(markers)),
+    onSetActiveMarker: activeMarkerID => dispatch(setActiveMarker(activeMarkerID))
   }
 }
 
@@ -149,30 +164,9 @@ Home.propTypes = {
   onSetActualMapMarkers: PropTypes.func.isRequired,
   allMapMarkers: PropTypes.array.isRequired,
   actualMapMarkers: PropTypes.array.isRequired,
-  activeMarker: PropTypes.string.isRequired
-}
-
-function mapStateToProps (state) {
-  return {
-    FBdata: state.data.FBdata,
-    allMapMarkers: state.data.allMapMarkers,
-    actualMapMarkers: state.data.allMapMarkers,
-    activeMarker: state.data.activeMarker,
-    eventsState: state.ui.eventsState,
-    viewState: state.ui.viewState,
-    introSeen: state.env.introSeen
-  }
-}
-
-function mapDispatchToProps (dispatch) {
-  return {
-    onFetchFBdata: () => dispatch(fetchFBdata()),
-    onSetAllMapMarkers: markers => dispatch(setAllMapMarkers(markers)),
-    onSetActualMapMarkers: markers => dispatch(setActualMapMarkers(markers)),
-    onSetViewState: viewState => dispatch(setViewState(viewState)),
-    onSetEventsState: eventsState => dispatch(setEventsState(eventsState)),
-    onSetActiveMarker: activeMarkerID => dispatch(setActiveMarker(activeMarkerID))
-  }
+  activeMarker: PropTypes.string.isRequired,
+  introSeen: PropTypes.bool.isRequired,
+  isMobile: PropTypes.bool.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)

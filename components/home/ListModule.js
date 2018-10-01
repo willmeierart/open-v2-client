@@ -21,7 +21,7 @@ export default class ListModule extends Component {
       noScrollBar: false,
       imgHeight: 0
     }
-    binder(this, ['handleExpand', 'manualExpand', 'renderGalleryContent', 'contentSwitcher', 'handleScroll', 'parseDate'])
+    binder(this, ['handleExpand', 'manualExpand', 'renderGalleryContent', 'handleScroll', 'parseDate'])
   }
 
   componentDidMount () {
@@ -114,19 +114,15 @@ export default class ListModule extends Component {
         <div ref={el => { this.descripBox = el }} className='descrip-outer'>
           <div ref={el => { this.scrollBar = el }} className='scrollbar-minus'>{ !this.state.noScrollBar && <Minus /> }</div>
           <div ref={el => { this.descripBoxInner = el }} onScroll={this.handleScroll} className='descrip-inner'>{ data.about ? data.about : data.description }</div>
-          { data.email && <div className='website'><a href={`mailto:${data.email}`}>{ data.email }</a></div>}
+          
         </div>
-        {/* <div className='img-wrapper'>
-          <img src={data.images[0]} />
-        </div> */}
         {data.images.length > 0 && <Carousel images={data.images} height={this.state.imgHeight} /> }
         <FBEventsPlugin ID={data.id} width={moduleWidth} />
-        { data.site &&
-          <div className='site-link'>
-            <a href={data.site}>{data.site.split('//')[1]}</a>
-            <LinkOut/>
-          </div>
-        }
+        { data.site && <div className='site-link'>
+          <a href={data.site}>{data.site.split('//')[1]}</a>
+          <LinkOut />
+        </div> }
+        { data.email && <div className='website'><a href={`mailto:${data.email}`}>{ data.email }</a></div> }
         <style jsx>{`
           .expanded-content {
             display: flex;
@@ -179,14 +175,9 @@ export default class ListModule extends Component {
     )
   }
 
-  contentSwitcher (data) {
-    return data.type === 'event' ? this.renderEventContent(data) : this.renderGalleryContent(data)
-  }
-
   render () {
-    const { data, handleToggle, listOpen, openList } = this.props
+    const { data, listOpen, openList } = this.props
     const { isOpen, xAmt, yAmt } = this.state
-    const actualPos = this.scrollBar ? `${this.scrollBar.getBoundingClientRect().x} ${this.scrollBar.getBoundingClientRect().y}` : '0 0'
     return (
       <div ref={el => { this.container = el }} className='outer-container' id={data.id}>
         { data ? <div className='inner-container'>
@@ -194,7 +185,6 @@ export default class ListModule extends Component {
           { this.state.isOpen && !this.state.noScrollBar && <div className='faux-minus'><Minus /></div> }
           <div className='title'>{ data.name }</div>
           <div className='address'>{ data.location ? data.location.street : '' }</div>
-          {/* { isOpen && this.contentSwitcher(data) } */}
           { isOpen && this.renderGalleryContent(data) }
           { openList && listOpen && data.location && <div className='see-on-map' onClick={openList}>See on map</div> }
         </div> : null }
@@ -224,7 +214,6 @@ export default class ListModule extends Component {
             height: 1em;
             animation: moveMinus 1s forwards;
             visibility: ${!this.state.shouldAnimate && 'hidden'}
-            // transform-origin: ${actualPos};
           }
           .title {
             font-weight: 700;
@@ -257,4 +246,11 @@ export default class ListModule extends Component {
   }
 }
 
-ListModule.propTypes = {}
+ListModule.propTypes = {
+  activeID: PropTypes.string.isRequired,
+  data: PropTypes.object.isRequired,
+  listOpen: PropTypes.bool,
+  openList: PropTypes.func,
+  setActiveMarker: PropTypes.func.isRequired,
+  shouldOpen: PropTypes.bool
+}

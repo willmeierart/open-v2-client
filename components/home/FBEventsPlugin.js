@@ -16,7 +16,9 @@ class FBEventsPlugin extends Component {
     const { ID, width } = this.props
     return (
       <div className='outer-container'>
-        <div className='fb-page' data-href={`https://www.facebook.com/${ID}`} data-tabs='events' data-small-header='true' data-adapt-container-width='true' data-hide-cover='true' data-show-facepile='false' data-hide-cta='true' />
+        <div className='fb-page' data-href={`https://www.facebook.com/${ID}`} 
+          data-tabs='events' data-small-header='true' data-adapt-container-width='true'
+          data-hide-cover='true' data-show-facepile='false' data-hide-cta='true' />
         <style jsx>{`
           .outer-container {
             width: 100%;
@@ -39,7 +41,8 @@ class FBEventsPlugin extends Component {
 }
 
 FBEventsPlugin.propTypes = {
-  ID: PropTypes.string.isRequired
+  ID: PropTypes.string.isRequired,
+  width: PropTypes.number.isRequired
 }
 
 export default FBEventsPlugin

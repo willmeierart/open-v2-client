@@ -97,4 +97,10 @@ class TitleBar extends Component {
   }
 }
 
+TitleBar.propTypes = {
+  handleClick: PropTypes.func.isRequired,
+  isHovered: PropTypes.bool.isRequired,
+  title: PropTypes.string.isRequired
+}
+
 export default TitleBar

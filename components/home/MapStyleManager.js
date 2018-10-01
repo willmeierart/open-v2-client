@@ -98,26 +98,6 @@ export default function MapStyleManager (ComposedComponent) {
             ]
           }
         ],
-        events: [
-          {
-            "featureType": "landscape.man_made",
-            "elementType": "geometry.fill",
-            "stylers": [
-              {
-                "color": "#5A76E4"
-              }
-            ]
-          },
-          {
-            "featureType": "landscape.natural",
-            "elementType": "geometry",
-            "stylers": [
-              {
-                "color": "#008F7E"
-              }
-            ]
-          },
-        ],
         galleries: [
           {
             "featureType": "landscape.man_made",
@@ -142,7 +122,7 @@ export default function MapStyleManager (ComposedComponent) {
     }
     render () {
       return (
-        <ComposedComponent mapStyles={this.styles.base.concat(this.styles[this.props.type])} {...this.props} />
+        <ComposedComponent mapStyles={this.styles.base.concat(this.styles.galleries)} {...this.props} />
       )
     }
   }
