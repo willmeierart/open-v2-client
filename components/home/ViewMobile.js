@@ -14,7 +14,8 @@ export default class Mobile extends Component {
       viewPos: 'calc(100vh - 4em - 230px)',
       scrollBarPosY: 0,
       viewOpen: false,
-      viewClosedAmt: 'calc(100vh - 4em - 100px)'
+      viewClosedAmt: 'calc(100vh - 4em - 100px)',
+      isTouchDevice: false
     }
     binder(this, ['handleListScroll', 'preventScroll', 'handleTitleBarClick', 'handleScrollBarPos'])
 
@@ -25,6 +26,9 @@ export default class Mobile extends Component {
     console.log('mobile')
     const init = () => {
       if (typeof window !== 'undefined') {
+        if (typeof window.orientation !== 'undefined') {
+          this.setState({ isTouchDevice: true })
+        }
         this.setState({ viewClosedAmt: `calc(${window.innerHeight - 100}px - 4em)` })
       } else {
         setTimeout(init, 500)
@@ -68,6 +72,17 @@ export default class Mobile extends Component {
     })
   }
 
+  deviceStyles () {
+    return (
+      <style jsx global>{`
+        html, body {
+          overflow: hidden;
+          height: ${window.innerHeight};
+        }
+      `}</style>
+    )
+  }
+
   render () {
     const {
       state: { viewPos, scrollBarPosY, viewOpen },
@@ -95,6 +110,7 @@ export default class Mobile extends Component {
             </div>
           </div>
         </div>
+        {this.state.isDevice && this.deviceStyles() }
         <style jsx>{`
         .outer-wrapper {
           min-height: ${bodyHeight};
