@@ -26,6 +26,7 @@ export default class MyApp extends App {
           width: 100vw;
           box-sizing: border-box;
           background-color: black;
+          overflow: hidden;
         }
         .ev-font {
           font-family: 'Art-Sans';

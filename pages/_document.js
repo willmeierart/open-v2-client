@@ -8,11 +8,16 @@ export default class CustomDocument extends Document {
     const styles = flush()
     return { html, head, errorHtml, chunks, styles }
   }
+
+  handleScroll = e => {
+    e.preventDefault()
+  }
+
   render () {
     return (
-      <html lang='en-US'>
+      <html onScroll={this.handleScroll} onTouchMove={this.handleScroll} lang='en-US'>
         <Head />
-        <body>
+        <body onScroll={this.handleScroll} onTouchMove={this.handleScroll}>
           <div dangerouslySetInnerHTML={{ __html: `
             <div id="fb-root"></div>
             <script>(function(d, s, id) {
