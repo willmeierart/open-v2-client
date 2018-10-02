@@ -9,7 +9,7 @@ export default class Desktop extends Component {
     super(props)
     this.state = {
       canScroll: true,
-      scrollBarPosY: 0.001,
+      scrollBarPosY: 0.00001,
       scrollBarWidth: 0,
       animate: false,
       animateAmt: 0
@@ -20,7 +20,7 @@ export default class Desktop extends Component {
 
   componentDidMount () {
     console.log('desktop')
-    window.addEventListener('resize', this.handleScrollBarPos)
+    window.addEventListener('resize', () => { this.handleScrollBarPos() })
   }
 
   componentDidUpdate (prevProps) {
@@ -37,7 +37,7 @@ export default class Desktop extends Component {
       if (e) {
         if (e.target === this.leftList || e.target === this.rightList) {
           const scrollCap = e.target.scrollHeight - e.target.getBoundingClientRect().height
-          const safeTop = e.target.scrollTop === 0 ? 0.01 : e.target.scrollTop
+          const safeTop = e.target.scrollTop === 0 ? 0.0001 : e.target.scrollTop
           const frac = parseFloat(safeTop / scrollCap)
           this.handleScrollBarPos(frac)
 

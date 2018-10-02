@@ -73,7 +73,7 @@ class Home extends Component {
   }
 
   setAllMapMarkers (activeMarkerID) {
-    const { FBdata: { galleries, events: { upcoming, today } }, activeMarker } = this.props
+    const { FBdata: { galleries, events: { upcoming, today } } } = this.props
     const checker = []
     const markerList = galleries.concat(today).concat(upcoming).reduce((a, b) => {
       const { id, name, type } = b

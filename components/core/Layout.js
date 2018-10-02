@@ -167,7 +167,7 @@ function mapDispatchToProps (dispatch) {
 }
 
 Layout.propTypes = {
-  FBdata: PropTypes.object.isRequired,
+  FBdata: PropTypes.object,
   title: PropTypes.string,
   introSeen: PropTypes.bool.isRequired,
   isMobile: PropTypes.bool.isRequired,
