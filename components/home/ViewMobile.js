@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { binder } from '../../lib/_utils'
 import ListView from './ListView'
 import ScrollBar from './ScrollBar'
+import { callbackify } from 'util';
 
 export default class Mobile extends Component {
   constructor (props) {
@@ -12,17 +13,24 @@ export default class Mobile extends Component {
       animateAmt: 0,
       viewPos: 'calc(100vh - 4em - 230px)',
       scrollBarPosY: 0,
-      viewOpen: false
+      viewOpen: false,
+      viewClosedAmt: 'calc(100vh - 4em - 100px)'
     }
     binder(this, ['handleListScroll', 'preventScroll', 'handleTitleBarClick', 'handleScrollBarPos'])
-
-    this.viewClosedAmt = 'calc(100vh - 4em - 100px)'
 
     this.viewOpenAmt = '20px'
   }
 
   componentDidMount () {
     console.log('mobile')
+    const init = () => {
+      if (typeof window !== 'undefined') {
+        this.setState({ viewClosedAmt: `calc(${window.innerHeight - 100}px - 4em)` })
+      } else {
+        setTimeout(init, 500)
+      }
+    }
+    init()
   }
 
   handleScrollBarPos (frac) {
@@ -55,7 +63,7 @@ export default class Mobile extends Component {
   handleTitleBarClick () {
     const { viewOpen } = this.state
     this.setState({
-      viewPos: viewOpen ? this.viewClosedAmt : this.viewOpenAmt,
+      viewPos: viewOpen ? this.state.viewClosedAmt : this.viewOpenAmt,
       viewOpen: !viewOpen
     })
   }

@@ -32,7 +32,7 @@ const Links = ({ links }) => {
           color: inherit;
           white-space: pre-wrap;
           width: fit-content;
-          cursor: none;
+          cursor: pointer;
         }
         a:hover {
           background-color: var(--color-yellow);
@@ -51,7 +51,6 @@ const Links = ({ links }) => {
           margin-top: 100px;
           background-color: var(--color-orange);
           height: calc(100vh - 100px);
-          cursor: none;
           overflow: scroll;
         }
         .inner-container {
