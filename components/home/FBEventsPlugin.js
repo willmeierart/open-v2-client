@@ -6,10 +6,16 @@ class FBEventsPlugin extends Component {
     super(props)
     this.state = { loaded: false }
   }
-  componentDidMount () {
-    FB.XFBML.parse()
+  async componentDidMount () {
+    await FB.XFBML.parse()
     setTimeout(() => {
-      this.setState({ loaded: true })
+      this.setState({ loaded: true }, () => {
+        // setTimeout(() => {
+        //   // console.log(document.querySelector('._1drp._5lv6'))
+        //   document.querySelector('._1drp._5lv6').style.display = 'none'
+        // }, 1000)
+      })
+
     }, 1000)
   }
   render () {
@@ -25,14 +31,18 @@ class FBEventsPlugin extends Component {
             display: flex;
             align-items: center;
             justify-content: center;
+            margin-top: 2em;
           }
           .fb-page {
-            margin: 2em;
             display: ${this.state.loaded ? 'block' : 'none'};
-            border: 2px solid var(--color-green);
             box-sizing: border-box;
             width: fit-content;
-            min-width: 300px;
+            min-width: 340px;
+          }
+          @media screen and (max-width: 450px) {
+            .fb-page {
+              min-width: 200px;
+            }
           }
         `}</style>
       </div>

@@ -114,15 +114,16 @@ export default class ListModule extends Component {
         <div ref={el => { this.descripBox = el }} className='descrip-outer'>
           <div ref={el => { this.scrollBar = el }} className='scrollbar-minus'>{ !this.state.noScrollBar && <Minus /> }</div>
           <div ref={el => { this.descripBoxInner = el }} onScroll={this.handleScroll} className='descrip-inner'>{ data.about ? data.about : data.description }</div>
-          
         </div>
-        {data.images.length > 0 && <Carousel images={data.images} height={this.state.imgHeight} /> }
-        <FBEventsPlugin ID={data.id} width={moduleWidth} />
-        { data.site && <div className='site-link'>
+        {data.site && <div className='site-link'>
           <a href={data.site}>{data.site.split('//')[1]}</a>
           <LinkOut />
-        </div> }
-        { data.email && <div className='website'><a href={`mailto:${data.email}`}>{ data.email }</a></div> }
+        </div>}
+        {data.email && <div className='website'><a href={`mailto:${data.email}`}>{data.email}</a></div>}
+        <div className='img-events-wrapper'>
+          {/* {data.images.length > 0 && <Carousel images={data.images} height={this.state.imgHeight} /> } */}
+          <FBEventsPlugin ID={data.id} width={moduleWidth} />
+        </div>
         <style jsx>{`
           .expanded-content {
             display: flex;
@@ -131,7 +132,7 @@ export default class ListModule extends Component {
             margin-top: 1em;
           }
           .descrip-outer {
-            margin-bottom: 3em;
+            margin-bottom: 1em;
             margin-right: .5em;
             height: 6em;
             line-height: 1.5em;
@@ -152,6 +153,9 @@ export default class ListModule extends Component {
             top: ${this.state.scrollBarPos}px;
             right: -1em;
             visibility: ${!this.state.scrollBarActual && 'hidden'};
+          }
+          .img-events-wrapper {
+            align-self: flex-start;
           }
           .img-wrapper {
             height: 100%; 

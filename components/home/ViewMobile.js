@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { binder } from '../../lib/_utils'
 import ListView from './ListView'
 import ScrollBar from './ScrollBar'
-import { callbackify } from 'util';
 
 export default class Mobile extends Component {
   constructor (props) {
@@ -14,10 +13,11 @@ export default class Mobile extends Component {
       viewPos: 'calc(100vh - 4em - 230px)',
       scrollBarPosY: 0,
       viewOpen: false,
-      viewClosedAmt: 'calc(100vh - 4em - 100px)',
-      isTouchDevice: false
+      isDevice: false
     }
     binder(this, ['handleListScroll', 'preventScroll', 'handleTitleBarClick', 'handleScrollBarPos'])
+
+    this.viewClosedAmt = 'calc(100vh - 4em - 100px)'
 
     this.viewOpenAmt = '20px'
   }
@@ -27,9 +27,9 @@ export default class Mobile extends Component {
     const init = () => {
       if (typeof window !== 'undefined') {
         if (typeof window.orientation !== 'undefined') {
-          this.setState({ isTouchDevice: true })
+          console.log('isDevice')
+          this.setState({ isDevice: true })
         }
-        this.setState({ viewClosedAmt: `calc(${window.innerHeight - 100}px - 4em)` })
       } else {
         setTimeout(init, 500)
       }
@@ -67,25 +67,26 @@ export default class Mobile extends Component {
   handleTitleBarClick () {
     const { viewOpen } = this.state
     this.setState({
-      viewPos: viewOpen ? this.state.viewClosedAmt : this.viewOpenAmt,
+      viewPos: viewOpen ? this.viewClosedAmt : this.viewOpenAmt,
       viewOpen: !viewOpen
     })
   }
 
   deviceStyles () {
     return (
-      <style jsx global>{`
-        html, body {
-          overflow: hidden;
-          height: ${window.innerHeight};
-        }
-      `}</style>
+      <div>
+        <style jsx global>{`
+          html, body {
+            overflow: hidden;
+          }  
+        `}</style>
+      </div>
     )
   }
 
   render () {
     const {
-      state: { viewPos, scrollBarPosY, viewOpen },
+      state: { viewPos, scrollBarPosY, viewOpen, isDevice },
       props: { galleries, bodyHeight, children, setActiveMarker, activeMarker }
     } = this
 
@@ -110,7 +111,7 @@ export default class Mobile extends Component {
             </div>
           </div>
         </div>
-        {this.state.isDevice && this.deviceStyles() }
+        { isDevice && this.deviceStyles() }
         <style jsx>{`
         .outer-wrapper {
           min-height: ${bodyHeight};
