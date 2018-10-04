@@ -36,7 +36,7 @@ class ScrollBar extends Component {
           .bar{
             height: 20vh;
             width: ${width};
-            background: red;
+            background: var(--color-orange);
             position: absolute;
             top: ${barPos};
           }
