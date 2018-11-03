@@ -4,20 +4,19 @@ import Head from '../components/Head'
 import Home from '../components/home'
 
 export default class HomePage extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      introSeen: false
-    }
-  }
-  render () {
-    return (
-      <div>
-        <Head title='Home' />
-        <section>
-          <Home introSeen={this.state.introSeen} isMobile={typeof window !== 'undefined' && (window.orientation !== undefined || window.innerWidth < 1000)} />
-        </section>
-      </div>
-    )
-  }
+	constructor (props) {
+		super(props)
+	}
+	render () {
+		return (
+			<div>
+				<Head title='Home' />
+				<section>
+					<Home
+						isMobile={typeof window !== 'undefined' && (window.orientation !== undefined || window.innerWidth < 1000)}
+					/>
+				</section>
+			</div>
+		)
+	}
 }

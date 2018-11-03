@@ -69,7 +69,7 @@ class TitleBar extends Component {
           .link {
             color: var(--color-lightblue);
             padding-right: 1.5em;
-            font-size: 2.5em;
+            font-size: 3em;
             cursor: pointer;
           }
           .link:last-of-type {
