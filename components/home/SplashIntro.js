@@ -38,7 +38,7 @@ const SplashIntro = ({ handleIntro }) => {
 				}
 				.body-text {
 					display: inline;
-					font-size: 2em;
+					font-size: 2.5vw;
 				}
 				.body-text span {
 					background-color: var(--color-orange);
