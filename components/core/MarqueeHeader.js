@@ -117,6 +117,7 @@ class MarqueeHeader extends Component {
           overflow: hidden;
           white-space: nowrap;
           width: 100vw;
+					position: relative;
         }
         .inner-container {
           display: flex;
@@ -124,6 +125,8 @@ class MarqueeHeader extends Component {
         .word {
           animation: marquee ${this.speed}s linear infinite;
           color: ${this.state.wdColor};
+					position: absolute;
+					opacity: 0;
         }
         @keyframes marquee {
           from {

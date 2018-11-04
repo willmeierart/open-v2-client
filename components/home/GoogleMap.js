@@ -114,6 +114,9 @@ class GoogleMap extends Component {
           const mainCluster = marker.title.toLowerCase().indexOf('boulder') === -1 &&
             marker.title.toLowerCase().indexOf('dairy') === -1 &&
             marker.title.toLowerCase().indexOf('gym') === -1 &&
+            marker.title.toLowerCase().indexOf('outdoor') === -1 &&
+            marker.title.toLowerCase().indexOf('edge') === -1 &&
+            marker.title.toLowerCase().indexOf('pirate') === -1 &&
             marker.title.toLowerCase().indexOf('myhren') === -1
           if (marker.position && mainCluster) {
             if (maxLat === null || marker.position.lat > maxLat) maxLat = marker.position.lat()

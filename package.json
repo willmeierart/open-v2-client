@@ -21,7 +21,9 @@
 	"license": "ISC",
 	"standard": {
 		"parser": "babel-eslint",
-		"ignore": [ "**/node_modules/**" ]
+		"ignore": [
+			"**/node_modules/**"
+		]
 	},
 	"dependencies": {
 		"apollo-client-preset": "^1.0.8",
@@ -29,6 +31,7 @@
 		"compression": "^1.7.2",
 		"dotenv": "^5.0.1",
 		"express": "^4.16.3",
+		"flubber": "^0.4.2",
 		"graphql": "^0.11.7",
 		"graphql-anywhere": "^4.1.11",
 		"graphql-tag": "^2.9.2",
@@ -51,6 +54,7 @@
 		"react-expand-animated": "^1.0.0",
 		"react-loaders": "^3.0.1",
 		"react-motion": "^0.5.2",
+		"react-move": "^2.8.0",
 		"react-redux": "^5.0.7",
 		"react-scroll": "^1.7.10",
 		"react-svg-morph": "^0.2.1",
@@ -81,7 +85,6 @@
 		"raw-loader": "^0.5.1",
 		"react-addons-test-utils": "^15.6.2",
 		"react-test-renderer": "^16.4.0",
-		"sass-loader": "^6.0.7",
-		"standard": "^10.0.3"
+		"sass-loader": "^6.0.7"
 	}
 }

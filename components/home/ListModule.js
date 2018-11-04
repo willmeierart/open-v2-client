@@ -32,9 +32,15 @@ export default class ListModule extends Component {
 	}
 
 	componentDidUpdate (prevProps) {
-		if (prevProps.shouldOpen !== this.props.shouldOpen && this.props.shouldOpen === false) {
+		if (prevProps.shouldOpen !== this.props.shouldOpen) {
+			if (this.props.shouldOpen === false) {
+				this.handleExpand(false)
+
+			} else {
+				this.handleExpand(true)
+
+			}
 			console.log('FIRING didUpdate')
-			this.handleExpand(false)
 		}
 	}
 
