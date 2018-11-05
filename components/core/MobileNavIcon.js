@@ -72,7 +72,7 @@ export default class MobileNavIcon extends Component {
 				</div>
 				<style jsx>{`
 					.outer-container {
-						margin-right: ${menuIsOpen ? '4em' : '4em'};
+						margin-right: 3em;
 						margin-bottom: 1em;
 					}
 					.inner-container {

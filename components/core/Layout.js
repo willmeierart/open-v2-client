@@ -18,7 +18,8 @@ class Layout extends Component {
 			hasSeenIntro: false, //disable intro,
 			isClient: false,
 			hoverQ: false,
-			introTransComplete: false
+			introTransComplete: false,
+			menuOpen: false
 		}
 		binder(this, [ 'handleIntro', 'hoverTitleBar', 'handleMenuItemClick' ])
 	}
@@ -105,9 +106,13 @@ class Layout extends Component {
 		router.push('/')
 	}
 
+	setMenuOpen = menuOpen => {
+		this.setState({ menuOpen })
+	}
+
 	render () {
 		const { children, isMobile, introSeen } = this.props
-		const { headerTitle, titleBarHovered, hasSeenIntro, introTransComplete } = this.state
+		const { headerTitle, titleBarHovered, hasSeenIntro, introTransComplete, menuOpen } = this.state
 		return (
 			<div className='Layout-outer'>
 				<div className='Layout-inner'>
@@ -119,7 +124,7 @@ class Layout extends Component {
 								this.splashWrapper = sw
 							}}
 						>
-							<SplashIntro handleIntro={this.handleIntro} />
+							<SplashIntro isMobile={isMobile} handleIntro={this.handleIntro} />
 						</div>
 					)}
 
@@ -134,7 +139,7 @@ class Layout extends Component {
 						{!isMobile ? (
 							<TitleBar isHovered={titleBarHovered} title={headerTitle} handleClick={this.handleMenuItemClick} />
 						) : (
-							<MobileTitleBar handleClick={this.handleMenuItemClick} />
+							<MobileTitleBar setMenuOpen={this.setMenuOpen} handleClick={this.handleMenuItemClick} />
 						)}
 					</header>
 					<main>{children}</main>
@@ -166,7 +171,9 @@ class Layout extends Component {
 					.Layout-outer,
 					.Layout-inner,
 					.splash-wrapper {
-						overflow: ${!introSeen ? 'hidden' : 'scroll'};
+						// overflow: ${!introSeen || menuOpen ? 'hidden' : 'scroll'};
+
+						overflow: hidden;
 					}
 					.splash-wrapper {
 						z-index: 1000000001;

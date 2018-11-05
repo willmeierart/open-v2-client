@@ -28,6 +28,9 @@ export default class MyApp extends App {
           background-color: black;
           overflow: hidden;
         }
+        iframe {
+          width: 100%!important;
+        }
         .ev-font {
           font-family: 'Art-Sans';
         }

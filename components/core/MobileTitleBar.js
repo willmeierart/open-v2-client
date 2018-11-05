@@ -21,9 +21,12 @@ class MobileTitleBar extends Component {
       this.setState({ animateIn: false })
       setTimeout(() => {
         this.setState({ menuOpen: false })
+        this.props.setMenuOpen(false)
+
       }, 800)
     } else {
       this.setState({ menuOpen: true, animateIn: true })
+      this.props.setMenuOpen(true)
     }
   }
 
@@ -34,7 +37,6 @@ class MobileTitleBar extends Component {
 
   render () {
     const { menuOpen, animateIn } = this.state
-    console.log(this.props)
     return (
       <div className='header-outer'>
         <div className='header-inner'>

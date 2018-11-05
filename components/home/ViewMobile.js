@@ -185,6 +185,7 @@ export default class Mobile extends Component {
 						width: calc(100vw - 20px);
 						overflow: scroll;
 						height: 100%;
+						-webkit-overflow-scrolling: touch;
 					}
 				`}</style>
 			</div>

@@ -39,6 +39,7 @@ class MobileMenu extends Component {
 						justify-content: center;
 						border-bottom: 10px solid black;
 						cursor: pointer;
+						max-height: calc((90vh - 100px) / 2)
 					}
 				`}</style>
 			</div>
@@ -82,6 +83,7 @@ class MobileMenu extends Component {
 					}
 					.faq {
 						height: 10vh;
+						width: 100vw;
 						background-color: var(--color-yellow);
 						display: flex;
 						flex-direction: column;

@@ -196,6 +196,8 @@ export default class ListModule extends Component {
 					}
 					.img-events-wrapper {
 						align-self: flex-start;
+						margin-bottom: 2em;
+						overflow: hidden;
 					}
 					.img-wrapper {
 						height: 100%;

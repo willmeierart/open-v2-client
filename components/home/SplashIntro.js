@@ -1,7 +1,7 @@
 import DaLogo from '../assets/DA_LOGO'
 import DownArrow from '../assets/down-arrow'
 
-const SplashIntro = ({ handleIntro }) => {
+const SplashIntro = ({ handleIntro, isMobile }) => {
 	return (
 		<div className='outer-container'>
 			<div className='inner-container'>
@@ -28,7 +28,7 @@ const SplashIntro = ({ handleIntro }) => {
 					align-items: center;
 				}
 				.inner-container {
-					width: 70%;
+					width: ${isMobile ? '85%' : '70%'};
 				}
 				.logo-wrapper {
 					background-color: var(--color-orange);
@@ -38,7 +38,7 @@ const SplashIntro = ({ handleIntro }) => {
 				}
 				.body-text {
 					display: inline;
-					font-size: 2.5vw;
+					font-size: ${isMobile ? '5vw' : '2.5vw'};
 				}
 				.body-text span {
 					background-color: var(--color-orange);
