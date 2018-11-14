@@ -30,7 +30,7 @@ export default class Mobile extends Component {
 					this.setState({ isDevice: true })
 				}
 			} else {
-				setTimeout(init, 100)
+				setTimeout(init, 400)
 			}
 		}
 		init()

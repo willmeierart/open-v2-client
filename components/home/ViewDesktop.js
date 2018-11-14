@@ -15,14 +15,14 @@ export default class Desktop extends Component {
 			animate: false,
 			animateAmt: 0
 		}
-
-		binder(this, [ 'handleListScroll', 'preventScrollAndReset', 'handleScrollBarPos' ])
 	}
 
 	componentDidMount () {
 		const init = () => {
 			if (typeof window !== 'undefined') {
-				window.addEventListener('resize', this.handleScrollBarPos)
+				window.addEventListener('resize', () => {
+					this.handleScrollBarPos()
+				})
 				this.handleScrollBarLeft()
 			} else {
 				setTimeout(init, 200)
@@ -37,7 +37,7 @@ export default class Desktop extends Component {
 		})
 	}
 
-	handleListScroll (e, num) {
+	handleListScroll = (e, num) => {
 		if (this.state.canScroll) {
 			if (e) {
 				if (e.target === this.list) {
@@ -58,7 +58,7 @@ export default class Desktop extends Component {
 		}
 	}
 
-	handleScrollBarPos (frac) {
+	handleScrollBarPos = frac => {
 		if (this.state.scrollBarWidth !== `${window.innerWidth / 2 - 15}px`) {
 			this.setState({ scrollBarWidth: `${window.innerWidth / 2 - 15}px` })
 		}
@@ -68,7 +68,7 @@ export default class Desktop extends Component {
 		this.handleScrollBarLeft()
 	}
 
-	preventScrollAndReset (e) {
+	preventScrollAndReset = e => {
 		e.preventDefault()
 	}
 

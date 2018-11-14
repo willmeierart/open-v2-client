@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom'
-import { binder } from '../../lib/_utils'
 import MapStyleManager from './MapStyleManager'
 
 class GoogleMap extends Component {
@@ -21,7 +20,6 @@ class GoogleMap extends Component {
 			bounds: null,
 			selectBegun: false
 		}
-		binder(this, [ 'toggleActiveMarkers' ])
 		this.ACTUAL_MAP_MARKERS = []
 		this.defaultCenter = { lat: 39.755123, lng: -104.986663 }
 	}
@@ -29,7 +27,7 @@ class GoogleMap extends Component {
 	componentDidMount () {
 		const init = () => {
 			const mapNode = ReactDOM.findDOMNode(this.mapDOM)
-			if (window.google && this.mapDOM) {
+			if (window.google && this.mapDOM && this.props.markers.length > 0) {
 				const { google } = window
 				// init options go here
 				this.map = new google.maps.Map(mapNode, {
@@ -49,13 +47,13 @@ class GoogleMap extends Component {
 				//   }
 				// })
 			} else {
-				setTimeout(init, 100)
+				setTimeout(init, 400)
 			}
 		}
 		init()
 	}
 
-	componentDidUpdate (prevProps, prevState) {
+	componentDidUpdate (prevProps) {
 		if (this.props.view !== prevProps.view) {
 			this.setState({ style: this.props.mapStyles[this.props.view] })
 		}
@@ -81,11 +79,13 @@ class GoogleMap extends Component {
 		return false
 	}
 
-	toggleActiveMarkers () {
+	toggleActiveMarkers = () => {
 		if (!this.state.inited) {
+			console.log('toggle not inited, ', this.props.markers)
 			this.props.markers.forEach(marker => {
 				marker.marker.map = this.map
 				const MARKER = new window.google.maps.Marker(marker.marker)
+				console.log(MARKER)
 				MARKER.addListener('click', () => {
 					this.props.setActiveMarker(marker.id)
 				})
@@ -94,6 +94,8 @@ class GoogleMap extends Component {
 
 			this.setState({ actualMapMarkers: this.ACTUAL_MAP_MARKERS })
 		} else {
+			console.log('toggle inited')
+
 			this.state.actualMapMarkers.forEach((marker, i) => {
 				const url =
 					this.props.markers[i].id === this.props.activeMarker
@@ -104,7 +106,7 @@ class GoogleMap extends Component {
 		}
 	}
 
-	setCenterViaMarkers (markers) {
+	setCenterViaMarkers = markers => {
 		if (markers.length > 1) {
 			// only calculate bounds frame if more than one marker
 			let maxLat = null
@@ -150,7 +152,7 @@ class GoogleMap extends Component {
 		}
 	}
 
-	setBounds (marker) {
+	setBounds = marker => {
 		const mainAction = () => {
 			if (marker) {
 				this.setState({ bounds: this.state.bounds.extend(marker) }, () => {

@@ -46,7 +46,7 @@ class Layout extends Component {
 					this.setState({ introTransComplete: true })
 				}
 			} else {
-				setTimeout(init, 100)
+				setTimeout(init, 400)
 			}
 		}
 		init()
@@ -197,13 +197,9 @@ class Layout extends Component {
 									to present elegantly what's going on -- where, when, here, now. No more needing to know what to
 									'like', who to ask, where to look. Welcome to Denver's Art.
 								</div>
-								<div className='info-sec'>
-									Reach out to{' '}
-									<a target='_blank' className='info-sec' href='mailto:willmeierart@gmail.com'>
-										willmeierart@gmail.com
-									</a>{' '}
-									if you think you'd like to be included in the project.
-								</div>
+								<a className='info-sec' href='mailto:willmeierart@gmail.com'>
+									Reach out if you think you'd like to be included in the project.
+								</a>
 							</div>
 						)}
 					</div>

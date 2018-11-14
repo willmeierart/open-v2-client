@@ -6,7 +6,7 @@ import Plus from '../assets/plus'
 import Minus from '../assets/minus'
 import LinkOut from '../assets/LinkOut'
 import FBEventsPlugin from './FBEventsPlugin'
-import { binder } from '../../lib/_utils'
+import { MorphReplace } from 'react-svg-morph'
 
 export default class ListModule extends Component {
 	constructor (props) {
@@ -19,9 +19,9 @@ export default class ListModule extends Component {
 			scrollBarPos: 0,
 			shouldAnimate: true,
 			noScrollBar: false,
-			imgHeight: 0
+			imgHeight: 0,
+			openDelay: false
 		}
-		binder(this, [ 'handleExpand', 'manualExpand', 'renderGalleryContent', 'handleScroll', 'parseDate' ])
 	}
 
 	componentDidMount () {
@@ -48,16 +48,15 @@ export default class ListModule extends Component {
 		}
 	}
 
-	manualExpand () {
+	manualExpand = () => {
 		if (this.props.data.location) {
 			this.props.setActiveMarker(this.props.data.id)
 		}
 		this.handleExpand()
 	}
 
-	handleExpand (force) {
-		this.setState({ isOpen: force !== undefined ? force : !this.state.isOpen })
-		setTimeout(() => {
+	handleExpand = force => {
+		this.setState({ isOpen: force !== undefined ? force : !this.state.isOpen }, () => {
 			if (this.state.isOpen) {
 				this.setState({ imgHeight: this.descripBox.getBoundingClientRect().width })
 				if (this.descripBox.scrollHeight < this.descripBoxInner.scrollHeight) {
@@ -83,18 +82,18 @@ export default class ListModule extends Component {
 						)
 					}
 				} else {
-					this.setState({ noScrollBar: true })
+					this.setState({ noScrollBar: true, openDelay: false })
 				}
 			} else {
-				// console.log(this.state.isOpen)
-				// setTimeout(() => {
 				this.setState({ scrollBarActual: false, shouldAnimate: true })
-				// }, 1000)
+				setTimeout(() => {
+					this.setState({ openDelay: true })
+				}, 50)
 			}
 		})
 	}
 
-	handleScroll (e) {
+	handleScroll = e => {
 		if (this.state.scrollBarActual) {
 			const scrollCap = e.target.scrollHeight - e.target.getBoundingClientRect().height
 			const safeTop = e.target.scrollTop === 0 ? 1 : e.target.scrollTop
@@ -106,7 +105,7 @@ export default class ListModule extends Component {
 		}
 	}
 
-	parseDate (d) {
+	parseDate = d => {
 		const momentVersion = moment(d, moment.ISO_8601)
 		const time = momentVersion.format('h:mm A')
 		const date = momentVersion.format('MMMM Do')
@@ -116,7 +115,7 @@ export default class ListModule extends Component {
 		}
 	}
 
-	renderGalleryContent (data) {
+	renderGalleryContent = data => {
 		const moduleWidth = this.descripBox ? this.descripBox.getBoundingClientRect().width : 200
 		return (
 			<div className='expanded-content'>
@@ -147,7 +146,7 @@ export default class ListModule extends Component {
 				{data.site && (
 					<div className='site-link'>
 						<a href={data.site}>
-							{data.site.split('/')[2]}
+							{data.site.indexOf('//') !== -1 ? data.site.split('/')[2] : data.site}
 							<LinkOut />
 						</a>
 					</div>
@@ -158,7 +157,6 @@ export default class ListModule extends Component {
 					</div>
 				)}
 				<div className='img-events-wrapper'>
-					{/* {data.images.length > 0 && <Carousel images={data.images} height={this.state.imgHeight} /> } */}
 					<FBEventsPlugin ID={data.id} width={moduleWidth} />
 				</div>
 				<style jsx>{`
@@ -221,6 +219,7 @@ export default class ListModule extends Component {
 	render () {
 		const { data, listOpen, openList } = this.props
 		const { isOpen, xAmt, yAmt, noScrollBar, scrollBarActual } = this.state
+		console.log(noScrollBar)
 		return (
 			<div
 				ref={el => {
@@ -241,7 +240,25 @@ export default class ListModule extends Component {
 							onClick={this.manualExpand}
 							className='expand-btn'
 						>
-							{isOpen ? <Minus /> : <Plus />}
+							{noScrollBar ? (
+								<MorphReplace
+									width={25}
+									height={25}
+									style={{
+										fill: '#008f7e',
+										overflow: 'visible'
+									}}
+									viewBox='0 0 25 25'
+									preserveAspectRatio='xMinYMid meet'
+									rotation='none'
+								>
+									{this.state.openDelay ? <Plus key='plus' /> : <Minus key='minus' />}
+								</MorphReplace>
+							) : isOpen ? (
+								<Minus />
+							) : (
+								<Plus />
+							)}
 						</div>
 						{isOpen &&
 						!noScrollBar && (
@@ -282,12 +299,6 @@ export default class ListModule extends Component {
 						width: 1em;
 						height: 1em;
 						z-index: 2;
-						 {
-							/* transform: rotate(0deg) translate3d(0, 0, 0); */
-						}
-						 {
-							/* transition: transform 1s; */
-						}
 					}
 					.faux-minus {
 						position: absolute;
