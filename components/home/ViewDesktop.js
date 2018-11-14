@@ -11,6 +11,7 @@ export default class Desktop extends Component {
 			canScroll: true,
 			scrollBarPosY: 0.00001,
 			scrollBarWidth: 0,
+			scrollBarLeft: 0,
 			animate: false,
 			animateAmt: 0
 		}
@@ -19,31 +20,38 @@ export default class Desktop extends Component {
 	}
 
 	componentDidMount () {
-		console.log('desktop')
-		window.addEventListener('resize', () => {
-			this.handleScrollBarPos()
-		})
+		const init = () => {
+			if (typeof window !== 'undefined') {
+				window.addEventListener('resize', this.handleScrollBarPos)
+				this.handleScrollBarLeft()
+			} else {
+				setTimeout(init, 200)
+			}
+		}
+		init()
 	}
 
-	componentDidUpdate (prevProps) {
-		const num = this.props.viewState === 'events' ? 1 : 2
-		if (this.props.viewState !== prevProps.viewState) {
-			this.setState({ scrollView: num }, () => {
-				this.handleListScroll(null, num)
-			})
-		}
+	handleScrollBarLeft = () => {
+		this.setState({
+			scrollBarLeft: this.state.scrollBarWidth === 0 ? window.innerWidth / 2 - 15 + 'px' : this.state.scrollBarWidth
+		})
 	}
 
 	handleListScroll (e, num) {
 		if (this.state.canScroll) {
 			if (e) {
-				if (e.target === this.leftList || e.target === this.rightList) {
+				if (e.target === this.list) {
 					const scrollCap = e.target.scrollHeight - e.target.getBoundingClientRect().height
-					const safeTop = e.target.scrollTop === 0 ? 0.0001 : e.target.scrollTop
+					const safeTop = e.target.scrollTop < 0.0001 ? 0.0001 : e.target.scrollTop
 					const frac = parseFloat(safeTop / scrollCap)
 					this.handleScrollBarPos(frac)
 				}
 			} else if (num) {
+				const frac = (num - (window.innerHeight - 100) / 5) / window.innerHeight
+				const listHeight = this.list.scrollHeight
+				const top = frac * listHeight
+
+				this.list.scrollTo({ top })
 			}
 		} else {
 			if (e) this.preventScrollAndReset(e)
@@ -57,23 +65,23 @@ export default class Desktop extends Component {
 		if (frac) {
 			this.setState({ scrollBarPosY: frac })
 		}
+		this.handleScrollBarLeft()
 	}
 
 	preventScrollAndReset (e) {
-		console.log('shouldnt be scrolling')
 		e.preventDefault()
 	}
 
 	render () {
 		const {
-			state: { animateAmt, scrollBarWidth, scrollBarPosY },
+			state: { animateAmt, scrollBarWidth, scrollBarPosY, scrollBarLeft },
 			props: { introSeen, galleries, bodyHeight, activeMarker, children, setActiveMarker }
 		} = this
 
 		return (
 			<div className='outer-wrapper'>
 				<div id='scrollbar'>
-					<ScrollBar introSeen yPos={scrollBarPosY} />
+					<ScrollBar introSeen yPos={scrollBarPosY} handleListScroll={this.handleListScroll} />
 				</div>
 				<div className='inner-wrapper'>
 					<div id='galleries-view' className='view-sec'>
@@ -83,8 +91,8 @@ export default class Desktop extends Component {
 							onScroll={e => {
 								this.handleListScroll(e, 2)
 							}}
-							ref={rightList => {
-								this.rightList = rightList
+							ref={list => {
+								this.list = list
 							}}
 							className='right'
 						>
@@ -122,10 +130,9 @@ export default class Desktop extends Component {
 					}
 					#scrollbar {
 						position: fixed;
-						left: ${scrollBarWidth === 0 ? window.innerWidth / 2 - 15 + 'px' : scrollBarWidth};
-						height: ${bodyHeight};
+						left: ${scrollBarLeft};
 						top: 100px;
-						z-index: -1;
+						z-index: ${introSeen ? 100 : -1};
 						display: ${introSeen ? 'initial' : 'none'};
 					}
 					.left,

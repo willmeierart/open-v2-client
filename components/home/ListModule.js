@@ -26,7 +26,6 @@ export default class ListModule extends Component {
 
 	componentDidMount () {
 		if (this.props.shouldOpen) {
-			console.log('FIRING didMount')
 			this.handleExpand(true)
 		}
 	}
@@ -35,12 +34,9 @@ export default class ListModule extends Component {
 		if (prevProps.shouldOpen !== this.props.shouldOpen) {
 			if (this.props.shouldOpen === false) {
 				this.handleExpand(false)
-
 			} else {
 				this.handleExpand(true)
-
 			}
-			console.log('FIRING didUpdate')
 		}
 	}
 
@@ -56,7 +52,6 @@ export default class ListModule extends Component {
 		if (this.props.data.location) {
 			this.props.setActiveMarker(this.props.data.id)
 		}
-		console.log('FIRING manual')
 		this.handleExpand()
 	}
 
@@ -91,7 +86,10 @@ export default class ListModule extends Component {
 					this.setState({ noScrollBar: true })
 				}
 			} else {
+				// console.log(this.state.isOpen)
+				// setTimeout(() => {
 				this.setState({ scrollBarActual: false, shouldAnimate: true })
+				// }, 1000)
 			}
 		})
 	}
@@ -102,7 +100,6 @@ export default class ListModule extends Component {
 			const safeTop = e.target.scrollTop === 0 ? 1 : e.target.scrollTop
 			const frac = parseFloat((safeTop / scrollCap).toFixed(3))
 			const scrollBarPos = frac * (this.descripBox.getBoundingClientRect().height - 25)
-			console.log(scrollBarPos)
 			this.setState({ scrollBarPos, shouldAnimate: false })
 		} else {
 			e.preventDefault()
@@ -149,8 +146,10 @@ export default class ListModule extends Component {
 				</div>
 				{data.site && (
 					<div className='site-link'>
-						<a href={data.site}>{data.site.split('//')[1]}</a>
-						<LinkOut />
+						<a href={data.site}>
+							{data.site.split('/')[2]}
+							<LinkOut />
+						</a>
 					</div>
 				)}
 				{data.email && (
@@ -208,13 +207,11 @@ export default class ListModule extends Component {
 						height: 100%;
 					}
 					a:hover {
-						text-transform: uppercase;
+						color: var(--color-green);
 					}
-					.site-link {
-						display: flex;
-					}
+					.site-link,
 					.site-link a {
-						margin-right: .5em;
+						display: flex;
 					}
 				`}</style>
 			</div>
@@ -223,7 +220,7 @@ export default class ListModule extends Component {
 
 	render () {
 		const { data, listOpen, openList } = this.props
-		const { isOpen, xAmt, yAmt } = this.state
+		const { isOpen, xAmt, yAmt, noScrollBar, scrollBarActual } = this.state
 		return (
 			<div
 				ref={el => {
@@ -231,6 +228,9 @@ export default class ListModule extends Component {
 				}}
 				className='outer-container'
 				id={data.id}
+				onClick={() => {
+					!isOpen ? this.handleExpand(true) : null
+				}}
 			>
 				{data ? (
 					<div className='inner-container'>
@@ -243,8 +243,8 @@ export default class ListModule extends Component {
 						>
 							{isOpen ? <Minus /> : <Plus />}
 						</div>
-						{this.state.isOpen &&
-						!this.state.noScrollBar && (
+						{isOpen &&
+						!noScrollBar && (
 							<div className='faux-minus'>
 								<Minus />
 							</div>
@@ -268,6 +268,8 @@ export default class ListModule extends Component {
 						background: var(--color-lightblue);
 						margin: 2em;
 						padding: 2em;
+						cursor: ${!isOpen ? 'pointer' : 'normal'};
+						box-sizing: border-box;
 					}
 					.inner-container {
 						position: relative;
@@ -280,6 +282,12 @@ export default class ListModule extends Component {
 						width: 1em;
 						height: 1em;
 						z-index: 2;
+						 {
+							/* transform: rotate(0deg) translate3d(0, 0, 0); */
+						}
+						 {
+							/* transition: transform 1s; */
+						}
 					}
 					.faux-minus {
 						position: absolute;
@@ -287,7 +295,7 @@ export default class ListModule extends Component {
 						right: -1em;
 						width: 1em;
 						height: 1em;
-						animation: moveMinus 1s forwards;
+						animation: openMinus 1s forwards;
 						visibility: ${!this.state.shouldAnimate && 'hidden'};
 					}
 					.title {
@@ -297,7 +305,7 @@ export default class ListModule extends Component {
 					.see-on-map {
 						cursor: pointer;
 					}
-					@keyframes moveMinus {
+					@keyframes openMinus {
 						0% {
 							transform: rotate(0deg) translate3d(0, 0, 0);
 							opacity: 1;
@@ -313,6 +321,24 @@ export default class ListModule extends Component {
 						100% {
 							transform: rotate(90deg) translate3d(${yAmt}px, ${-xAmt}px, 0);
 							opacity: 0;
+						}
+					}
+					@keyframes closeMinus {
+						0% {
+							transform: rotate(90deg) translate3d(${yAmt}px, ${-xAmt}px, 0);
+							opacity: 0;
+						}
+						30% {
+							transform: rotate(90deg) translate3d(${yAmt}px, ${-xAmt}px, 0);
+							opacity: 1;
+						}
+						99% {
+							transform: rotate(90deg) translate3d(0, 0, 0);
+							opacity: 1;
+						}
+						100% {
+							transform: rotate(0deg) translate3d(0, 0, 0);
+							opacity: 1;
 						}
 					}
 				`}</style>

@@ -23,7 +23,6 @@ export default class Mobile extends Component {
 	}
 
 	componentDidMount () {
-		console.log('mobile')
 		const init = () => {
 			if (typeof window !== 'undefined') {
 				if (typeof window.orientation !== 'undefined') {
@@ -31,7 +30,7 @@ export default class Mobile extends Component {
 					this.setState({ isDevice: true })
 				}
 			} else {
-				setTimeout(init, 500)
+				setTimeout(init, 100)
 			}
 		}
 		init()
@@ -43,7 +42,7 @@ export default class Mobile extends Component {
 		}
 	}
 
-	handleListScroll (e) {
+	handleListScroll (e, num) {
 		if (this.state.canScroll) {
 			if (e) {
 				if (e.target === this.list) {
@@ -52,6 +51,12 @@ export default class Mobile extends Component {
 					const frac = parseFloat(safeTop / scrollCap)
 					this.handleScrollBarPos(frac)
 				}
+			} else if (num) {
+				const frac = (num - (window.innerHeight - 100) / 5) / window.innerHeight
+				const listHeight = this.list.scrollHeight
+				const top = frac * listHeight
+
+				this.list.scrollTo({ top })
 			}
 		} else {
 			if (e) this.preventScroll(e)
@@ -59,7 +64,6 @@ export default class Mobile extends Component {
 	}
 
 	preventScroll (e) {
-		console.log('shouldnt be scrolling')
 		e.preventDefault()
 		e.stopPropagation()
 	}
@@ -94,13 +98,15 @@ export default class Mobile extends Component {
 		const Map = children[1]
 		const TitleBar = children[0]
 
+		console.log('intro seen: ', introSeen)
+
 		return (
 			<div className='outer-wrapper'>
 				<div id='google-map'>{Map}</div>
 				<div className='inner-wrapper'>
 					<div id='view'>
 						<div id='scrollbar'>
-							<ScrollBar isMobile yPos={scrollBarPosY} />
+							<ScrollBar isMobile introSeen yPos={scrollBarPosY} handleListScroll={this.handleListScroll} />
 						</div>
 						<div
 							onClick={this.handleTitleBarClick}
@@ -134,7 +140,6 @@ export default class Mobile extends Component {
 				{isDevice && this.deviceStyles()}
 				<style jsx>{`
 					.outer-wrapper {
-						min-height: ${bodyHeight};
 						height: ${bodyHeight};
 						width: 100vw;
 						display: flex;
@@ -144,12 +149,11 @@ export default class Mobile extends Component {
 					#google-map {
 						position: absolute;
 						width: 100vw;
-						height: calc(100%);
+						height: 100%;
 						display: flex;
 						background-color: var(--color-green);
 					}
 					.inner-wrapper {
-						min-height: ${bodyHeight};
 						width: 100vw;
 						display: flex;
 						flex-direction: column;
@@ -160,7 +164,7 @@ export default class Mobile extends Component {
 						transition-timing-function: ease-out;
 					}
 					#view {
-						height: calc(${bodyHeight} - 50px);
+						height: calc(${bodyHeight} - 70px);
 						width: 100vw;
 						min-height: ${bodyHeight};
 						position: relative;
@@ -171,7 +175,7 @@ export default class Mobile extends Component {
 						right: 0;
 						height: ${bodyHeight};
 						top: 4em;
-						z-index: ${introSeen ? '1' : '-1'};
+						z-index: ${introSeen ? '10000000' : '-1'};
 					}
 					.title-wrapper {
 						background: black;
@@ -183,8 +187,8 @@ export default class Mobile extends Component {
 					}
 					.list-section {
 						width: calc(100vw - 20px);
+						height: calc(${bodyHeight} - 80px);
 						overflow: scroll;
-						height: 100%;
 						-webkit-overflow-scrolling: touch;
 					}
 				`}</style>

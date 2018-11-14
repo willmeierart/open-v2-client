@@ -15,7 +15,6 @@ class ListView extends Component {
 	scrollToEl = () => {
 		const { activeID } = this.props
 		const el = ReactDOM.findDOMNode(this[activeID])
-		console.log(el, el.offsetTop)
 		scroller.scrollTo(`${activeID}`, {
 			duration: 1000,
 			// delay: 1000,
@@ -54,6 +53,7 @@ class ListView extends Component {
 				<ul>{this.renderList()}</ul>
 				<style jsx>{`
 					ul {
+						box-sizing: border-box;
 						margin-top: 2em;
 						padding: 0;
 					}

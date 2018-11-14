@@ -11,7 +11,31 @@ export default class CustomDocument extends Document {
 	render () {
 		return (
 			<html lang='en-US'>
-				<Head />
+				<Head>
+					<style
+						dangerouslySetInnerHTML={{
+							__html: `
+            @font-face {
+              font-family: 'Art-Sans';
+              src: url('/static/fonts/ArtSans.eot');
+              src: url('/static/fonts/ArtSans.eot?#iefix') format('embedded-opentype'),
+                url('/static/fonts/ArtSans.woff2') format('woff2'),
+                url('/static/fonts/ArtSans.woff') format('woff'),
+                url('/static/fonts/ArtSans.ttf') format('truetype');
+              font-weight: normal;
+              font-style: normal;
+            }
+          `
+						}}
+					/>
+					<script
+						key='google-map'
+						type='text/javascript'
+						src={`https://maps.googleapis.com/maps/api/js?key=${process.env.MAPS_API_KEY}`}
+						async
+						defer
+					/>
+				</Head>
 				<body>
 					<div
 						dangerouslySetInnerHTML={{

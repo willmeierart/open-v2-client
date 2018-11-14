@@ -6,6 +6,8 @@ import TitleBar from './TitleBar'
 import MobileTitleBar from './MobileTitleBar'
 import SplashIntro from '../home/SplashIntro'
 import ArtSquiggle from '../assets/ArtSquiggle'
+import InfoX from '../assets/InfoX'
+import Loader from 'react-loader'
 import { binder } from '../../lib/_utils'
 
 class Layout extends Component {
@@ -19,7 +21,8 @@ class Layout extends Component {
 			isClient: false,
 			hoverQ: false,
 			introTransComplete: false,
-			menuOpen: false
+			menuOpen: false,
+			infoOpen: false
 		}
 		binder(this, [ 'handleIntro', 'hoverTitleBar', 'handleMenuItemClick' ])
 	}
@@ -30,6 +33,7 @@ class Layout extends Component {
 				const { hasSeenIntro } = window.localStorage
 				this.props.onCheckIfMobile()
 				window.addEventListener('resize', () => {
+					console.log('resizing')
 					if ((this.props.isMobile && window.innerWidth > 1000) || (!this.props.isMobile && window.innerWidth < 1000)) {
 						this.props.onCheckIfMobile()
 					}
@@ -42,7 +46,7 @@ class Layout extends Component {
 					this.setState({ introTransComplete: true })
 				}
 			} else {
-				setTimeout(init, 200)
+				setTimeout(init, 100)
 			}
 		}
 		init()
@@ -64,7 +68,6 @@ class Layout extends Component {
 
 	handleIntro (e) {
 		e.preventDefault()
-		console.log(e)
 		if (this.splashWrapper) {
 			// const SWBounds = this.splashWrapper.getBoundingClientRect()
 			// const conds = SWBounds.bottom <= 0
@@ -110,53 +113,102 @@ class Layout extends Component {
 		this.setState({ menuOpen })
 	}
 
+	handleInfoClick = () => {
+		this.setState({ infoOpen: !this.state.infoOpen })
+	}
+
+	handleInfoExit = e => {
+		this.state.infoOpen && e.target.classList.value.indexOf('info-sec') === -1
+			? this.setState({ infoOpen: false })
+			: null
+	}
+
 	render () {
 		const { children, isMobile, introSeen } = this.props
-		const { headerTitle, titleBarHovered, hasSeenIntro, introTransComplete, menuOpen } = this.state
+		const {
+			headerTitle,
+			titleBarHovered,
+			hasSeenIntro,
+			introTransComplete,
+			menuOpen,
+			infoOpen,
+			hoverQ,
+			isClient
+		} = this.state
 		return (
-			<div className='Layout-outer'>
-				<div className='Layout-inner'>
-					{!introTransComplete && (
-						<div
-							onWheel={this.handleIntro}
-							className={`${hasSeenIntro ? 'transition ' : ''} splash-wrapper`}
-							ref={sw => {
-								this.splashWrapper = sw
-							}}
-						>
-							<SplashIntro isMobile={isMobile} handleIntro={this.handleIntro} />
-						</div>
-					)}
-
-					<header
-						onMouseEnter={() => {
-							this.hoverTitleBar(true)
-						}}
-						onMouseLeave={() => {
-							this.hoverTitleBar(false)
-						}}
-					>
-						{!isMobile ? (
-							<TitleBar isHovered={titleBarHovered} title={headerTitle} handleClick={this.handleMenuItemClick} />
-						) : (
-							<MobileTitleBar setMenuOpen={this.setMenuOpen} handleClick={this.handleMenuItemClick} />
+			<div className='Layout-outer' onClick={this.handleInfoExit}>
+				<Loader color='#ddff00' loaded={isClient}>
+					<div className='Layout-inner'>
+						{!introTransComplete && (
+							<div
+								onWheel={this.handleIntro}
+								className={`${hasSeenIntro ? 'transition ' : ''} splash-wrapper`}
+								ref={sw => {
+									this.splashWrapper = sw
+								}}
+							>
+								<SplashIntro isMobile={isMobile} handleIntro={this.handleIntro} />
+							</div>
 						)}
-					</header>
-					<main>{children}</main>
-					{!isMobile && (
-						<div
-							onMouseOver={() => {
-								this.setState({ hoverQ: true })
+
+						<header
+							onMouseEnter={() => {
+								this.hoverTitleBar(true)
 							}}
 							onMouseLeave={() => {
-								this.setState({ hoverQ: false })
+								this.hoverTitleBar(false)
 							}}
-							className='q-mark'
 						>
-							<a href='/info'>{this.state.hoverQ ? <ArtSquiggle /> : '?'}</a>
-						</div>
-					)}
-				</div>
+							{!isMobile ? (
+								<TitleBar isHovered={titleBarHovered} title={headerTitle} handleClick={this.handleMenuItemClick} />
+							) : (
+								<MobileTitleBar setMenuOpen={this.setMenuOpen} handleClick={this.handleMenuItemClick} />
+							)}
+						</header>
+						<main>{children}</main>
+						{!isMobile && (
+							<div
+								onMouseOver={() => {
+									this.setState({ hoverQ: true })
+								}}
+								onMouseLeave={() => {
+									this.setState({ hoverQ: false })
+								}}
+								className='q-mark'
+								onClick={this.handleInfoClick}
+							>
+								{infoOpen ? <InfoX /> : hoverQ ? <ArtSquiggle /> : '?'}
+							</div>
+						)}
+						{!isMobile &&
+						infoOpen && (
+							<div
+								ref={infoModal => {
+									this.infoModal = infoModal
+								}}
+								className='info-modal info-sec'
+							>
+								<div className='info-sec'>
+									<span onClick={this.handleInfoClick} className='info-sec'>
+										Denver's.Art
+									</span>{' '}
+									is the front page of Denver's art scene. A singular resource for presenting the best galleries and
+									events, both obvious and obscure. Data sourced directly from the Facebook API on a platform designed
+									to present elegantly what's going on -- where, when, here, now. No more needing to know what to
+									'like', who to ask, where to look. Welcome to Denver's Art.
+								</div>
+								<div className='info-sec'>
+									Reach out to{' '}
+									<a target='_blank' className='info-sec' href='mailto:willmeierart@gmail.com'>
+										willmeierart@gmail.com
+									</a>{' '}
+									if you think you'd like to be included in the project.
+								</div>
+							</div>
+						)}
+					</div>
+				</Loader>
+
 				<style jsx global>{`
 					header {
 						position: fixed;
@@ -171,9 +223,14 @@ class Layout extends Component {
 					.Layout-outer,
 					.Layout-inner,
 					.splash-wrapper {
-						// overflow: ${!introSeen || menuOpen ? 'hidden' : 'scroll'};
+						// overflow: ${!introSeen || menuOpen || infoOpen ? 'hidden' : 'scroll'};
 
 						overflow: hidden;
+						position: absolute;
+						top: 0;
+						left: 0;
+						width: 100vw;
+						height: 100vh;
 					}
 					.splash-wrapper {
 						z-index: 1000000001;
@@ -194,9 +251,28 @@ class Layout extends Component {
 						align-items: center;
 						cursor: pointer;
 						display: ${introSeen ? 'flex' : 'none'};
-					}
-					.q-mark a {
 						color: white;
+					}
+					.info-modal {
+						position: absolute;
+						width: 70vw;
+						min-height: 40vh;
+						top: 20vh;
+						left: 15vw;
+						background: black;
+						z-index: 99999999999;
+						padding: 5vw;
+						box-sizing: border-box;
+						color: white;
+						font-size: 2em;
+					}
+					.info-modal div {
+						margin-bottom: 1em;
+						line-height: 1.25em;
+					}
+					.info-modal a:hover, .info-modal span:hover {
+						color: var(--color-green);
+						cursor: pointer;
 					}
 				`}</style>
 			</div>

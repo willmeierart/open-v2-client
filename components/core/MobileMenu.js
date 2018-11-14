@@ -39,7 +39,7 @@ class MobileMenu extends Component {
 						justify-content: center;
 						border-bottom: 10px solid black;
 						cursor: pointer;
-						max-height: calc((90vh - 100px) / 2)
+						max-height: calc((90vh - 100px) / 2);
 					}
 				`}</style>
 			</div>
@@ -47,7 +47,6 @@ class MobileMenu extends Component {
 	}
 
 	render () {
-		console.log(this.props)
 		return (
 			<div className='outer-container'>
 				<div className='inner-container'>
