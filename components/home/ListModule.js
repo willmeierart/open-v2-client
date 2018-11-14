@@ -20,7 +20,8 @@ export default class ListModule extends Component {
 			shouldAnimate: true,
 			noScrollBar: false,
 			imgHeight: 0,
-			openDelay: false
+			openDelay: false,
+			showPlus: true
 		}
 	}
 
@@ -58,7 +59,7 @@ export default class ListModule extends Component {
 	handleExpand = force => {
 		this.setState({ isOpen: force !== undefined ? force : !this.state.isOpen }, () => {
 			if (this.state.isOpen) {
-				this.setState({ imgHeight: this.descripBox.getBoundingClientRect().width })
+				this.setState({ imgHeight: this.descripBox.getBoundingClientRect().width, showPlus: false })
 				if (this.descripBox.scrollHeight < this.descripBoxInner.scrollHeight) {
 					if (this.state.shouldAnimate) {
 						const oX = this.expBtn.getBoundingClientRect().x
@@ -89,6 +90,9 @@ export default class ListModule extends Component {
 				setTimeout(() => {
 					this.setState({ openDelay: true })
 				}, 50)
+				setTimeout(() => {
+					this.setState({ showPlus: true })
+				}, 1000)
 			}
 		})
 	}
@@ -219,7 +223,7 @@ export default class ListModule extends Component {
 	render () {
 		const { data, listOpen, openList } = this.props
 		const { isOpen, xAmt, yAmt, noScrollBar, scrollBarActual } = this.state
-		console.log(noScrollBar)
+		console.log('isOpen: ', isOpen)
 		return (
 			<div
 				ref={el => {
@@ -254,13 +258,13 @@ export default class ListModule extends Component {
 								>
 									{this.state.openDelay ? <Plus key='plus' /> : <Minus key='minus' />}
 								</MorphReplace>
-							) : isOpen ? (
+							) : !this.state.showPlus ? (
 								<Minus />
 							) : (
 								<Plus />
 							)}
 						</div>
-						{isOpen &&
+						{!this.state.showPlus &&
 						!noScrollBar && (
 							<div className='faux-minus'>
 								<Minus />
@@ -306,7 +310,11 @@ export default class ListModule extends Component {
 						right: -1em;
 						width: 1em;
 						height: 1em;
-						animation: openMinus 1s forwards;
+						animation-name: openMinus;
+						// animation-name: ${isOpen ? 'closeMinus' : 'openMinus'};
+						animation-duration: 1s;
+						animation-fill-mode: forwards;
+						animation-direction: ${isOpen ? 'initial' : 'reverse'};
 						visibility: ${!this.state.shouldAnimate && 'hidden'};
 					}
 					.title {
@@ -339,12 +347,12 @@ export default class ListModule extends Component {
 							transform: rotate(90deg) translate3d(${yAmt}px, ${-xAmt}px, 0);
 							opacity: 0;
 						}
-						30% {
+						1% {
 							transform: rotate(90deg) translate3d(${yAmt}px, ${-xAmt}px, 0);
 							opacity: 1;
 						}
-						99% {
-							transform: rotate(90deg) translate3d(0, 0, 0);
+						30% {
+							transform: rotate(90deg) translate3d(${yAmt}px, ${-xAmt}px, 0);
 							opacity: 1;
 						}
 						100% {
