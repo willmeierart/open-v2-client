@@ -2,11 +2,11 @@ import Head from '../components/Head'
 import Links from '../components/links'
 import { links as Ls } from '../lib/data'
 
-const ev = [ [ ...Ls ][0] ]
+const ev = [ [ ...Ls ][0], [ ...Ls ][1] ]
 
 export default function LinksPage () {
 	const shuffledArr = (() => {
-		let links = Ls.slice(1)
+		let links = Ls.slice(2)
 		let LINKS = [ ...links ]
 		let currentIndex = links.length
 		let temporaryValue
@@ -18,7 +18,7 @@ export default function LinksPage () {
 			links[currentIndex] = links[randomIndex]
 			links[randomIndex] = temporaryValue
 		}
-		return ev.concat(LINKS)
+		return ev.concat(links)
 	})()
 	return (
 		<div>
