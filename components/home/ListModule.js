@@ -33,6 +33,7 @@ export default class ListModule extends Component {
 
 	componentDidUpdate (prevProps) {
 		if (prevProps.shouldOpen !== this.props.shouldOpen) {
+			console.log('different shouldOpen props')
 			if (this.props.shouldOpen === false) {
 				this.handleExpand(false)
 			} else {
@@ -222,8 +223,7 @@ export default class ListModule extends Component {
 
 	render () {
 		const { data, listOpen, openList } = this.props
-		const { isOpen, xAmt, yAmt, noScrollBar, scrollBarActual } = this.state
-		console.log('isOpen: ', isOpen)
+		const { isOpen, xAmt, yAmt, noScrollBar } = this.state
 		return (
 			<div
 				ref={el => {
@@ -232,7 +232,7 @@ export default class ListModule extends Component {
 				className='outer-container'
 				id={data.id}
 				onClick={() => {
-					!isOpen ? this.handleExpand(true) : null
+					!isOpen ? this.manualExpand() : null
 				}}
 			>
 				{data ? (
@@ -320,6 +320,9 @@ export default class ListModule extends Component {
 					.title {
 						font-weight: 700;
 						text-transform: uppercase;
+					}
+					.title:hover {
+						color: ${isOpen ? 'inherit' : 'var(--color-green)'};
 					}
 					.see-on-map {
 						cursor: pointer;

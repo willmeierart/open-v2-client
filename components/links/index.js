@@ -4,12 +4,13 @@ import randomBoolean from 'random-boolean'
 const Links = ({ links }) => {
 	const splitta = phrase =>
 		phrase.split('').map((l, i) => {
+			const bool = randomBoolean()
 			return (
 				<span key={i}>
 					{l}
 					<style jsx>{`
 						span {
-							text-transform: ${randomBoolean() ? 'uppercase' : 'none'};
+							text-transform: ${bool ? 'uppercase' : 'none'};
 							display: inline-block;
 							flex-grow: 0;
 							white-space: pre;
@@ -31,18 +32,24 @@ const Links = ({ links }) => {
 				<span className='space'> </span>
 				<style jsx>{`
 					a {
-						font-size: 7em;
+						font-size: 8em;
 						text-decoration: none;
 						color: inherit;
 						white-space: pre-wrap;
 						width: fit-content;
 						cursor: pointer;
+						line-height: .75em;
 					}
 					a:visited {
 						background-color: var(--color-blue) !important;
 					}
 					a:hover {
 						background-color: var(--color-yellow);
+					}
+					@media screen and (max-width: 1000px) {
+						a {
+							font-size: 6em;
+						}
 					}
 				`}</style>
 			</a>

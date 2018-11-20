@@ -8,7 +8,6 @@ import SplashIntro from '../home/SplashIntro'
 import ArtSquiggle from '../assets/ArtSquiggle'
 import InfoX from '../assets/InfoX'
 import Loader from 'react-loader'
-import { binder } from '../../lib/_utils'
 
 class Layout extends Component {
 	constructor (props) {
@@ -24,7 +23,6 @@ class Layout extends Component {
 			menuOpen: false,
 			infoOpen: false
 		}
-		binder(this, [ 'handleIntro', 'hoverTitleBar', 'handleMenuItemClick' ])
 	}
 	componentDidMount () {
 		const init = () => {
@@ -66,7 +64,7 @@ class Layout extends Component {
 		}
 	}
 
-	handleIntro (e) {
+	handleIntro = e => {
 		e.preventDefault()
 		if (this.splashWrapper) {
 			// const SWBounds = this.splashWrapper.getBoundingClientRect()
@@ -86,7 +84,7 @@ class Layout extends Component {
 		}
 	}
 
-	setHeaderTitle () {
+	setHeaderTitle = () => {
 		const { router: { asPath } } = this.props
 		this.setState({ route: asPath })
 		if (asPath === '/') {
@@ -96,11 +94,11 @@ class Layout extends Component {
 		}
 	}
 
-	hoverTitleBar (bool) {
+	hoverTitleBar = bool => {
 		this.setState({ titleBarHovered: bool })
 	}
 
-	handleMenuItemClick (itemTxt) {
+	handleMenuItemClick = itemTxt => {
 		const { router } = this.props
 		if (itemTxt === 'links' || itemTxt === 'info') {
 			router.push(`/${itemTxt}`)

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom'
 import MapStyleManager from './MapStyleManager'
+import Loader from 'react-loader'
 
 class GoogleMap extends Component {
 	constructor (props) {
@@ -18,7 +19,8 @@ class GoogleMap extends Component {
 			actualMapMarkers: [],
 			center: initCenter.lat ? initCenter : this.defaultCenter,
 			bounds: null,
-			selectBegun: false
+			selectBegun: false,
+			loaded: false
 		}
 		this.ACTUAL_MAP_MARKERS = []
 		this.defaultCenter = { lat: 39.755123, lng: -104.986663 }
@@ -38,8 +40,12 @@ class GoogleMap extends Component {
 				})
 
 				this.toggleActiveMarkers()
-				this.setState({ inited: true }, () => {
-					this.setCenterViaMarkers(this.ACTUAL_MAP_MARKERS)
+				this.setState({ inited: true }, async () => {
+					await this.setCenterViaMarkers(this.ACTUAL_MAP_MARKERS)
+					this.setState({ loaded: true }, () => {
+						this.forceUpdate()
+					})
+					console.log('loaded')
 				})
 				// window.google.maps.event.addListener(this.map, 'idle', () => {
 				//   if (this.map.getZoom() !== 14) {
@@ -81,11 +87,9 @@ class GoogleMap extends Component {
 
 	toggleActiveMarkers = () => {
 		if (!this.state.inited) {
-			console.log('toggle not inited, ', this.props.markers)
 			this.props.markers.forEach(marker => {
 				marker.marker.map = this.map
 				const MARKER = new window.google.maps.Marker(marker.marker)
-				console.log(MARKER)
 				MARKER.addListener('click', () => {
 					this.props.setActiveMarker(marker.id)
 				})
@@ -94,8 +98,6 @@ class GoogleMap extends Component {
 
 			this.setState({ actualMapMarkers: this.ACTUAL_MAP_MARKERS })
 		} else {
-			console.log('toggle inited')
-
 			this.state.actualMapMarkers.forEach((marker, i) => {
 				const url =
 					this.props.markers[i].id === this.props.activeMarker
@@ -169,8 +171,10 @@ class GoogleMap extends Component {
 	}
 
 	render () {
+		console.log(typeof this.map, this.state.loaded)
 		return (
 			<div className='outer-wrapper'>
+				<Loader color='#ddff00' loaded={this.state.loaded} />
 				<div
 					id='map'
 					className='map'
@@ -182,11 +186,14 @@ class GoogleMap extends Component {
 					.outer-wrapper {
 						width: 100%;
 						height: 100%;
+						position: relative;
+						background-color: var(--color-green);
 					}
 					.map {
 						width: 100%;
 						height: 100%;
 						overflow: visible;
+						background-color: var(--color-green);
 					}
 				`}</style>
 			</div>
