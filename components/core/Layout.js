@@ -316,7 +316,7 @@ class Layout extends Component {
 						color: var(--color-green);
 						cursor: pointer;
 					}
-					@media (orientation: landscape) and (max-height: 700px) {
+					@media (orientation: landscape) and (max-height: 600px) {
 						.Layout-inner {
 							display: ${isDevice && isMobile ? 'none' : 'block'};
 						}
