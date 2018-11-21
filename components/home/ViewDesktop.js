@@ -19,15 +19,17 @@ export default class Desktop extends Component {
 	componentDidMount () {
 		const init = () => {
 			if (typeof window !== 'undefined') {
-				window.addEventListener('resize', () => {
-					this.handleScrollBarPos()
-				})
+				window.addEventListener('resize', this.handleScrollBarPos)
 				this.handleScrollBarLeft()
 			} else {
 				setTimeout(init, 200)
 			}
 		}
 		init()
+	}
+
+	componentWillUnmount () {
+		window.removeEventListener('resize', this.handleScrollBarPos)
 	}
 
 	handleScrollBarLeft = () => {
