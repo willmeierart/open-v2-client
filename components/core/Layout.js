@@ -68,7 +68,6 @@ class Layout extends Component {
 	}
 
 	handleResize = () => {
-		console.log('ok')
 		if ((this.props.isMobile && window.innerWidth > 1000) || (!this.props.isMobile && window.innerWidth < 1000)) {
 			this.props.onCheckIfMobile()
 		}
@@ -157,7 +156,6 @@ class Layout extends Component {
 			height,
 			isDevice
 		} = this.state
-		console.log('device', isDevice)
 
 		return (
 			<div className='Layout-outer' onClick={this.handleInfoExit}>
