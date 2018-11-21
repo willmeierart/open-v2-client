@@ -17,6 +17,7 @@ const Links = ({ links }) => {
 							min-width: fit-content;
 							display: inline-flex;
 							width: fit-content;
+							margin-right: -.05em;
 						}
 						span::before {
 							white-space: pre;
@@ -67,7 +68,7 @@ const Links = ({ links }) => {
         }
         .inner-container {
           padding: 0;
-          width: 100vw;
+          width: 101vw;
           height: 100%;
       `}</style>
 		</div>
