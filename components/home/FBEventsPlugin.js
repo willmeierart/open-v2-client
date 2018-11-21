@@ -10,7 +10,6 @@ class FBEventsPlugin extends Component {
 		await FB.XFBML.parse()
 		FB.Event.subscribe('xfbml.render', () => {
 			this.setState({ loaded: true })
-			console.log('loaded')
 		})
 	}
 

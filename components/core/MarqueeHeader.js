@@ -97,6 +97,7 @@ class MarqueeHeader extends Component {
 					this.outer = outer
 				}}
 				className='outer-container'
+				onClick={this.props.handleClick ? this.props.handleClick : null}
 			>
 				<div className='inner-container'>
 					<div

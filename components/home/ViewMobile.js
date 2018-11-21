@@ -36,6 +36,12 @@ export default class Mobile extends Component {
 		init()
 	}
 
+	componentDidUpdate (prevProps) {
+		if (this.props.isDevice !== prevProps.isDevice) {
+			this.setVPHeight()
+		}
+	}
+
 	setVPHeight = () => {
 		const VH = vhCheck()
 		const height = VH.windowHeight
@@ -86,19 +92,19 @@ export default class Mobile extends Component {
 
 	render () {
 		const {
-			state: { viewPos, scrollBarPosY, viewOpen, isDevice },
-			props: { galleries, bodyHeight, children, setActiveMarker, activeMarker, introSeen }
+			state: { viewPos, scrollBarPosY, viewOpen },
+			props: { galleries, bodyHeight, children, setActiveMarker, activeMarker, introSeen, marqueeHeader }
 		} = this
 
-		const Map = children[1]
-		const TitleBar = children[0]
+		// const Map = children[1]
+		// const TitleBar = children[0]
 
 		const dynamicHeight = bodyHeight
 		// const dynamicHeight = height === 0 ? bodyHeight : height + 'px'
 
 		return (
 			<div className='outer-wrapper'>
-				<div id='google-map'>{Map}</div>
+				<div id='google-map'>{children}</div>
 				<div className='inner-wrapper'>
 					<div id='view'>
 						<div id='scrollbar'>
@@ -111,7 +117,7 @@ export default class Mobile extends Component {
 								this.titleBar = titleBar
 							}}
 						>
-							{TitleBar}
+							{this.props.marqueeHeader(this.setVPHeight)}
 						</div>
 						<div
 							id='list-view'

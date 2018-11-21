@@ -27,6 +27,9 @@ class Layout extends Component {
 			isDevice: false
 		}
 	}
+
+	componentWillMount () {}
+
 	componentDidMount () {
 		const init = () => {
 			if (typeof window !== 'undefined') {
@@ -54,13 +57,16 @@ class Layout extends Component {
 		window.removeEventListener('scroll', this.handleIntro)
 	}
 
-	componentDidUpdate (prevProps, prevState) {
+	componentDidUpdate (prevProps) {
 		if (
 			this.props.router.asPath !== this.props.router.asPath ||
 			this.props.router.asPath !== this.state.route ||
 			this.props.viewState !== prevProps.viewState
 		) {
 			this.setHeaderTitle()
+		}
+		if (this.props.introTransComplete !== prevProps.introTransComplete) {
+			this.handleResize()
 		}
 		if (this.props.isMobile !== prevProps.isMobile) {
 			this.setVPHeight()
@@ -312,10 +318,10 @@ class Layout extends Component {
 					}
 					@media (orientation: landscape) {
 						.Layout-inner {
-							display: ${isDevice && isMobile && hasSeenIntro ? 'none' : 'block'};
+							display: ${isDevice && isMobile ? 'none' : 'block'};
 						}
 						.landscape-placeholder {
-							display: ${isDevice && isMobile && hasSeenIntro ? 'flex' : 'none'};
+							display: ${isDevice && isMobile ? 'flex' : 'none'};
 							justify-content: center;
 							align-items: center;
 							width: 100vw;

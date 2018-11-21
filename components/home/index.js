@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { fetchFBdata, setAllMapMarkers, setActiveMarker, setActualMapMarkers } from '../../lib/redux/actions'
-import { gallery, todayEvent, futureEvent } from '../../lib/mockData'
 import ViewMobile from './ViewMobile'
 import ViewDesktop from './ViewDesktop'
 import GoogleMap from './GoogleMap'
@@ -26,8 +25,9 @@ class Home extends Component {
 	}
 
 	async componentDidMount () {
-		await this.props.onFetchFBdata()
-		this.returnMockDataList()
+		if (!this.props.FBdata) {
+			await this.props.onFetchFBdata()
+		}
 	}
 
 	componentDidUpdate (prevProps) {
@@ -39,38 +39,6 @@ class Home extends Component {
 			this.setAllMapMarkers(this.props.activeMarker)
 			// setTimeout(() => { this.setAllMapMarkers(this.props.activeMarker) })
 		}
-	}
-
-	returnMockDataList = () => {
-		const { FBdata, eventsState } = this.props
-		const fakeGalleries = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ].map(x => gallery)
-		const fakeEvents = {
-			today: [ 0, 0, 0, 0, 0, 0, 0, 0 ].map(x => todayEvent),
-			upcoming: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ].map(x => futureEvent)
-		}
-		// const testEventsList = FBdata ? FBdata.events[eventsState].concat(fakeEvents[eventsState]) : fakeEvents[eventsState]
-		const testEventsList = fakeEvents[eventsState]
-		const testGalleriesList = FBdata ? FBdata.galleries.concat(fakeGalleries) : fakeGalleries
-		this.setState({ testEventsList, testGalleriesList })
-	}
-
-	handleMapMarkers = () => {
-		const teLocations = this.state.testEventsList.map(ev => ({
-			id: ev.id,
-			name: ev.name,
-			coords: {
-				lat: ev.place.location.latitude,
-				lng: ev.place.location.longitude
-			}
-		}))
-		const tgLocations = this.state.testGalleriesList.map(ev => ({
-			id: ev.id,
-			name: ev.name,
-			coords: {
-				lat: ev.location.latitude,
-				lng: ev.location.longitude
-			}
-		}))
 	}
 
 	setAllMapMarkers = activeMarkerID => {
@@ -121,8 +89,8 @@ class Home extends Component {
 						bodyHeight={this.bodyHeight}
 						setActiveMarker={onSetActiveMarker}
 						activeMarker={activeMarker}
+						marqueeHeader={handleClick => <MarqueeHeader handleClick={handleClick} isMobile title={'galleries'} />}
 					>
-						<MarqueeHeader title={'galleries'} />
 						<GoogleMap
 							markers={mapMarkers('gallery')}
 							setActiveMarker={onSetActiveMarker}

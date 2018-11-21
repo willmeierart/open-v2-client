@@ -4,9 +4,6 @@ import Head from '../components/Head'
 import Home from '../components/home'
 
 export default class HomePage extends Component {
-	constructor (props) {
-		super(props)
-	}
 	render () {
 		return (
 			<div>
