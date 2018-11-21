@@ -231,9 +231,9 @@ class Layout extends Component {
 										Denver's.Art
 									</span>{' '}
 									is the front page of Denver's art scene. A singular resource for presenting the best galleries and
-									events, both obvious and obscure. Data sourced directly from the Facebook API on a platform designed
-									to present elegantly what's going on -- where, when, here, now. No more needing to know what to
-									'like', who to ask, where to look. Welcome to Denver's Art.
+									events, both obvious and obscure. Data sourced directly from Facebook into a platform designed to
+									present elegantly what's going on -- where, when, here, now. No more needing to know what to 'like',
+									who to ask, where to look. Welcome to Denver's Art.
 								</div>
 								<a className='info-sec' href='mailto:denversartscene@gmail.com'>
 									Reach out if you think you'd like to be included in the project.
