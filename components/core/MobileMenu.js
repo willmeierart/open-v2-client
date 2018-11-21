@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import MarqueeHeader from './MarqueeHeader'
-import { binder } from '../../lib/_utils'
 
 class MobileMenu extends Component {
 	constructor (props) {
@@ -9,7 +8,6 @@ class MobileMenu extends Component {
 		this.state = {
 			inited: false
 		}
-		binder(this, [ 'renderMarquees' ])
 	}
 
 	componentDidMount () {
@@ -20,7 +18,7 @@ class MobileMenu extends Component {
 		this.props.handleClick(l)
 	}
 
-	renderMarquees () {
+	renderMarquees = () => {
 		return [ 'galleries', 'links' ].map((l, i) => (
 			<div
 				key={l}
@@ -47,6 +45,7 @@ class MobileMenu extends Component {
 	}
 
 	render () {
+		const { height, isOpen, handleClick } = this.props
 		return (
 			<div className='outer-container'>
 				<div className='inner-container'>
@@ -54,7 +53,7 @@ class MobileMenu extends Component {
 					<div
 						className='faq'
 						onClick={() => {
-							this.props.handleClick('info')
+							handleClick('info')
 						}}
 					>
 						<MarqueeHeader isFAQ isMobileMenu title='FAQ' />
@@ -64,9 +63,9 @@ class MobileMenu extends Component {
 					.outer-container {
 						width: 100vw;
 						margin-left: -10px;
-						height: calc(100vh - 100px);
+						height: ${height === 0 ? 'calc(100vh - 100px)' : `${height - 100}px`};
 						transition: transform 800ms linear;
-						transform: translateX(${!this.props.isOpen || !this.state.inited ? window.innerWidth : 0}px);
+						transform: translateX(${!isOpen || !this.state.inited ? window.innerWidth : 0}px);
 						box-sizing: content-box;
 						border-left: 10px solid black;
 					}

@@ -12,7 +12,7 @@ class GoogleMap extends Component {
 
 		const initCenter = activeMarker
 			? markers.filter(m => m.id === activeMarker).pop().marker.position
-			: { lat: 39.755123, lng: -104.986663 }
+			: { lat: parseFloat(39.755123), lng: parseFloat(-104.986663) }
 
 		this.state = {
 			inited: false,
@@ -23,7 +23,7 @@ class GoogleMap extends Component {
 			loaded: false
 		}
 		this.ACTUAL_MAP_MARKERS = []
-		this.defaultCenter = { lat: 39.755123, lng: -104.986663 }
+		this.defaultCenter = { lat: parseFloat(39.755123), lng: parseFloat(-104.986663) }
 	}
 
 	componentDidMount () {
@@ -45,7 +45,6 @@ class GoogleMap extends Component {
 					this.setState({ loaded: true }, () => {
 						this.forceUpdate()
 					})
-					console.log('loaded')
 				})
 				// window.google.maps.event.addListener(this.map, 'idle', () => {
 				//   if (this.map.getZoom() !== 14) {
@@ -89,11 +88,13 @@ class GoogleMap extends Component {
 		if (!this.state.inited) {
 			this.props.markers.forEach(marker => {
 				marker.marker.map = this.map
-				const MARKER = new window.google.maps.Marker(marker.marker)
-				MARKER.addListener('click', () => {
-					this.props.setActiveMarker(marker.id)
-				})
-				this.ACTUAL_MAP_MARKERS.push(MARKER)
+				if (marker.marker.position.lat && marker.marker.position.lng) {
+					const MARKER = new window.google.maps.Marker(marker.marker)
+					MARKER.addListener('click', () => {
+						this.props.setActiveMarker(marker.id)
+					})
+					this.ACTUAL_MAP_MARKERS.push(MARKER)
+				}
 			})
 
 			this.setState({ actualMapMarkers: this.ACTUAL_MAP_MARKERS })
@@ -127,11 +128,11 @@ class GoogleMap extends Component {
 							marker.title.toLowerCase().indexOf('edge') === -1 &&
 							marker.title.toLowerCase().indexOf('pirate') === -1 &&
 							marker.title.toLowerCase().indexOf('myhren') === -1
-						if (marker.position && mainCluster) {
-							if (maxLat === null || marker.position.lat > maxLat) maxLat = marker.position.lat()
-							if (minLat === null || marker.position.lat < minLat) minLat = marker.position.lat()
-							if (maxLng === null || marker.position.lng > maxLng) maxLng = marker.position.lng()
-							if (minLng === null || marker.position.lng < minLng) minLng = marker.position.lng()
+						if (marker.position && typeof marker.position !== 'undefined' && mainCluster) {
+							if (maxLat === null || marker.position.lat() > maxLat) maxLat = marker.position.lat()
+							if (minLat === null || marker.position.lat() < minLat) minLat = marker.position.lat()
+							if (maxLng === null || marker.position.lng() > maxLng) maxLng = marker.position.lng()
+							if (minLng === null || marker.position.lng() < minLng) minLng = marker.position.lng()
 							obj.coords.lat = parseFloat(((maxLat + minLat) / 2).toFixed(5))
 							obj.coords.lng = parseFloat(((maxLng + minLng) / 2).toFixed(5))
 							const invokedPos = { lat: marker.position.lat(), lng: marker.position.lng() }
@@ -139,7 +140,7 @@ class GoogleMap extends Component {
 						}
 						return obj
 					},
-					{ coords: { lat: 0, lng: 0 } }
+					{ coords: { lat: parseFloat(0), lng: parseFloat(0) } }
 				)
 				if (markerCenter.coords.lat === 0 && markerCenter.coords.lng === 0) {
 					console.warn('markercenter.Coords are 0,0 - defaulting to props.center')
@@ -171,7 +172,6 @@ class GoogleMap extends Component {
 	}
 
 	render () {
-		console.log(typeof this.map, this.state.loaded)
 		return (
 			<div className='outer-wrapper'>
 				<Loader color='#ddff00' loaded={this.state.loaded} />

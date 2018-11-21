@@ -21,6 +21,7 @@ const CustomHead = (props = initialProps) => {
 			<link rel='shortcut icon' href='/static/favicon.ico' />
 			{/* <script async src='https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXXX-X' /> */}
 			<link rel='stylesheet' href='https://use.typekit.net/weo5ngi.css' />
+			<meta name='apple-mobile-web-app-capable' content='yes' />
 		</Head>
 	)
 }

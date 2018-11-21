@@ -1,8 +1,8 @@
-export default () => (
+export default ({ placeholder }) => (
 	<svg version='1.1' id='Layer_1' x='0px' y='0px' viewBox='0 0 32 32' style={{ enableBackground: 'new 0 0 32 32' }}>
 		<style jsx>{`
 			svg {
-				width: 30px;
+				width: ${placeholder ? '50vmin' : '30px'};
 				margin-top: 5px;
 			}
 			.st0 {

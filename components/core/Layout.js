@@ -8,6 +8,7 @@ import SplashIntro from '../home/SplashIntro'
 import ArtSquiggle from '../assets/ArtSquiggle'
 import InfoX from '../assets/InfoX'
 import Loader from 'react-loader'
+import vhCheck from 'vh-check'
 
 class Layout extends Component {
 	constructor (props) {
@@ -21,7 +22,9 @@ class Layout extends Component {
 			hoverQ: false,
 			introTransComplete: false,
 			menuOpen: false,
-			infoOpen: false
+			infoOpen: false,
+			height: 0,
+			isDevice: false
 		}
 	}
 	componentDidMount () {
@@ -29,13 +32,8 @@ class Layout extends Component {
 			if (typeof window !== 'undefined') {
 				this.setState({ isClient: true })
 				const { hasSeenIntro } = window.localStorage
-				this.props.onCheckIfMobile()
-				window.addEventListener('resize', () => {
-					console.log('resizing')
-					if ((this.props.isMobile && window.innerWidth > 1000) || (!this.props.isMobile && window.innerWidth < 1000)) {
-						this.props.onCheckIfMobile()
-					}
-				})
+				this.handleResize()
+				window.addEventListener('resize', this.handleResize)
 				if (this.splashWrapper) window.addEventListener('scroll', this.handleIntro)
 				// this.setState({ hasSeenIntro })
 				// this.props.onSetIntroSeen(hasSeenIntro)
@@ -51,6 +49,11 @@ class Layout extends Component {
 		this.setHeaderTitle()
 	}
 
+	componentWillUnmount () {
+		window.removeEventListener('resize', this.handleResize)
+		window.removeEventListener('scroll', this.handleIntro)
+	}
+
 	componentDidUpdate (prevProps, prevState) {
 		if (
 			this.props.router.asPath !== this.props.router.asPath ||
@@ -59,8 +62,28 @@ class Layout extends Component {
 		) {
 			this.setHeaderTitle()
 		}
-		if (!this.hasSeenIntro && this.splashWrapper) {
-			// window.addEventListener('scroll', this.handleIntro)
+		if (this.props.isMobile !== prevProps.isMobile) {
+			this.setVPHeight()
+		}
+	}
+
+	handleResize = () => {
+		console.log('ok')
+		if ((this.props.isMobile && window.innerWidth > 1000) || (!this.props.isMobile && window.innerWidth < 1000)) {
+			this.props.onCheckIfMobile()
+		}
+		this.setVPHeight()
+		this.setState({ isDevice: typeof window.orientation !== 'undefined' })
+	}
+
+	setVPHeight = () => {
+		if (this.props.isMobile || !this.state.isClient) {
+			const VH = vhCheck()
+			const height = VH.windowHeight
+			// const height = `${window.innerHeight - VH.offset}px`
+			if (this.state.height === 0 || this.state.height !== height) {
+				this.setState({ height })
+			}
 		}
 	}
 
@@ -128,13 +151,21 @@ class Layout extends Component {
 			titleBarHovered,
 			hasSeenIntro,
 			introTransComplete,
-			menuOpen,
 			infoOpen,
 			hoverQ,
-			isClient
+			isClient,
+			height,
+			isDevice
 		} = this.state
+		console.log('device', isDevice)
+
 		return (
 			<div className='Layout-outer' onClick={this.handleInfoExit}>
+				<div className='landscape-placeholder'>
+					<div className='placeholder-inner'>
+						<ArtSquiggle placeholder />
+					</div>
+				</div>
 				<Loader color='#ddff00' loaded={isClient}>
 					<div className='Layout-inner'>
 						{!introTransComplete && (
@@ -160,7 +191,12 @@ class Layout extends Component {
 							{!isMobile ? (
 								<TitleBar isHovered={titleBarHovered} title={headerTitle} handleClick={this.handleMenuItemClick} />
 							) : (
-								<MobileTitleBar setMenuOpen={this.setMenuOpen} handleClick={this.handleMenuItemClick} />
+								<MobileTitleBar
+									setVPHeight={this.setVPHeight}
+									height={height}
+									setMenuOpen={this.setMenuOpen}
+									handleClick={this.handleMenuItemClick}
+								/>
 							)}
 						</header>
 						<main>{children}</main>
@@ -195,7 +231,7 @@ class Layout extends Component {
 									to present elegantly what's going on -- where, when, here, now. No more needing to know what to
 									'like', who to ask, where to look. Welcome to Denver's Art.
 								</div>
-								<a className='info-sec' href='mailto:willmeierart@gmail.com'>
+								<a className='info-sec' href='mailto:denversartscene@gmail.com'>
 									Reach out if you think you'd like to be included in the project.
 								</a>
 							</div>
@@ -217,14 +253,18 @@ class Layout extends Component {
 					.Layout-outer,
 					.Layout-inner,
 					.splash-wrapper {
-						// overflow: ${!introSeen || menuOpen || infoOpen ? 'hidden' : 'scroll'};
-
 						overflow: hidden;
 						position: absolute;
 						top: 0;
 						left: 0;
 						width: 100vw;
-						height: 100vh;
+					}
+					.wrapper,
+					.main-sec,
+					.Layout-outer,
+					.Layout-inner,
+					.splash-wrapper {
+						height: ${isMobile ? `${height}px` : '100vh'};
 					}
 					.splash-wrapper {
 						z-index: 1000000001;
@@ -232,6 +272,9 @@ class Layout extends Component {
 					.splash-wrapper.transition {
 						transform: translate3D(0, -100%, 0);
 						transition: transform 1s ease-in-out;
+					}
+					.landscape-placeholder {
+						display: none;
 					}
 					.q-mark {
 						position: fixed;
@@ -264,9 +307,34 @@ class Layout extends Component {
 						margin-bottom: 1em;
 						line-height: 1.25em;
 					}
-					.info-modal a:hover, .info-modal span:hover {
+					.info-modal a:hover,
+					.info-modal span:hover {
 						color: var(--color-green);
 						cursor: pointer;
+					}
+					@media (orientation: landscape) {
+						.Layout-inner {
+							display: ${isDevice && isMobile && hasSeenIntro ? 'none' : 'block'};
+						}
+						.landscape-placeholder {
+							display: ${isDevice && isMobile && hasSeenIntro ? 'flex' : 'none'};
+							justify-content: center;
+							align-items: center;
+							width: 100vw;
+						}
+						.placeholder-inner {
+							position: relative;
+							margin: auto;
+							animation: rotate 5s linear infinite;
+						}
+					}
+					@-webkit-keyframes rotate {
+						from {
+							-webkit-transform: rotate(0deg);
+						}
+						to {
+							-webkit-transform: rotate(360deg);
+						}
 					}
 				`}</style>
 			</div>

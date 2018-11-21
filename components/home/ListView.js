@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import { Element, scroller } from 'react-scroll'
 import ListModule from './ListModule'
@@ -14,10 +13,8 @@ class ListView extends Component {
 
 	scrollToEl = () => {
 		const { activeID } = this.props
-		const el = ReactDOM.findDOMNode(this[activeID])
 		scroller.scrollTo(`${activeID}`, {
 			duration: 1000,
-			// delay: 1000,
 			smooth: true,
 			containerId: 'list-view',
 			offset: this.props.openList ? -230 : -130
@@ -25,7 +22,7 @@ class ListView extends Component {
 	}
 
 	renderList = () => {
-		const { list, setActiveMarker, activeID, openList, listOpen } = this.props
+		const { list, setActiveMarker, activeID, openList, listOpen, isMobile } = this.props
 		return list.map((li, i) => (
 			<li
 				ref={r => {
@@ -41,6 +38,7 @@ class ListView extends Component {
 						shouldOpen={activeID === li.id}
 						openList={openList}
 						listOpen={listOpen}
+						isMobile
 					/>
 				</Element>
 			</li>

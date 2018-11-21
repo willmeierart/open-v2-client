@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { binder } from '../../lib/_utils'
+import vhCheck from 'vh-check'
 import ListView from './ListView'
 import ScrollBar from './ScrollBar'
 
@@ -13,11 +13,10 @@ export default class Mobile extends Component {
 			viewPos: 'calc(100vh - 4em - 230px)',
 			scrollBarPosY: 0,
 			viewOpen: false,
-			isDevice: false
+			isDevice: false,
+			height: 0,
+			viewClosedAmt: 'calc(100vh - 4em - 100px)'
 		}
-		binder(this, [ 'handleListScroll', 'preventScroll', 'handleTitleBarClick', 'handleScrollBarPos' ])
-
-		this.viewClosedAmt = 'calc(100vh - 4em - 100px)'
 
 		this.viewOpenAmt = '20px'
 	}
@@ -25,8 +24,9 @@ export default class Mobile extends Component {
 	componentDidMount () {
 		const init = () => {
 			if (typeof window !== 'undefined') {
+				// window.addEventListener('scroll', this.preventScroll)
 				if (typeof window.orientation !== 'undefined') {
-					console.log('isDevice')
+					this.setVPHeight()
 					this.setState({ isDevice: true })
 				}
 			} else {
@@ -36,13 +36,21 @@ export default class Mobile extends Component {
 		init()
 	}
 
-	handleScrollBarPos (frac) {
+	setVPHeight = () => {
+		const VH = vhCheck()
+		const height = VH.windowHeight
+		if (this.state.height === 0 || this.state.height !== height) {
+			this.setState({ height, viewClosedAmt: `calc(${height - 100}px - 4em)` })
+		}
+	}
+
+	handleScrollBarPos = frac => {
 		if (frac) {
 			this.setState({ scrollBarPosY: frac })
 		}
 	}
 
-	handleListScroll (e, num) {
+	handleListScroll = (e, num) => {
 		if (this.state.canScroll) {
 			if (e) {
 				if (e.target === this.list) {
@@ -63,30 +71,17 @@ export default class Mobile extends Component {
 		}
 	}
 
-	preventScroll (e) {
+	preventScroll = e => {
 		e.preventDefault()
 		e.stopPropagation()
 	}
 
-	handleTitleBarClick () {
-		const { viewOpen } = this.state
+	handleTitleBarClick = () => {
+		const { viewOpen, viewClosedAmt } = this.state
 		this.setState({
-			viewPos: viewOpen ? this.viewClosedAmt : this.viewOpenAmt,
+			viewPos: viewOpen ? viewClosedAmt : this.viewOpenAmt,
 			viewOpen: !viewOpen
 		})
-	}
-
-	deviceStyles () {
-		return (
-			<div>
-				<style jsx global>{`
-					html,
-					body {
-						overflow: hidden;
-					}
-				`}</style>
-			</div>
-		)
 	}
 
 	render () {
@@ -98,7 +93,8 @@ export default class Mobile extends Component {
 		const Map = children[1]
 		const TitleBar = children[0]
 
-		console.log('intro seen: ', introSeen)
+		const dynamicHeight = bodyHeight
+		// const dynamicHeight = height === 0 ? bodyHeight : height + 'px'
 
 		return (
 			<div className='outer-wrapper'>
@@ -133,14 +129,14 @@ export default class Mobile extends Component {
 								activeID={activeMarker}
 								listOpen={viewOpen}
 								openList={this.handleTitleBarClick}
+								isMobile
 							/>
 						</div>
 					</div>
 				</div>
-				{isDevice && this.deviceStyles()}
 				<style jsx>{`
 					.outer-wrapper {
-						height: ${bodyHeight};
+						height: ${dynamicHeight};
 						width: 100vw;
 						display: flex;
 						margin-top: 100px;
@@ -164,16 +160,16 @@ export default class Mobile extends Component {
 						transition-timing-function: ease-out;
 					}
 					#view {
-						height: calc(${bodyHeight} - 70px);
+						height: calc(${dynamicHeight} - 70px);
 						width: 100vw;
-						min-height: ${bodyHeight};
+						min-height: ${dynamicHeight};
 						position: relative;
 						background-color: var(--color-blue);
 					}
 					#scrollbar {
 						position: absolute;
 						right: 0;
-						height: ${bodyHeight};
+						height: ${dynamicHeight};
 						top: 4em;
 						z-index: ${introSeen ? '10000000' : '-1'};
 					}
@@ -187,9 +183,12 @@ export default class Mobile extends Component {
 					}
 					.list-section {
 						width: calc(100vw - 20px);
-						height: calc(${bodyHeight} - 80px);
+						height: calc(${dynamicHeight} - 80px);
 						overflow: scroll;
 						-webkit-overflow-scrolling: touch;
+					}
+					.list-section::-webkit-scrollbar {
+						display: none;
 					}
 				`}</style>
 			</div>

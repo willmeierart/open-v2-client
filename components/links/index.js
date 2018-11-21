@@ -63,6 +63,7 @@ const Links = ({ links }) => {
           background-color: var(--color-orange);
           height: calc(100vh - 100px);
           overflow: scroll;
+					-webkit-overflow-scrolling: touch;
         }
         .inner-container {
           padding: 0;

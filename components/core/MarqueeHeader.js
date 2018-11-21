@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import FontWyler from '../magic/FontWyler'
+// import FontWyler from '../magic/FontWyler'
 import FauxWyler from '../magic/FauxWyler'
-import { binder } from '../../lib/_utils'
 
 class MarqueeHeader extends Component {
 	constructor (props) {
@@ -17,7 +16,6 @@ class MarqueeHeader extends Component {
 			fontSize: this.props.isMobileMenu && !this.props.isFAQ ? '20vh' : '3em'
 		}
 		this.speed = this.props.isMobileMenu && !this.props.isFAQ ? '8' : '3'
-		binder(this, [ 'renderWordDivs', 'setWdStyleColor' ])
 	}
 
 	componentDidMount () {
@@ -38,7 +36,7 @@ class MarqueeHeader extends Component {
 		}
 	}
 
-	setWdStyleColor () {
+	setWdStyleColor = () => {
 		const { title } = this.props
 		let color = 'var(--color-lightblue)'
 		switch (title) {
@@ -55,7 +53,7 @@ class MarqueeHeader extends Component {
 		this.setState({ wdColor: color })
 	}
 
-	renderWordDivs () {
+	renderWordDivs = () => {
 		const outerWidth = this.outer.getBoundingClientRect().width
 		const innerWidth = this.word.getBoundingClientRect().width
 		const arr = []
@@ -118,6 +116,7 @@ class MarqueeHeader extends Component {
           white-space: nowrap;
           width: 100vw;
 					position: relative;
+					z-index: 9999999999999999;
         }
         .inner-container {
           display: flex;

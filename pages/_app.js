@@ -35,7 +35,9 @@ export default class MyApp extends App {
 					.ev-font {
 						font-family: 'Art-Sans';
 					}
-					*::-webkit-scrollbar {
+					*::-webkit-scrollbar,
+					::-webkit-scrollbar,
+					-webkit-scrollbar {
 						display: none;
 					}
 					* {

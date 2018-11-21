@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+// import dynamic from 'next/dynamic'
+import { MorphReplace } from 'react-svg-morph'
 import Expand from 'react-expand-animated'
 import moment from 'moment'
 import Plus from '../assets/plus'
 import Minus from '../assets/minus'
 import LinkOut from '../assets/LinkOut'
 import FBEventsPlugin from './FBEventsPlugin'
-import { MorphReplace } from 'react-svg-morph'
+// const FBEventsPlugin = dynamic(() => import('./FBEventsPlugin'))
 
 export default class ListModule extends Component {
 	constructor (props) {
@@ -33,7 +35,6 @@ export default class ListModule extends Component {
 
 	componentDidUpdate (prevProps) {
 		if (prevProps.shouldOpen !== this.props.shouldOpen) {
-			console.log('different shouldOpen props')
 			if (this.props.shouldOpen === false) {
 				this.handleExpand(false)
 			} else {
@@ -161,9 +162,11 @@ export default class ListModule extends Component {
 						<a href={`mailto:${data.email}`}>{data.email}</a>
 					</div>
 				)}
-				<div className='img-events-wrapper'>
-					<FBEventsPlugin ID={data.id} width={moduleWidth} />
-				</div>
+				{!this.props.isMobile && (
+					<div className='img-events-wrapper'>
+						<FBEventsPlugin ID={data.id} width={moduleWidth} />
+					</div>
+				)}
 				<style jsx>{`
 					.expanded-content {
 						display: flex;

@@ -14,7 +14,7 @@ const InfoPage = () => {
 					elegantly what's going on -- where, when, here, now. No more needing to know what to 'like', who to ask, where
 					to look. Welcome to Denver's Art.
 				</div>
-				<a className='info-sec' href='mailto:willmeierart@gmail.com'>
+				<a className='info-sec' href='mailto:denversartscene@gmail.com'>
 					Reach out if you think you'd like to be included in the project.
 				</a>
 			</section>

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { binder } from '../../lib/_utils'
 import ListView from './ListView'
 import ScrollBar from './ScrollBar'
 
