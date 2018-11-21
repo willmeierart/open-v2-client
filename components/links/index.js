@@ -17,7 +17,7 @@ const Links = ({ links }) => {
 							min-width: fit-content;
 							display: inline-flex;
 							width: fit-content;
-							margin-right: -.05em;
+							margin-right: -.025em;
 						}
 						span::before {
 							white-space: pre;
@@ -65,6 +65,7 @@ const Links = ({ links }) => {
           height: calc(100vh - 100px);
           overflow: scroll;
 					-webkit-overflow-scrolling: touch;
+					overflow-x: hidden;
         }
         .inner-container {
           padding: 0;
