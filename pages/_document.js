@@ -35,6 +35,25 @@ export default class CustomDocument extends Document {
 						async
 						defer
 					/>
+					<meta key='meta-title' name='title' content='Denvers Art' />
+					<meta key='og:title' property='og:title' content='Denvers Art' />
+					<meta key='og:url' property='og:url' content='https://denvers.art/' />
+					<meta key='og:image' property='og:image' content='/static/assets/logo.jpg' />
+					<meta key='og:description' property='og:description' content='The front page of Denvers Art scene' />
+					<link key='icon' rel='shortcut icon' href='/static/favicon.ico' />
+					<link key='typekit' rel='stylesheet' href='https://use.typekit.net/weo5ngi.css' />
+					<script
+						dangerouslySetInnerHTML={{
+							__html: `
+						window.dataLayer = window.dataLayer || []
+						function gtag () {
+							window.dataLayer.push(arguments)
+						}
+						gtag('js', new Date())
+						gtag('config', 'UA-129744723-1')
+				`
+						}}
+					/>
 				</Head>
 				<body>
 					<div
