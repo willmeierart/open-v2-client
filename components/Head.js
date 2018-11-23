@@ -17,7 +17,9 @@ const CustomHead = (props = initialProps) => {
 				name='viewport'
 				content={`initial-scale=${initialScale || initialProps.initialScale}, width=device-width, shrink-to-fit=no`}
 			/>
-			<meta key='meta-title' name='title' content='Agency Zero' />
+			<meta key='meta-title' name='title' content='Denver&#39;s Art' />
+			<meta property='og:title' content='Denver&#39;s Art' />
+			<meta property='og:url' content='https://denvers.art/' />
 			<link rel='shortcut icon' href='/static/favicon.ico' />
 			{/* <script async src='https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXXX-X' /> */}
 			<link rel='stylesheet' href='https://use.typekit.net/weo5ngi.css' />
