@@ -33,7 +33,6 @@ class Layout extends Component {
 	componentDidMount () {
 		const init = () => {
 			if (typeof window !== 'undefined') {
-				this.setState({ isClient: true })
 				const { hasSeenIntro } = window.localStorage
 				this.handleResize()
 				window.addEventListener('resize', this.handleResize)
@@ -42,7 +41,13 @@ class Layout extends Component {
 				// this.props.onSetIntroSeen(hasSeenIntro)
 				if (hasSeenIntro) {
 					this.props.onSetIntroSeen(true)
-					this.setState({ introTransComplete: true })
+					this.setState({ introTransComplete: true }, () => {
+						if (!this.state.isClient) {
+							this.setState({ isClient: true }, () => {
+								this.forceUpdate()
+							})
+						}
+					})
 				}
 			} else {
 				setTimeout(init, 400)
@@ -227,7 +232,7 @@ class Layout extends Component {
 								className='info-modal info-sec'
 							>
 								<div className='info-sec'>
-									<span onClick={this.handleInfoClick} className='info-sec'>
+									<span onClick={this.handleInfoClick} className='info-sec modal-title'>
 										Denver's.Art
 									</span>{' '}
 									is the front page of Denver's art scene. A singular resource for presenting the best galleries and
@@ -235,8 +240,8 @@ class Layout extends Component {
 									present elegantly what's going on -- where, when, here, now. No more needing to know what to 'like',
 									who to ask, where to look. Welcome to Denver's Art.
 								</div>
-								<a className='info-sec' href='mailto:denversartscene@gmail.com'>
-									Reach out if you think you'd like to be included in the project.
+								<a className='info-sec mail-link' href='mailto:denversartscene@gmail.com'>
+									<span>Reach out</span> if you think you'd like to be included in the project.
 								</a>
 							</div>
 						)}
@@ -262,6 +267,7 @@ class Layout extends Component {
 						top: 0;
 						left: 0;
 						width: 100vw;
+						overflow-y: hidden;
 					}
 					.wrapper,
 					.main-sec,
@@ -316,6 +322,17 @@ class Layout extends Component {
 						color: var(--color-green);
 						cursor: pointer;
 					}
+					.modal-title {
+						color: var(--color-green);
+					}
+					.modal-title:hover,
+					.mail-link span {
+						color: var(--color-blue) !important;
+					}
+					.mail-link:hover {
+						color: var(--color-green);
+						cursor: pointer;
+					}
 					@media (orientation: landscape) and (max-height: 600px) {
 						.Layout-inner {
 							display: ${isDevice && isMobile ? 'none' : 'block'};
@@ -325,6 +342,7 @@ class Layout extends Component {
 							justify-content: center;
 							align-items: center;
 							width: 100vw;
+							height: 80vh;
 						}
 						.placeholder-inner {
 							position: relative;

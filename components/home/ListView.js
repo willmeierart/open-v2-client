@@ -38,7 +38,7 @@ class ListView extends Component {
 						shouldOpen={activeID === li.id}
 						openList={openList}
 						listOpen={listOpen}
-						isMobile
+						isMobile={isMobile}
 					/>
 				</Element>
 			</li>

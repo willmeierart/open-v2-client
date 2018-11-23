@@ -92,7 +92,7 @@ export default class Mobile extends Component {
 
 	render () {
 		const {
-			state: { viewPos, scrollBarPosY, viewOpen },
+			state: { viewPos, scrollBarPosY, viewOpen, isDevice },
 			props: { galleries, bodyHeight, children, setActiveMarker, activeMarker, introSeen, marqueeHeader }
 		} = this
 
@@ -101,6 +101,8 @@ export default class Mobile extends Component {
 
 		const dynamicHeight = bodyHeight
 		// const dynamicHeight = height === 0 ? bodyHeight : height + 'px'
+
+		// typeof window !== 'undefined' && console.log(window.navigator.userAgent)
 
 		return (
 			<div className='outer-wrapper'>
@@ -135,7 +137,7 @@ export default class Mobile extends Component {
 								activeID={activeMarker}
 								listOpen={viewOpen}
 								openList={this.handleTitleBarClick}
-								isMobile
+								isMobile={isDevice}
 							/>
 						</div>
 					</div>
@@ -190,7 +192,7 @@ export default class Mobile extends Component {
 					.list-section {
 						width: calc(100vw - 20px);
 						height: calc(${dynamicHeight} - 80px);
-						overflow: scroll;
+						overflow-y: scroll;
 						-webkit-overflow-scrolling: touch;
 					}
 					.list-section::-webkit-scrollbar {

@@ -88,13 +88,13 @@ class GoogleMap extends Component {
 		if (!this.state.inited) {
 			this.props.markers.forEach(marker => {
 				marker.marker.map = this.map
-				if (marker.marker.position.lat && marker.marker.position.lng) {
-					const MARKER = new window.google.maps.Marker(marker.marker)
-					MARKER.addListener('click', () => {
-						this.props.setActiveMarker(marker.id)
-					})
-					this.ACTUAL_MAP_MARKERS.push(MARKER)
-				}
+				// if (marker.marker.position.lat && marker.marker.position.lng) {
+				const MARKER = new window.google.maps.Marker(marker.marker)
+				MARKER.addListener('click', () => {
+					this.props.setActiveMarker(marker.id)
+				})
+				this.ACTUAL_MAP_MARKERS.push(MARKER)
+				// }
 			})
 
 			this.setState({ actualMapMarkers: this.ACTUAL_MAP_MARKERS })

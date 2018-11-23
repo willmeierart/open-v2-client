@@ -7,15 +7,17 @@ const InfoPage = () => {
 			<section className='info-page info-sec'>
 				<div className='info-sec'>
 					<span className='info-sec'>
-						<a href='/'>Denver's.Art</a>
+						<a className='title' href='/'>
+							Denver's.Art
+						</a>
 					</span>{' '}
 					is the front page of Denver's art scene. A singular resource for presenting the best galleries and events,
 					both obvious and obscure. Data sourced directly from Facebook into a platform designed to present elegantly
 					what's going on -- where, when, here, now. No more needing to know what to 'like', who to ask, where to look.
 					Welcome to Denver's Art.
 				</div>
-				<a className='info-sec' href='mailto:denversartscene@gmail.com'>
-					Reach out if you think you'd like to be included in the project.
+				<a className='info-sec mail-link' href='mailto:denversartscene@gmail.com'>
+					<span>Reach out</span> if you think you'd like to be included in the project.
 				</a>
 			</section>
 			<style jsx>{`
@@ -30,7 +32,7 @@ const InfoPage = () => {
 					z-index: 99999999999;
 					box-sizing: border-box;
 					color: white;
-					font-size: 2em;
+					font-size: 3vw;
 					padding: 5vw;
 					 {
 						/* font-family: 'Art Sans'; */
@@ -40,8 +42,14 @@ const InfoPage = () => {
 					margin-bottom: 1em;
 					line-height: 1.25em;
 				}
-				.info-page a:hover,
-				.info-page span:hover {
+				.title {
+					color: var(--color-green);
+				}
+				.title:hover,
+				.mail-link span {
+					color: var(--color-blue) !important;
+				}
+				.mail-link:hover {
 					color: var(--color-green);
 					cursor: pointer;
 				}
