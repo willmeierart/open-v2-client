@@ -31,17 +31,15 @@ const CustomHead = (props = initialProps) => {
 			<meta property='og:description' content='The front page of Denver&#39;s Art scene' />
 			<link rel='shortcut icon' href='/static/favicon.ico' />
 			<link rel='stylesheet' href='https://use.typekit.net/weo5ngi.css' />
-			<div
+			<script
 				dangerouslySetInnerHTML={{
 					__html: `
-					<script>
 						window.dataLayer = window.dataLayer || []
 						function gtag () {
 							window.dataLayer.push(arguments)
 						}
 						gtag('js', new Date())
 						gtag('config', 'UA-129744723-1')
-					</script>
 				`
 				}}
 			/>
