@@ -41,12 +41,11 @@ class Layout extends Component {
 				// this.props.onSetIntroSeen(hasSeenIntro)
 				if (hasSeenIntro) {
 					this.props.onSetIntroSeen(true)
-					this.setState({ introTransComplete: true }, () => {
-						if (!this.state.isClient) {
-							this.setState({ isClient: true }, () => {
-								this.forceUpdate()
-							})
-						}
+					this.setState({ introTransComplete: true }, () => {})
+				}
+				if (!this.state.isClient) {
+					this.setState({ isClient: true }, () => {
+						this.forceUpdate()
 					})
 				}
 			} else {
