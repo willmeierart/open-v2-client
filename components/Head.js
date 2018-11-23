@@ -22,13 +22,13 @@ const CustomHead = (props = initialProps) => {
 			/>
 			<meta
 				name='description'
-				content='The front page of Denver&#39;s Art Scene - denvers.art is a comprehensive list of the best art galleries and art events the city has to offer.'
+				content='The front page of Denvers Art Scene - denvers.art is a comprehensive list of the best art galleries and art events the city has to offer.'
 			/>
-			<meta key='meta-title' name='title' content='Denver&#39;s Art' />
-			<meta property='og:title' content='Denver&#39;s Art' />
+			<meta key='meta-title' name='title' content='Denvers Art' />
+			<meta property='og:title' content='Denvers Art' />
 			<meta property='og:url' content='https://denvers.art/' />
 			<meta property='og:image' content='/static/assets/logo.jpg' />
-			<meta property='og:description' content='The front page of Denver&#39;s Art scene' />
+			<meta property='og:description' content='The front page of Denvers Art scene' />
 			<link rel='shortcut icon' href='/static/favicon.ico' />
 			<link rel='stylesheet' href='https://use.typekit.net/weo5ngi.css' />
 			<script
