@@ -9,7 +9,7 @@
 		"build": "next build",
 		"start": "NODE_ENV=production node server/index.js",
 		"reload": "git pull origin master && npm run build && pm2 restart all",
-		"reload:i": "git pull origin master && npm i && npm run build && pm2 restart all"
+		"reload:i": "git pull origin master && npm i && npm run build && pm2 restart all && curl https://denvers.art"
 	},
 	"author": "Will Meier",
 	"license": "ISC",

@@ -54,6 +54,7 @@ export default class CustomDocument extends Document {
 				`
 						}}
 					/>
+					<meta name='google-site-verification' content='RVXgAwVz7DrPB7diq6l1VnII41OSxQM4yUi-oouKoL4' />
 				</Head>
 				<body>
 					<div
