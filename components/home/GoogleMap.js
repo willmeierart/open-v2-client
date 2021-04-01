@@ -151,7 +151,7 @@ class GoogleMap extends Component {
 			})
 		} else if (markers.length === 1) {
 			const { lat, lng } = markers[0].position
-			this.setCenter({ lat: lat(), lng: lng() })
+			this.map.setCenter({ lat: lat(), lng: lng() })
 		}
 	}
 
