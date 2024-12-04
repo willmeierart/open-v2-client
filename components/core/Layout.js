@@ -23,6 +23,7 @@ class Layout extends Component {
 			introTransComplete: false,
 			menuOpen: false,
 			infoOpen: false,
+			alertOpen: true,
 			height: 0,
 			isDevice: false
 		}
@@ -148,8 +149,8 @@ class Layout extends Component {
 	}
 
 	handleInfoExit = e => {
-		this.state.infoOpen && e.target.classList.value.indexOf('info-sec') === -1
-			? this.setState({ infoOpen: false })
+		e.target.classList.value.indexOf('info-sec') === -1
+			? this.setState({ infoOpen: false, alertOpen: false })
 			: null
 	}
 
@@ -161,6 +162,7 @@ class Layout extends Component {
 			hasSeenIntro,
 			introTransComplete,
 			infoOpen,
+			alertOpen,
 			hoverQ,
 			isClient,
 			height,
@@ -242,6 +244,21 @@ class Layout extends Component {
 								<a className='info-sec mail-link' href='mailto:denversartscene@gmail.com'>
 									<span>Reach out</span> if you think you'd like to be included in the project.
 								</a>
+							</div>
+						)}
+						{alertOpen && (
+							<div
+								ref={infoModal => {
+									this.infoModal = infoModal
+								}}
+								className='info-modal info-sec'
+							>
+								<div className='info-sec'>
+									<div onClick={this.handleInfoClick} className='info-sec modal-title'>
+										Denver's.Art
+									</div>{' '}
+									Please bear with us while we work out some issues with changes to the facebook api permissions required to run this page. :)
+								</div>
 							</div>
 						)}
 					</div>
